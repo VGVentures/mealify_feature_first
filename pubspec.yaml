@@ -3,6 +3,7 @@ publish_to: none
 environment:
   sdk: ^3.9.0
 workspace:
+  - packages/cocktaildb_api_client
   - packages/http_client_factory
   - packages/mealdb_api_client
   - packages/mealify_app

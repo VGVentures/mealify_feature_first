@@ -1,14 +1,14 @@
 import 'dart:convert';
 
+import 'package:cocktaildb_api_client/cocktaildb_api_client.dart';
+import 'package:cocktaildb_api_client/src/random_drink_response.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_status/http_status.dart';
-import 'package:mealdb_api_client/src/meal.dart';
-import 'package:mealdb_api_client/src/random_meal_response.dart';
 
 /// A client that interacts with the MealDB api
-class MealDbApiClient {
+class CocktailDbApiClient {
   /// Constructs a MealDB api client
-  MealDbApiClient({
+  CocktailDbApiClient({
     /// The httpClient used to fetch data from the MealDB api
     required http.Client httpClient,
   }) : _httpClient = httpClient;
@@ -16,28 +16,30 @@ class MealDbApiClient {
   final http.Client _httpClient;
 
   /// Fetch a random meal from the MealDB api
-  Future<Meal> fetchRandomMeal() async {
-    final uri = Uri.parse('https://www.themealdb.com/api/json/v1/1/random.php');
+  Future<Drink> fetchRandomDrink() async {
+    final uri = Uri.parse(
+      'https://www.thecocktaildb.com/api/json/v1/1/random.php',
+    );
     final httpResponse = await _httpClient.get(uri);
 
     if (httpResponse.statusCode >= HttpStatusCode.badRequest) {
-      throw MealDbApiHttpException(
+      throw CocktailDbApiHttpException(
         uri: uri,
         statusCode: httpResponse.statusCode,
         body: httpResponse.body,
       );
     } else {
-      return RandomMealResponse.fromJson(
+      return RandomDrinkResponse.fromJson(
         jsonDecode(httpResponse.body) as Map<String, dynamic>,
-      ).meal;
+      ).drink;
     }
   }
 }
 
 /// There was an error fetching the http request
-class MealDbApiHttpException implements Exception {
+class CocktailDbApiHttpException implements Exception {
   /// Constructs an HttpException
-  const MealDbApiHttpException({
+  const CocktailDbApiHttpException({
     required this.uri,
     required this.statusCode,
     required this.body,

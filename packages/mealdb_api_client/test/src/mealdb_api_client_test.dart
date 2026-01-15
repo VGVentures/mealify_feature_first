@@ -3,9 +3,9 @@ import 'package:mealdb_api_client/mealdb_api_client.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('$MealdbApiClient Integration Test', () {
+  group('$MealDbApiClient Integration Test', () {
     test('should fetch a random meal', () async {
-      final client = MealdbApiClient(httpClient: httpClientFactory());
+      final client = MealDbApiClient(httpClient: httpClientFactory());
 
       final randomMeal = await client.fetchRandomMeal();
 
