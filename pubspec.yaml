@@ -1,0 +1,8 @@
+name: mealify_brian_egan
+publish_to: none
+environment:
+  sdk: ^3.9.0
+workspace:
+  - packages/http_client_factory
+  - packages/mealdb_api_client
+  - packages/mealify_app
