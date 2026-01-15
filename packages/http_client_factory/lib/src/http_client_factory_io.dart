@@ -29,7 +29,7 @@ http.Client httpClientFactory() {
       return CronetClient.fromCronetEngine(engine, closeEngine: true);
     }
   } on Object catch (_) {
-    // We must wrap the Android configuration in particular in a try/catch 
+    // We must wrap the Android configuration in particular in a try/catch
     // block. If we do not, and the user does not have Play services installed,
     // creating a cronet client will fail.
     return _fallbackHttpClient();

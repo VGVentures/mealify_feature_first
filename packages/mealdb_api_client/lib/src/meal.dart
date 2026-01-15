@@ -1,3 +1,5 @@
+// No need to document every member for the demo app
+// ignore_for_file: public_member_api_docs
 import 'package:meta/meta.dart';
 
 @immutable
@@ -116,64 +118,6 @@ class Meal {
           json['strCreativeCommonsConfirmed'] as String?,
       dateModified: json['dateModified'] as String?,
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['idMeal'] = this.idMeal;
-    data['strMeal'] = this.strMeal;
-    data['strMealAlternate'] = this.strMealAlternate;
-    data['strCategory'] = this.strCategory;
-    data['strArea'] = this.strArea;
-    data['strInstructions'] = this.strInstructions;
-    data['strMealThumb'] = this.strMealThumb;
-    data['strTags'] = this.strTags;
-    data['strYoutube'] = this.strYoutube;
-    data['strIngredient1'] = this.strIngredient1;
-    data['strIngredient2'] = this.strIngredient2;
-    data['strIngredient3'] = this.strIngredient3;
-    data['strIngredient4'] = this.strIngredient4;
-    data['strIngredient5'] = this.strIngredient5;
-    data['strIngredient6'] = this.strIngredient6;
-    data['strIngredient7'] = this.strIngredient7;
-    data['strIngredient8'] = this.strIngredient8;
-    data['strIngredient9'] = this.strIngredient9;
-    data['strIngredient10'] = this.strIngredient10;
-    data['strIngredient11'] = this.strIngredient11;
-    data['strIngredient12'] = this.strIngredient12;
-    data['strIngredient13'] = this.strIngredient13;
-    data['strIngredient14'] = this.strIngredient14;
-    data['strIngredient15'] = this.strIngredient15;
-    data['strIngredient16'] = this.strIngredient16;
-    data['strIngredient17'] = this.strIngredient17;
-    data['strIngredient18'] = this.strIngredient18;
-    data['strIngredient19'] = this.strIngredient19;
-    data['strIngredient20'] = this.strIngredient20;
-    data['strMeasure1'] = this.strMeasure1;
-    data['strMeasure2'] = this.strMeasure2;
-    data['strMeasure3'] = this.strMeasure3;
-    data['strMeasure4'] = this.strMeasure4;
-    data['strMeasure5'] = this.strMeasure5;
-    data['strMeasure6'] = this.strMeasure6;
-    data['strMeasure7'] = this.strMeasure7;
-    data['strMeasure8'] = this.strMeasure8;
-    data['strMeasure9'] = this.strMeasure9;
-    data['strMeasure10'] = this.strMeasure10;
-    data['strMeasure11'] = this.strMeasure11;
-    data['strMeasure12'] = this.strMeasure12;
-    data['strMeasure13'] = this.strMeasure13;
-    data['strMeasure14'] = this.strMeasure14;
-    data['strMeasure15'] = this.strMeasure15;
-    data['strMeasure16'] = this.strMeasure16;
-    data['strMeasure17'] = this.strMeasure17;
-    data['strMeasure18'] = this.strMeasure18;
-    data['strMeasure19'] = this.strMeasure19;
-    data['strMeasure20'] = this.strMeasure20;
-    data['strSource'] = this.strSource;
-    data['strImageSource'] = this.strImageSource;
-    data['strCreativeCommonsConfirmed'] = this.strCreativeCommonsConfirmed;
-    data['dateModified'] = this.dateModified;
-    return data;
   }
 
   final String? idMeal;
