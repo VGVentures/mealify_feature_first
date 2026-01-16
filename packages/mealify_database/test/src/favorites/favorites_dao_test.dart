@@ -3,7 +3,6 @@ import 'package:drift/drift.dart' hide isNull;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mealify_database/mealify_database.dart';
-import 'package:mealify_database/src/favorites/favorites_dao.dart';
 
 void main() {
   group('$FavoritesDao', () {
@@ -29,7 +28,7 @@ void main() {
         ),
       );
       final dao = FavoritesDao(db);
-      final fixedDate = DateTime(2025, 1, 1, 12, 0, 0);
+      final fixedDate = DateTime(2025, 1, 1, 12);
 
       await withClock(Clock.fixed(fixedDate), () async {
         await dao.addFavorite(
@@ -60,7 +59,7 @@ void main() {
         ),
       );
       final dao = FavoritesDao(db);
-      final fixedDate = DateTime(2025, 1, 1, 12, 0, 0);
+      final fixedDate = DateTime(2025, 1, 1, 12);
 
       await withClock(Clock.fixed(fixedDate), () async {
         await dao.addFavorite(
@@ -95,7 +94,7 @@ void main() {
         ),
       );
       final dao = FavoritesDao(db);
-      final fixedDate = DateTime(2025, 1, 1, 12, 0, 0);
+      final fixedDate = DateTime(2025, 1, 1, 12);
 
       await withClock(Clock.fixed(fixedDate), () async {
         await dao.addFavorite(

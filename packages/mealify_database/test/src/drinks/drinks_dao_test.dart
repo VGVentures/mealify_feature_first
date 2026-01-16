@@ -2,7 +2,6 @@ import 'package:drift/drift.dart' hide isNull;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mealify_database/mealify_database.dart';
-import 'package:mealify_database/src/drinks/drinks_dao.dart';
 
 void main() {
   group('$DrinksDao', () {
@@ -29,7 +28,7 @@ void main() {
       );
       final dao = DrinksDao(db);
 
-      await dao.saveDrink(const DrinksCompanion(idDrink: Value('TEST_ID')));
+      await dao.saveDrink(idDrink: 'TEST_ID');
 
       expect(await dao.getDrink('TEST_ID'), const Drink(idDrink: 'TEST_ID'));
 
@@ -45,8 +44,8 @@ void main() {
       );
       final dao = DrinksDao(db);
 
-      await dao.saveDrink(const DrinksCompanion(idDrink: Value('TEST_ID_1')));
-      await dao.saveDrink(const DrinksCompanion(idDrink: Value('TEST_ID_2')));
+      await dao.saveDrink(idDrink: 'TEST_ID_1');
+      await dao.saveDrink(idDrink: 'TEST_ID_2');
 
       expect(
         await dao.getDrink('TEST_ID_1'),
