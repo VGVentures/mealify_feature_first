@@ -1,5 +1,13 @@
 {
     "@@locale": "en",
+    "favoritesLabel": "Favorites",
+    "@favoritesLabel": {
+        "description": "The name of the favorites tab"
+    },
+    "ideasLabel": "Ideas",
+    "@ideasLabel": {
+        "description": "The name of the ideas tab"
+    },
     "mealifyAppTitle": "Mealify",
     "@mealifyAppTitle": {
         "description": "Text shown in the AppBar of the Mealify App"

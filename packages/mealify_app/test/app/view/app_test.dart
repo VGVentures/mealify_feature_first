@@ -1,15 +1,17 @@
-// Ignore for testing purposes
-// ignore_for_file: prefer_const_constructors
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mealify_app/app/app.dart';
-import 'package:mealify_app/random_meal/view/random_meal_page.dart';
+import 'package:mealify_app/ideas/view/ideas_screen.dart';
 
 void main() {
   group('App', () {
     testWidgets('renders CounterPage', (tester) async {
-      await tester.pumpWidget(App());
-      expect(find.byType(RandomMealPage), findsOneWidget);
+      await tester.pumpWidget(
+        App(
+          navigatorKey: GlobalKey(),
+        ),
+      );
+      expect(find.byType(IdeasScreen), findsOneWidget);
     });
   });
 }

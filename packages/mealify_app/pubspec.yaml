@@ -17,17 +17,21 @@ dependencies:
   flutter_bloc: ^9.1.1
   flutter_localizations:
     sdk: flutter
+  go_router:
   http:
   http_client_factory:
     path: ../http_client_factory
   intl: ^0.20.2
   mealdb_api_client:
     path: ../mealdb_api_client
+  provider:
 
 dev_dependencies:
   bloc_test: ^10.0.0
+  build_runner:
   flutter_test:
     sdk: flutter
+  go_router_builder:
   mocktail: ^1.0.4
   very_good_analysis: ^10.0.0
 
