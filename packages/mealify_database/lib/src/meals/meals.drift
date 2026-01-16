@@ -1,0 +1,66 @@
+CREATE TABLE meals (
+    id_meal TEXT NOT NULL PRIMARY KEY,
+    str_meal TEXT,
+    str_meal_alternate TEXT,
+    str_category TEXT,
+    str_area TEXT,
+    str_instructions TEXT,
+    str_meal_thumb TEXT,
+    str_tags TEXT,
+    str_youtube TEXT,
+    
+    -- Ingredients (1-20)
+    str_ingredient1 TEXT,
+    str_ingredient2 TEXT,
+    str_ingredient3 TEXT,
+    str_ingredient4 TEXT,
+    str_ingredient5 TEXT,
+    str_ingredient6 TEXT,
+    str_ingredient7 TEXT,
+    str_ingredient8 TEXT,
+    str_ingredient9 TEXT,
+    str_ingredient10 TEXT,
+    str_ingredient11 TEXT,
+    str_ingredient12 TEXT,
+    str_ingredient13 TEXT,
+    str_ingredient14 TEXT,
+    str_ingredient15 TEXT,
+    str_ingredient16 TEXT,
+    str_ingredient17 TEXT,
+    str_ingredient18 TEXT,
+    str_ingredient19 TEXT,
+    str_ingredient20 TEXT,
+
+    -- Measures (1-20)
+    str_measure1 TEXT,
+    str_measure2 TEXT,
+    str_measure3 TEXT,
+    str_measure4 TEXT,
+    str_measure5 TEXT,
+    str_measure6 TEXT,
+    str_measure7 TEXT,
+    str_measure8 TEXT,
+    str_measure9 TEXT,
+    str_measure10 TEXT,
+    str_measure11 TEXT,
+    str_measure12 TEXT,
+    str_measure13 TEXT,
+    str_measure14 TEXT,
+    str_measure15 TEXT,
+    str_measure16 TEXT,
+    str_measure17 TEXT,
+    str_measure18 TEXT,
+    str_measure19 TEXT,
+    str_measure20 TEXT,
+
+    str_source TEXT,
+    str_image_source TEXT,
+    str_creative_commons_confirmed TEXT,
+    date_modified TEXT
+);
+
+findMealById: 
+    SELECT * FROM meals WHERE id_meal = :id;
+
+findMealsByIds: 
+    SELECT * FROM meals WHERE id_meal IN ?;

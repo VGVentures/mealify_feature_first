@@ -7,3 +7,4 @@ workspace:
   - packages/http_client_factory
   - packages/mealdb_api_client
   - packages/mealify_app
+  - packages/mealify_database

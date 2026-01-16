@@ -1,0 +1,25 @@
+import '../meals/meals.drift';
+import '../drinks/drinks.drift';
+
+CREATE TABLE favorites (
+    id TEXT NOT NULL PRIMARY KEY,
+    
+    meal_id TEXT NOT NULL REFERENCES meals(id_meal) ON DELETE CASCADE,
+    drink_id TEXT NOT NULL REFERENCES drinks(id_drink) ON DELETE CASCADE,
+    
+    created_at DATETIME NOT NULL,
+
+    UNIQUE(meal_id, drink_id)
+);
+
+findFavoriteById: 
+    SELECT * FROM favorites WHERE id = :favoriteId;
+
+findAllFavorites: 
+    SELECT * FROM favorites;
+
+findFavorite:
+    SELECT * FROM favorites WHERE meal_id = :mealId AND drink_id = :drinkId;
+
+deleteFavorite:
+    DELETE FROM favorites WHERE id = :favoriteId;
