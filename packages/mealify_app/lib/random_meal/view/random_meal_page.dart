@@ -4,6 +4,7 @@ import 'package:cocktaildb_api_client/cocktaildb_api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mealdb_api_client/mealdb_api_client.dart';
+import 'package:mealify_app/l10n/gen/app_localizations.dart';
 import 'package:mealify_app/random_meal/bloc/random_meal_cubit.dart';
 import 'package:mealify_app/random_meal/bloc/random_meal_state.dart';
 
@@ -27,6 +28,9 @@ class _RandomMealPageState extends State<RandomMealPage> {
     final state = context.watch<RandomMealCubit>().state;
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context).mealifyAppTitle),
+      ),
       body: switch (state) {
         RandomMealLoading() => const _LoadingView(),
         final RandomMealError e => _ErrorView(e: e.error),
@@ -56,7 +60,7 @@ class _SuccessView extends StatelessWidget {
             child: MaterialButton(
               onPressed: () =>
                   context.read<RandomMealCubit>().fetchRandomMeal(),
-              child: const Text('Fetch another!'),
+              child: Text(AppLocalizations.of(context).showMeMoreButtonText),
             ),
           ),
           Expanded(child: Image.network(drink.strDrinkThumb!)),

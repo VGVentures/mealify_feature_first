@@ -1,7 +1,11 @@
 {
     "@@locale": "en",
-    "counterAppBarTitle": "Counter",
-    "@counterAppBarTitle": {
-        "description": "Text shown in the AppBar of the Counter Page"
+    "mealifyAppTitle": "Mealify",
+    "@mealifyAppTitle": {
+        "description": "Text shown in the AppBar of the Mealify App"
+    },
+    "showMeMoreButtonText": "Show me more!",
+    "@showMeMoreButtonText": {
+        "description": "Text shown on the button that loads another random meal"
     }
 }
