@@ -21,12 +21,8 @@ class App extends StatelessWidget {
           initialLocation: const IdeasRoute().location,
           routes: $appRoutes,
         ),
-        theme: ThemeData(
-          appBarTheme: AppBarTheme(
-            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          ),
-          useMaterial3: true,
-        ),
+        theme: ThemeData(),
+        darkTheme: ThemeData.dark(),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
       ),

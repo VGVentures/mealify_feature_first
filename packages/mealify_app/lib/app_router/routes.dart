@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:mealdb_api_client/mealdb_api_client.dart';
-import 'package:mealify_app/app/view/responsive_scaffold.dart';
+import 'package:mealify_app/app_router/responsive_scaffold.dart';
 import 'package:mealify_app/details/details.dart';
 import 'package:mealify_app/favorites/favorites.dart';
 import 'package:mealify_app/ideas/ideas.dart';

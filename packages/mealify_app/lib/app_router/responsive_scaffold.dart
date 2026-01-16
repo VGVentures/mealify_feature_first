@@ -10,8 +10,8 @@ class ResponsiveScaffold extends StatelessWidget {
     super.key,
   });
 
-  static const smallScreen = 576;
-  static const mediumScreen = 768;
+  static const mediumScreenMinWidth = 576;
+  static const largeScreenMinWidth = 768;
 
   final StatefulNavigationShell navigationShell;
 
@@ -26,17 +26,16 @@ class ResponsiveScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (constraints.maxWidth < smallScreen) {
+        if (constraints.maxWidth < mediumScreenMinWidth) {
           return _MobileScaffold(
             navigationShell: navigationShell,
             onDestinationSelected: _onDestinationSelected,
           );
         } else {
           return _DesktopScaffold(
-            mediumScreen: mediumScreen,
             navigationShell: navigationShell,
             onDestinationSelected: _onDestinationSelected,
-            extendRail: constraints.maxWidth > mediumScreen,
+            extendRail: constraints.maxWidth > largeScreenMinWidth,
           );
         }
       },
@@ -79,13 +78,11 @@ class _MobileScaffold extends StatelessWidget {
 
 class _DesktopScaffold extends StatelessWidget {
   const _DesktopScaffold({
-    required this.mediumScreen,
     required this.navigationShell,
     required this.onDestinationSelected,
     required this.extendRail,
   });
 
-  final int mediumScreen;
   final StatefulNavigationShell navigationShell;
   final ValueChanged<int> onDestinationSelected;
   final bool extendRail;
