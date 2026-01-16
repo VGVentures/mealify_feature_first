@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:cocktaildb_api_client/cocktaildb_api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mealdb_api_client/mealdb_api_client.dart';
 import 'package:mealify_app/ideas/bloc/ideas_cubit.dart';
 import 'package:mealify_app/ideas/bloc/ideas_state.dart';
 import 'package:mealify_app/l10n/gen/app_localizations.dart';
+import 'package:meals_repository/meals_repository.dart';
 
 class IdeasScreen extends StatefulWidget {
   const IdeasScreen({super.key});

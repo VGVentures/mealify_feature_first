@@ -1,5 +1,5 @@
 import 'package:cocktaildb_api_client/cocktaildb_api_client.dart';
-import 'package:mealdb_api_client/mealdb_api_client.dart';
+import 'package:meals_repository/meals_repository.dart';
 
 sealed class IdeasState {}
 

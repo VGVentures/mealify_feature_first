@@ -8,3 +8,4 @@ workspace:
   - packages/mealdb_api_client
   - packages/mealify_app
   - packages/mealify_database
+  - packages/meals_repository

@@ -1,2 +1,2 @@
-export 'io_query_executor_factory.dart'
-    if (dart.library.html) 'web_query_executor_factory.dart';
+export 'query_executor_factory_io.dart'
+    if (dart.library.js_interop) 'query_executor_factory_web.dart';

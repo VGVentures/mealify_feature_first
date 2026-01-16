@@ -25,6 +25,10 @@ dependencies:
   intl: ^0.20.2
   mealdb_api_client:
     path: ../mealdb_api_client
+  mealify_database:
+    path: ../mealify_database
+  meals_repository:
+    path: ../meals_repository
   path:
   path_provider:
   provider:
