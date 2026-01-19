@@ -23,13 +23,30 @@ mixin _$FavoritesDaoMixin on DatabaseAccessor<MealifyDatabase> {
     ).asyncMap(favorites.mapFromRow);
   }
 
-  Future<int> deleteFavorite(String favoriteId) {
+  Future<int> deleteFavoriteById(String favoriteId) {
     return customUpdate(
       'DELETE FROM favorites WHERE id = ?1',
       variables: [Variable<String>(favoriteId)],
       updates: {favorites},
       updateKind: UpdateKind.delete,
     );
+  }
+
+  Future<int> deleteFavoriteByMealAndDrink(String mealId, String drinkId) {
+    return customUpdate(
+      'DELETE FROM favorites WHERE meal_id = ?1 AND drink_id = ?2',
+      variables: [Variable<String>(mealId), Variable<String>(drinkId)],
+      updates: {favorites},
+      updateKind: UpdateKind.delete,
+    );
+  }
+
+  Selectable<bool> isFavorite(String mealId, String drinkId) {
+    return customSelect(
+      'SELECT EXISTS (SELECT 1 AS _c1 FROM favorites WHERE meal_id = ?1 AND drink_id = ?2) AS _c0',
+      variables: [Variable<String>(mealId), Variable<String>(drinkId)],
+      readsFrom: {favorites},
+    ).map((QueryRow row) => row.read<bool>('_c0'));
   }
 
   Selectable<Drink> findDrinkById(String id) {

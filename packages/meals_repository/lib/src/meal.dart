@@ -8,113 +8,113 @@ import 'package:meta/meta.dart';
 class Meal {
   /// Construct a Meal
   const Meal({
-    required this.idMeal,
-    required this.strMeal,
-    required this.strInstructions,
-    required this.strMealThumb,
-    this.strMealAlternate,
-    this.strCategory,
-    this.strArea,
-    this.strTags,
-    this.strYoutube,
-    this.strIngredient1,
-    this.strIngredient2,
-    this.strIngredient3,
-    this.strIngredient4,
-    this.strIngredient5,
-    this.strIngredient6,
-    this.strIngredient7,
-    this.strIngredient8,
-    this.strIngredient9,
-    this.strIngredient10,
-    this.strIngredient11,
-    this.strIngredient12,
-    this.strIngredient13,
-    this.strIngredient14,
-    this.strIngredient15,
-    this.strIngredient16,
-    this.strIngredient17,
-    this.strIngredient18,
-    this.strIngredient19,
-    this.strIngredient20,
-    this.strMeasure1,
-    this.strMeasure2,
-    this.strMeasure3,
-    this.strMeasure4,
-    this.strMeasure5,
-    this.strMeasure6,
-    this.strMeasure7,
-    this.strMeasure8,
-    this.strMeasure9,
-    this.strMeasure10,
-    this.strMeasure11,
-    this.strMeasure12,
-    this.strMeasure13,
-    this.strMeasure14,
-    this.strMeasure15,
-    this.strMeasure16,
-    this.strMeasure17,
-    this.strMeasure18,
-    this.strMeasure19,
-    this.strMeasure20,
-    this.strSource,
-    this.strImageSource,
-    this.strCreativeCommonsConfirmed,
+    required this.id,
+    required this.title,
+    required this.instructions,
+    required this.thumbnail,
+    this.mealAlternate,
+    this.category,
+    this.area,
+    this.tags,
+    this.youtube,
+    this.ingredient1,
+    this.ingredient2,
+    this.ingredient3,
+    this.ingredient4,
+    this.ingredient5,
+    this.ingredient6,
+    this.ingredient7,
+    this.ingredient8,
+    this.ingredient9,
+    this.ingredient10,
+    this.ingredient11,
+    this.ingredient12,
+    this.ingredient13,
+    this.ingredient14,
+    this.ingredient15,
+    this.ingredient16,
+    this.ingredient17,
+    this.ingredient18,
+    this.ingredient19,
+    this.ingredient20,
+    this.measure1,
+    this.measure2,
+    this.measure3,
+    this.measure4,
+    this.measure5,
+    this.measure6,
+    this.measure7,
+    this.measure8,
+    this.measure9,
+    this.measure10,
+    this.measure11,
+    this.measure12,
+    this.measure13,
+    this.measure14,
+    this.measure15,
+    this.measure16,
+    this.measure17,
+    this.measure18,
+    this.measure19,
+    this.measure20,
+    this.source,
+    this.imageSource,
+    this.creativeCommonsConfirmed,
     this.dateModified,
   });
 
-  final String idMeal;
-  final String strMeal;
-  final String? strMealAlternate;
-  final String? strCategory;
-  final String? strArea;
-  final String strInstructions;
-  final String strMealThumb;
-  final String? strTags;
-  final String? strYoutube;
-  final String? strIngredient1;
-  final String? strIngredient2;
-  final String? strIngredient3;
-  final String? strIngredient4;
-  final String? strIngredient5;
-  final String? strIngredient6;
-  final String? strIngredient7;
-  final String? strIngredient8;
-  final String? strIngredient9;
-  final String? strIngredient10;
-  final String? strIngredient11;
-  final String? strIngredient12;
-  final String? strIngredient13;
-  final String? strIngredient14;
-  final String? strIngredient15;
-  final String? strIngredient16;
-  final String? strIngredient17;
-  final String? strIngredient18;
-  final String? strIngredient19;
-  final String? strIngredient20;
-  final String? strMeasure1;
-  final String? strMeasure2;
-  final String? strMeasure3;
-  final String? strMeasure4;
-  final String? strMeasure5;
-  final String? strMeasure6;
-  final String? strMeasure7;
-  final String? strMeasure8;
-  final String? strMeasure9;
-  final String? strMeasure10;
-  final String? strMeasure11;
-  final String? strMeasure12;
-  final String? strMeasure13;
-  final String? strMeasure14;
-  final String? strMeasure15;
-  final String? strMeasure16;
-  final String? strMeasure17;
-  final String? strMeasure18;
-  final String? strMeasure19;
-  final String? strMeasure20;
-  final String? strSource;
-  final String? strImageSource;
-  final String? strCreativeCommonsConfirmed;
+  final String id;
+  final String title;
+  final String? mealAlternate;
+  final String? category;
+  final String? area;
+  final String instructions;
+  final String thumbnail;
+  final String? tags;
+  final String? youtube;
+  final String? ingredient1;
+  final String? ingredient2;
+  final String? ingredient3;
+  final String? ingredient4;
+  final String? ingredient5;
+  final String? ingredient6;
+  final String? ingredient7;
+  final String? ingredient8;
+  final String? ingredient9;
+  final String? ingredient10;
+  final String? ingredient11;
+  final String? ingredient12;
+  final String? ingredient13;
+  final String? ingredient14;
+  final String? ingredient15;
+  final String? ingredient16;
+  final String? ingredient17;
+  final String? ingredient18;
+  final String? ingredient19;
+  final String? ingredient20;
+  final String? measure1;
+  final String? measure2;
+  final String? measure3;
+  final String? measure4;
+  final String? measure5;
+  final String? measure6;
+  final String? measure7;
+  final String? measure8;
+  final String? measure9;
+  final String? measure10;
+  final String? measure11;
+  final String? measure12;
+  final String? measure13;
+  final String? measure14;
+  final String? measure15;
+  final String? measure16;
+  final String? measure17;
+  final String? measure18;
+  final String? measure19;
+  final String? measure20;
+  final String? source;
+  final String? imageSource;
+  final String? creativeCommonsConfirmed;
   final String? dateModified;
 
   @override
@@ -122,174 +122,121 @@ class Meal {
       identical(this, other) ||
       other is Meal &&
           runtimeType == other.runtimeType &&
-          idMeal == other.idMeal &&
-          strMeal == other.strMeal &&
-          strMealAlternate == other.strMealAlternate &&
-          strCategory == other.strCategory &&
-          strArea == other.strArea &&
-          strInstructions == other.strInstructions &&
-          strMealThumb == other.strMealThumb &&
-          strTags == other.strTags &&
-          strYoutube == other.strYoutube &&
-          strIngredient1 == other.strIngredient1 &&
-          strIngredient2 == other.strIngredient2 &&
-          strIngredient3 == other.strIngredient3 &&
-          strIngredient4 == other.strIngredient4 &&
-          strIngredient5 == other.strIngredient5 &&
-          strIngredient6 == other.strIngredient6 &&
-          strIngredient7 == other.strIngredient7 &&
-          strIngredient8 == other.strIngredient8 &&
-          strIngredient9 == other.strIngredient9 &&
-          strIngredient10 == other.strIngredient10 &&
-          strIngredient11 == other.strIngredient11 &&
-          strIngredient12 == other.strIngredient12 &&
-          strIngredient13 == other.strIngredient13 &&
-          strIngredient14 == other.strIngredient14 &&
-          strIngredient15 == other.strIngredient15 &&
-          strIngredient16 == other.strIngredient16 &&
-          strIngredient17 == other.strIngredient17 &&
-          strIngredient18 == other.strIngredient18 &&
-          strIngredient19 == other.strIngredient19 &&
-          strIngredient20 == other.strIngredient20 &&
-          strMeasure1 == other.strMeasure1 &&
-          strMeasure2 == other.strMeasure2 &&
-          strMeasure3 == other.strMeasure3 &&
-          strMeasure4 == other.strMeasure4 &&
-          strMeasure5 == other.strMeasure5 &&
-          strMeasure6 == other.strMeasure6 &&
-          strMeasure7 == other.strMeasure7 &&
-          strMeasure8 == other.strMeasure8 &&
-          strMeasure9 == other.strMeasure9 &&
-          strMeasure10 == other.strMeasure10 &&
-          strMeasure11 == other.strMeasure11 &&
-          strMeasure12 == other.strMeasure12 &&
-          strMeasure13 == other.strMeasure13 &&
-          strMeasure14 == other.strMeasure14 &&
-          strMeasure15 == other.strMeasure15 &&
-          strMeasure16 == other.strMeasure16 &&
-          strMeasure17 == other.strMeasure17 &&
-          strMeasure18 == other.strMeasure18 &&
-          strMeasure19 == other.strMeasure19 &&
-          strMeasure20 == other.strMeasure20 &&
-          strSource == other.strSource &&
-          strImageSource == other.strImageSource &&
-          strCreativeCommonsConfirmed == other.strCreativeCommonsConfirmed &&
+          id == other.id &&
+          title == other.title &&
+          mealAlternate == other.mealAlternate &&
+          category == other.category &&
+          area == other.area &&
+          instructions == other.instructions &&
+          thumbnail == other.thumbnail &&
+          tags == other.tags &&
+          youtube == other.youtube &&
+          ingredient1 == other.ingredient1 &&
+          ingredient2 == other.ingredient2 &&
+          ingredient3 == other.ingredient3 &&
+          ingredient4 == other.ingredient4 &&
+          ingredient5 == other.ingredient5 &&
+          ingredient6 == other.ingredient6 &&
+          ingredient7 == other.ingredient7 &&
+          ingredient8 == other.ingredient8 &&
+          ingredient9 == other.ingredient9 &&
+          ingredient10 == other.ingredient10 &&
+          ingredient11 == other.ingredient11 &&
+          ingredient12 == other.ingredient12 &&
+          ingredient13 == other.ingredient13 &&
+          ingredient14 == other.ingredient14 &&
+          ingredient15 == other.ingredient15 &&
+          ingredient16 == other.ingredient16 &&
+          ingredient17 == other.ingredient17 &&
+          ingredient18 == other.ingredient18 &&
+          ingredient19 == other.ingredient19 &&
+          ingredient20 == other.ingredient20 &&
+          measure1 == other.measure1 &&
+          measure2 == other.measure2 &&
+          measure3 == other.measure3 &&
+          measure4 == other.measure4 &&
+          measure5 == other.measure5 &&
+          measure6 == other.measure6 &&
+          measure7 == other.measure7 &&
+          measure8 == other.measure8 &&
+          measure9 == other.measure9 &&
+          measure10 == other.measure10 &&
+          measure11 == other.measure11 &&
+          measure12 == other.measure12 &&
+          measure13 == other.measure13 &&
+          measure14 == other.measure14 &&
+          measure15 == other.measure15 &&
+          measure16 == other.measure16 &&
+          measure17 == other.measure17 &&
+          measure18 == other.measure18 &&
+          measure19 == other.measure19 &&
+          measure20 == other.measure20 &&
+          source == other.source &&
+          imageSource == other.imageSource &&
+          creativeCommonsConfirmed == other.creativeCommonsConfirmed &&
           dateModified == other.dateModified;
 
   @override
   int get hashCode => Object.hashAll([
-    idMeal,
-    strMeal,
-    strMealAlternate,
-    strCategory,
-    strArea,
-    strInstructions,
-    strMealThumb,
-    strTags,
-    strYoutube,
-    strIngredient1,
-    strIngredient2,
-    strIngredient3,
-    strIngredient4,
-    strIngredient5,
-    strIngredient6,
-    strIngredient7,
-    strIngredient8,
-    strIngredient9,
-    strIngredient10,
-    strIngredient11,
-    strIngredient12,
-    strIngredient13,
-    strIngredient14,
-    strIngredient15,
-    strIngredient16,
-    strIngredient17,
-    strIngredient18,
-    strIngredient19,
-    strIngredient20,
-    strMeasure1,
-    strMeasure2,
-    strMeasure3,
-    strMeasure4,
-    strMeasure5,
-    strMeasure6,
-    strMeasure7,
-    strMeasure8,
-    strMeasure9,
-    strMeasure10,
-    strMeasure11,
-    strMeasure12,
-    strMeasure13,
-    strMeasure14,
-    strMeasure15,
-    strMeasure16,
-    strMeasure17,
-    strMeasure18,
-    strMeasure19,
-    strMeasure20,
-    strSource,
-    strImageSource,
-    strCreativeCommonsConfirmed,
+    id,
+    title,
+    mealAlternate,
+    category,
+    area,
+    instructions,
+    thumbnail,
+    tags,
+    youtube,
+    ingredient1,
+    ingredient2,
+    ingredient3,
+    ingredient4,
+    ingredient5,
+    ingredient6,
+    ingredient7,
+    ingredient8,
+    ingredient9,
+    ingredient10,
+    ingredient11,
+    ingredient12,
+    ingredient13,
+    ingredient14,
+    ingredient15,
+    ingredient16,
+    ingredient17,
+    ingredient18,
+    ingredient19,
+    ingredient20,
+    measure1,
+    measure2,
+    measure3,
+    measure4,
+    measure5,
+    measure6,
+    measure7,
+    measure8,
+    measure9,
+    measure10,
+    measure11,
+    measure12,
+    measure13,
+    measure14,
+    measure15,
+    measure16,
+    measure17,
+    measure18,
+    measure19,
+    measure20,
+    source,
+    imageSource,
+    creativeCommonsConfirmed,
     dateModified,
   ]);
 
   @override
   String toString() {
-    return '''
-Meal 
-  idMeal: $idMeal,
-  strMeal: $strMeal,
-  strMealAlternate: $strMealAlternate,
-  strCategory: $strCategory,
-  strArea: $strArea,
-  strInstructions: $strInstructions,
-  strMealThumb: $strMealThumb,
-  strTags: $strTags,
-  strYoutube: $strYoutube,
-  strIngredient1: $strIngredient1,
-  strIngredient2: $strIngredient2,
-  strIngredient3: $strIngredient3,
-  strIngredient4: $strIngredient4,
-  strIngredient5: $strIngredient5,
-  strIngredient6: $strIngredient6,
-  strIngredient7: $strIngredient7,
-  strIngredient8: $strIngredient8,
-  strIngredient9: $strIngredient9,
-  strIngredient10: $strIngredient10,
-  strIngredient11: $strIngredient11,
-  strIngredient12: $strIngredient12,
-  strIngredient13: $strIngredient13,
-  strIngredient14: $strIngredient14,
-  strIngredient15: $strIngredient15,
-  strIngredient16: $strIngredient16,
-  strIngredient17: $strIngredient17,
-  strIngredient18: $strIngredient18,
-  strIngredient19: $strIngredient19,
-  strIngredient20: $strIngredient20,
-  strMeasure1: $strMeasure1,
-  strMeasure2: $strMeasure2,
-  strMeasure3: $strMeasure3,
-  strMeasure4: $strMeasure4,
-  strMeasure5: $strMeasure5,
-  strMeasure6: $strMeasure6,
-  strMeasure7: $strMeasure7,
-  strMeasure8: $strMeasure8,
-  strMeasure9: $strMeasure9,
-  strMeasure10: $strMeasure10,
-  strMeasure11: $strMeasure11,
-  strMeasure12: $strMeasure12,
-  strMeasure13: $strMeasure13,
-  strMeasure14: $strMeasure14,
-  strMeasure15: $strMeasure15,
-  strMeasure16: $strMeasure16,
-  strMeasure17: $strMeasure17,
-  strMeasure18: $strMeasure18,
-  strMeasure19: $strMeasure19,
-  strMeasure20: $strMeasure20,
-  strSource: $strSource,
-  strImageSource: $strImageSource,
-  strCreativeCommonsConfirmed: $strCreativeCommonsConfirmed,
-  dateModified: $dateModified
-}''';
+    // No need to spread this over several lines
+    // ignore: lines_longer_than_80_chars
+    return 'Meal{id: $id, title: $title, mealAlternate: $mealAlternate, category: $category, area: $area, instructions: $instructions, thumbnail: $thumbnail, tags: $tags, youtube: $youtube, ingredient1: $ingredient1, ingredient2: $ingredient2, ingredient3: $ingredient3, ingredient4: $ingredient4, ingredient5: $ingredient5, ingredient6: $ingredient6, ingredient7: $ingredient7, ingredient8: $ingredient8, ingredient9: $ingredient9, ingredient10: $ingredient10, ingredient11: $ingredient11, ingredient12: $ingredient12, ingredient13: $ingredient13, ingredient14: $ingredient14, ingredient15: $ingredient15, ingredient16: $ingredient16, ingredient17: $ingredient17, ingredient18: $ingredient18, ingredient19: $ingredient19, ingredient20: $ingredient20, measure1: $measure1, measure2: $measure2, measure3: $measure3, measure4: $measure4, measure5: $measure5, measure6: $measure6, measure7: $measure7, measure8: $measure8, measure9: $measure9, measure10: $measure10, measure11: $measure11, measure12: $measure12, measure13: $measure13, measure14: $measure14, measure15: $measure15, measure16: $measure16, measure17: $measure17, measure18: $measure18, measure19: $measure19, measure20: $measure20, source: $source, imageSource: $imageSource, creativeCommonsConfirmed: $creativeCommonsConfirmed, dateModified: $dateModified}';
   }
 }

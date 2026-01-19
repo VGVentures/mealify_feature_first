@@ -37,7 +37,11 @@ class _IdeasScreenState extends State<IdeasScreen> {
       body: switch (state) {
         IdeasLoading() => const LoadingView(),
         final IdeasError e => ErrorView(error: e.error),
-        final IdeasSuccess s => _SuccessView(meal: s.meal, drink: s.drink),
+        final IdeasSuccess s => _SuccessView(
+          meal: s.meal,
+          drink: s.drink,
+          isFavorite: s.isFavorite,
+        ),
       },
     );
   }
@@ -47,10 +51,12 @@ class _SuccessView extends StatelessWidget {
   const _SuccessView({
     required this.meal,
     required this.drink,
+    required this.isFavorite,
   });
 
   final Meal meal;
   final Drink drink;
+  final bool isFavorite;
 
   @override
   Widget build(BuildContext context) {
@@ -59,21 +65,40 @@ class _SuccessView extends StatelessWidget {
         children: [
           Expanded(
             child: MaterialButton(
-              onPressed: () => MealDetailsRoute(id: meal.idMeal).go(context),
-              child: Image.network(meal.strMealThumb),
+              onPressed: () => MealDetailsRoute(id: meal.id).go(context),
+              child: Image.network(meal.thumbnail),
             ),
           ),
           Padding(
             padding: const EdgeInsetsGeometry.symmetric(vertical: 20),
-            child: MaterialButton(
-              onPressed: () => context.read<IdeasCubit>().fetchRandomMeal(),
-              child: Text(AppLocalizations.of(context).showMeMoreButtonText),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                MaterialButton(
+                  onPressed: () => context.read<IdeasCubit>().fetchRandomMeal(),
+                  child: Text(
+                    AppLocalizations.of(context).showMeMoreButtonText,
+                  ),
+                ),
+                MaterialButton(
+                  onPressed: () => context.read<IdeasCubit>().toggleFavorite(),
+                  child: Text(
+                    isFavorite
+                        ? AppLocalizations.of(
+                            context,
+                          ).removeFromFavoritesButtonText
+                        : AppLocalizations.of(
+                            context,
+                          ).addToFavoritesButtonText,
+                  ),
+                ),
+              ],
             ),
           ),
           Expanded(
             child: MaterialButton(
-              onPressed: () => DrinkDetailsRoute(id: drink.idDrink).go(context),
-              child: Image.network(drink.strDrinkThumb),
+              onPressed: () => DrinkDetailsRoute(id: drink.id).go(context),
+              child: Image.network(drink.thumbnail),
             ),
           ),
         ],

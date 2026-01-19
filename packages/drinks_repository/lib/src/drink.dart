@@ -8,109 +8,109 @@ import 'package:meta/meta.dart';
 @immutable
 class Drink {
   const Drink({
-    required this.idDrink,
-    required this.strDrink,
-    required this.strInstructions,
-    required this.strDrinkThumb,
-    this.strDrinkAlternate,
-    this.strTags,
-    this.strVideo,
-    this.strCategory,
-    this.strIba,
-    this.strAlcoholic,
-    this.strGlass,
-    this.strInstructionsEs,
-    this.strInstructionsDe,
-    this.strInstructionsFr,
-    this.strInstructionsIt,
-    this.strInstructionsZhHans,
-    this.strInstructionsZhHant,
-    this.strIngredient1,
-    this.strIngredient2,
-    this.strIngredient3,
-    this.strIngredient4,
-    this.strIngredient5,
-    this.strIngredient6,
-    this.strIngredient7,
-    this.strIngredient8,
-    this.strIngredient9,
-    this.strIngredient10,
-    this.strIngredient11,
-    this.strIngredient12,
-    this.strIngredient13,
-    this.strIngredient14,
-    this.strIngredient15,
-    this.strMeasure1,
-    this.strMeasure2,
-    this.strMeasure3,
-    this.strMeasure4,
-    this.strMeasure5,
-    this.strMeasure6,
-    this.strMeasure7,
-    this.strMeasure8,
-    this.strMeasure9,
-    this.strMeasure10,
-    this.strMeasure11,
-    this.strMeasure12,
-    this.strMeasure13,
-    this.strMeasure14,
-    this.strMeasure15,
-    this.strImageSource,
-    this.strImageAttribution,
-    this.strCreativeCommonsConfirmed,
+    required this.id,
+    required this.title,
+    required this.instructions,
+    required this.thumbnail,
+    this.drinkAlternate,
+    this.tags,
+    this.video,
+    this.category,
+    this.iba,
+    this.alcoholic,
+    this.glass,
+    this.instructionsEs,
+    this.instructionsDe,
+    this.instructionsFr,
+    this.instructionsIt,
+    this.instructionsZhHans,
+    this.instructionsZhHant,
+    this.ingredient1,
+    this.ingredient2,
+    this.ingredient3,
+    this.ingredient4,
+    this.ingredient5,
+    this.ingredient6,
+    this.ingredient7,
+    this.ingredient8,
+    this.ingredient9,
+    this.ingredient10,
+    this.ingredient11,
+    this.ingredient12,
+    this.ingredient13,
+    this.ingredient14,
+    this.ingredient15,
+    this.measure1,
+    this.measure2,
+    this.measure3,
+    this.measure4,
+    this.measure5,
+    this.measure6,
+    this.measure7,
+    this.measure8,
+    this.measure9,
+    this.measure10,
+    this.measure11,
+    this.measure12,
+    this.measure13,
+    this.measure14,
+    this.measure15,
+    this.imageSource,
+    this.imageAttribution,
+    this.creativeCommonsConfirmed,
     this.dateModified,
   });
 
-  final String idDrink;
-  final String strDrink;
-  final String? strDrinkAlternate;
-  final String? strTags;
-  final String? strVideo;
-  final String? strCategory;
-  final String? strIba;
-  final String? strAlcoholic;
-  final String? strGlass;
-  final String strInstructions;
-  final String? strInstructionsEs;
-  final String? strInstructionsDe;
-  final String? strInstructionsFr;
-  final String? strInstructionsIt;
-  final String? strInstructionsZhHans;
-  final String? strInstructionsZhHant;
-  final String strDrinkThumb;
-  final String? strIngredient1;
-  final String? strIngredient2;
-  final String? strIngredient3;
-  final String? strIngredient4;
-  final String? strIngredient5;
-  final String? strIngredient6;
-  final String? strIngredient7;
-  final String? strIngredient8;
-  final String? strIngredient9;
-  final String? strIngredient10;
-  final String? strIngredient11;
-  final String? strIngredient12;
-  final String? strIngredient13;
-  final String? strIngredient14;
-  final String? strIngredient15;
-  final String? strMeasure1;
-  final String? strMeasure2;
-  final String? strMeasure3;
-  final String? strMeasure4;
-  final String? strMeasure5;
-  final String? strMeasure6;
-  final String? strMeasure7;
-  final String? strMeasure8;
-  final String? strMeasure9;
-  final String? strMeasure10;
-  final String? strMeasure11;
-  final String? strMeasure12;
-  final String? strMeasure13;
-  final String? strMeasure14;
-  final String? strMeasure15;
-  final String? strImageSource;
-  final String? strImageAttribution;
-  final String? strCreativeCommonsConfirmed;
+  final String id;
+  final String title;
+  final String? drinkAlternate;
+  final String? tags;
+  final String? video;
+  final String? category;
+  final String? iba;
+  final String? alcoholic;
+  final String? glass;
+  final String instructions;
+  final String? instructionsEs;
+  final String? instructionsDe;
+  final String? instructionsFr;
+  final String? instructionsIt;
+  final String? instructionsZhHans;
+  final String? instructionsZhHant;
+  final String thumbnail;
+  final String? ingredient1;
+  final String? ingredient2;
+  final String? ingredient3;
+  final String? ingredient4;
+  final String? ingredient5;
+  final String? ingredient6;
+  final String? ingredient7;
+  final String? ingredient8;
+  final String? ingredient9;
+  final String? ingredient10;
+  final String? ingredient11;
+  final String? ingredient12;
+  final String? ingredient13;
+  final String? ingredient14;
+  final String? ingredient15;
+  final String? measure1;
+  final String? measure2;
+  final String? measure3;
+  final String? measure4;
+  final String? measure5;
+  final String? measure6;
+  final String? measure7;
+  final String? measure8;
+  final String? measure9;
+  final String? measure10;
+  final String? measure11;
+  final String? measure12;
+  final String? measure13;
+  final String? measure14;
+  final String? measure15;
+  final String? imageSource;
+  final String? imageAttribution;
+  final String? creativeCommonsConfirmed;
   final String? dateModified;
 
   @override
@@ -118,168 +118,117 @@ class Drink {
       identical(this, other) ||
       other is Drink &&
           runtimeType == other.runtimeType &&
-          idDrink == other.idDrink &&
-          strDrink == other.strDrink &&
-          strDrinkAlternate == other.strDrinkAlternate &&
-          strTags == other.strTags &&
-          strVideo == other.strVideo &&
-          strCategory == other.strCategory &&
-          strIba == other.strIba &&
-          strAlcoholic == other.strAlcoholic &&
-          strGlass == other.strGlass &&
-          strInstructions == other.strInstructions &&
-          strInstructionsEs == other.strInstructionsEs &&
-          strInstructionsDe == other.strInstructionsDe &&
-          strInstructionsFr == other.strInstructionsFr &&
-          strInstructionsIt == other.strInstructionsIt &&
-          strInstructionsZhHans == other.strInstructionsZhHans &&
-          strInstructionsZhHant == other.strInstructionsZhHant &&
-          strDrinkThumb == other.strDrinkThumb &&
-          strIngredient1 == other.strIngredient1 &&
-          strIngredient2 == other.strIngredient2 &&
-          strIngredient3 == other.strIngredient3 &&
-          strIngredient4 == other.strIngredient4 &&
-          strIngredient5 == other.strIngredient5 &&
-          strIngredient6 == other.strIngredient6 &&
-          strIngredient7 == other.strIngredient7 &&
-          strIngredient8 == other.strIngredient8 &&
-          strIngredient9 == other.strIngredient9 &&
-          strIngredient10 == other.strIngredient10 &&
-          strIngredient11 == other.strIngredient11 &&
-          strIngredient12 == other.strIngredient12 &&
-          strIngredient13 == other.strIngredient13 &&
-          strIngredient14 == other.strIngredient14 &&
-          strIngredient15 == other.strIngredient15 &&
-          strMeasure1 == other.strMeasure1 &&
-          strMeasure2 == other.strMeasure2 &&
-          strMeasure3 == other.strMeasure3 &&
-          strMeasure4 == other.strMeasure4 &&
-          strMeasure5 == other.strMeasure5 &&
-          strMeasure6 == other.strMeasure6 &&
-          strMeasure7 == other.strMeasure7 &&
-          strMeasure8 == other.strMeasure8 &&
-          strMeasure9 == other.strMeasure9 &&
-          strMeasure10 == other.strMeasure10 &&
-          strMeasure11 == other.strMeasure11 &&
-          strMeasure12 == other.strMeasure12 &&
-          strMeasure13 == other.strMeasure13 &&
-          strMeasure14 == other.strMeasure14 &&
-          strMeasure15 == other.strMeasure15 &&
-          strImageSource == other.strImageSource &&
-          strImageAttribution == other.strImageAttribution &&
-          strCreativeCommonsConfirmed == other.strCreativeCommonsConfirmed &&
+          id == other.id &&
+          title == other.title &&
+          drinkAlternate == other.drinkAlternate &&
+          tags == other.tags &&
+          video == other.video &&
+          category == other.category &&
+          iba == other.iba &&
+          alcoholic == other.alcoholic &&
+          glass == other.glass &&
+          instructions == other.instructions &&
+          instructionsEs == other.instructionsEs &&
+          instructionsDe == other.instructionsDe &&
+          instructionsFr == other.instructionsFr &&
+          instructionsIt == other.instructionsIt &&
+          instructionsZhHans == other.instructionsZhHans &&
+          instructionsZhHant == other.instructionsZhHant &&
+          thumbnail == other.thumbnail &&
+          ingredient1 == other.ingredient1 &&
+          ingredient2 == other.ingredient2 &&
+          ingredient3 == other.ingredient3 &&
+          ingredient4 == other.ingredient4 &&
+          ingredient5 == other.ingredient5 &&
+          ingredient6 == other.ingredient6 &&
+          ingredient7 == other.ingredient7 &&
+          ingredient8 == other.ingredient8 &&
+          ingredient9 == other.ingredient9 &&
+          ingredient10 == other.ingredient10 &&
+          ingredient11 == other.ingredient11 &&
+          ingredient12 == other.ingredient12 &&
+          ingredient13 == other.ingredient13 &&
+          ingredient14 == other.ingredient14 &&
+          ingredient15 == other.ingredient15 &&
+          measure1 == other.measure1 &&
+          measure2 == other.measure2 &&
+          measure3 == other.measure3 &&
+          measure4 == other.measure4 &&
+          measure5 == other.measure5 &&
+          measure6 == other.measure6 &&
+          measure7 == other.measure7 &&
+          measure8 == other.measure8 &&
+          measure9 == other.measure9 &&
+          measure10 == other.measure10 &&
+          measure11 == other.measure11 &&
+          measure12 == other.measure12 &&
+          measure13 == other.measure13 &&
+          measure14 == other.measure14 &&
+          measure15 == other.measure15 &&
+          imageSource == other.imageSource &&
+          imageAttribution == other.imageAttribution &&
+          creativeCommonsConfirmed == other.creativeCommonsConfirmed &&
           dateModified == other.dateModified;
 
   @override
   int get hashCode => Object.hashAll([
-    idDrink,
-    strDrink,
-    strDrinkAlternate,
-    strTags,
-    strVideo,
-    strCategory,
-    strIba,
-    strAlcoholic,
-    strGlass,
-    strInstructions,
-    strInstructionsEs,
-    strInstructionsDe,
-    strInstructionsFr,
-    strInstructionsIt,
-    strInstructionsZhHans,
-    strInstructionsZhHant,
-    strDrinkThumb,
-    strIngredient1,
-    strIngredient2,
-    strIngredient3,
-    strIngredient4,
-    strIngredient5,
-    strIngredient6,
-    strIngredient7,
-    strIngredient8,
-    strIngredient9,
-    strIngredient10,
-    strIngredient11,
-    strIngredient12,
-    strIngredient13,
-    strIngredient14,
-    strIngredient15,
-    strMeasure1,
-    strMeasure2,
-    strMeasure3,
-    strMeasure4,
-    strMeasure5,
-    strMeasure6,
-    strMeasure7,
-    strMeasure8,
-    strMeasure9,
-    strMeasure10,
-    strMeasure11,
-    strMeasure12,
-    strMeasure13,
-    strMeasure14,
-    strMeasure15,
-    strImageSource,
-    strImageAttribution,
-    strCreativeCommonsConfirmed,
+    id,
+    title,
+    drinkAlternate,
+    tags,
+    video,
+    category,
+    iba,
+    alcoholic,
+    glass,
+    instructions,
+    instructionsEs,
+    instructionsDe,
+    instructionsFr,
+    instructionsIt,
+    instructionsZhHans,
+    instructionsZhHant,
+    thumbnail,
+    ingredient1,
+    ingredient2,
+    ingredient3,
+    ingredient4,
+    ingredient5,
+    ingredient6,
+    ingredient7,
+    ingredient8,
+    ingredient9,
+    ingredient10,
+    ingredient11,
+    ingredient12,
+    ingredient13,
+    ingredient14,
+    ingredient15,
+    measure1,
+    measure2,
+    measure3,
+    measure4,
+    measure5,
+    measure6,
+    measure7,
+    measure8,
+    measure9,
+    measure10,
+    measure11,
+    measure12,
+    measure13,
+    measure14,
+    measure15,
+    imageSource,
+    imageAttribution,
+    creativeCommonsConfirmed,
     dateModified,
   ]);
 
   @override
   String toString() {
-    return '''
-Drink {
-  idDrink: $idDrink,
-  strDrink: $strDrink,
-  strDrinkAlternate: $strDrinkAlternate,
-  strTags: $strTags,
-  strVideo: $strVideo,
-  strCategory: $strCategory,
-  strIba: $strIba,
-  strAlcoholic: $strAlcoholic,
-  strGlass: $strGlass,
-  strInstructions: $strInstructions,
-  strInstructionsEs: $strInstructionsEs,
-  strInstructionsDe: $strInstructionsDe,
-  strInstructionsFr: $strInstructionsFr,
-  strInstructionsIt: $strInstructionsIt,
-  strInstructionsZhHans: $strInstructionsZhHans,
-  strInstructionsZhHant: $strInstructionsZhHant,
-  strDrinkThumb: $strDrinkThumb,
-  strIngredient1: $strIngredient1,
-  strIngredient2: $strIngredient2,
-  strIngredient3: $strIngredient3,
-  strIngredient4: $strIngredient4,
-  strIngredient5: $strIngredient5,
-  strIngredient6: $strIngredient6,
-  strIngredient7: $strIngredient7,
-  strIngredient8: $strIngredient8,
-  strIngredient9: $strIngredient9,
-  strIngredient10: $strIngredient10,
-  strIngredient11: $strIngredient11,
-  strIngredient12: $strIngredient12,
-  strIngredient13: $strIngredient13,
-  strIngredient14: $strIngredient14,
-  strIngredient15: $strIngredient15,
-  strMeasure1: $strMeasure1,
-  strMeasure2: $strMeasure2,
-  strMeasure3: $strMeasure3,
-  strMeasure4: $strMeasure4,
-  strMeasure5: $strMeasure5,
-  strMeasure6: $strMeasure6,
-  strMeasure7: $strMeasure7,
-  strMeasure8: $strMeasure8,
-  strMeasure9: $strMeasure9,
-  strMeasure10: $strMeasure10,
-  strMeasure11: $strMeasure11,
-  strMeasure12: $strMeasure12,
-  strMeasure13: $strMeasure13,
-  strMeasure14: $strMeasure14,
-  strMeasure15: $strMeasure15,
-  strImageSource: $strImageSource,
-  strImageAttribution: $strImageAttribution,
-  strCreativeCommonsConfirmed: $strCreativeCommonsConfirmed,
-  dateModified: $dateModified
-}''';
+    // No need to spread this over several lines
+    // ignore: lines_longer_than_80_chars
+    return 'Drink{id: $id, title: $title, drinkAlternate: $drinkAlternate, tags: $tags, video: $video, category: $category, iba: $iba, alcoholic: $alcoholic, glass: $glass, instructions: $instructions, instructionsEs: $instructionsEs, instructionsDe: $instructionsDe, instructionsFr: $instructionsFr, instructionsIt: $instructionsIt, instructionsZhHans: $instructionsZhHans, instructionsZhHant: $instructionsZhHant, thumbnail: $thumbnail, ingredient1: $ingredient1, ingredient2: $ingredient2, ingredient3: $ingredient3, ingredient4: $ingredient4, ingredient5: $ingredient5, ingredient6: $ingredient6, ingredient7: $ingredient7, ingredient8: $ingredient8, ingredient9: $ingredient9, ingredient10: $ingredient10, ingredient11: $ingredient11, ingredient12: $ingredient12, ingredient13: $ingredient13, ingredient14: $ingredient14, ingredient15: $ingredient15, measure1: $measure1, measure2: $measure2, measure3: $measure3, measure4: $measure4, measure5: $measure5, measure6: $measure6, measure7: $measure7, measure8: $measure8, measure9: $measure9, measure10: $measure10, measure11: $measure11, measure12: $measure12, measure13: $measure13, measure14: $measure14, measure15: $measure15, imageSource: $imageSource, imageAttribution: $imageAttribution, creativeCommonsConfirmed: $creativeCommonsConfirmed, dateModified: $dateModified}';
   }
 }

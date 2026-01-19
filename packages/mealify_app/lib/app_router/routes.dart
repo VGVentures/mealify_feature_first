@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:mealify_app/app_router/responsive_scaffold.dart';
 import 'package:mealify_app/drink_details/bloc/drink_details_cubit.dart';
 import 'package:mealify_app/drink_details/drink_details.dart';
+import 'package:mealify_app/favorites/bloc/favorites_details_cubit.dart';
+import 'package:mealify_app/favorites/bloc/favorites_list_cubit.dart';
 import 'package:mealify_app/favorites/favorites.dart';
 import 'package:mealify_app/ideas/ideas.dart';
 import 'package:mealify_app/meal_details/bloc/meal_details_cubit.dart';
@@ -68,6 +70,7 @@ class IdeasRoute extends GoRouteData with $IdeasRoute {
         create: (context) => IdeasCubit(
           drinksRepository: context.read(),
           mealsRepository: context.read(),
+          favoritesRepository: context.read(),
         ),
       ),
     );
@@ -111,7 +114,18 @@ class FavoritesRoute extends GoRouteData with $FavoritesRoute {
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return const NoTransitionPage(child: FavoritesScreen());
+    return NoTransitionPage(
+      child: BlocProvider<FavoritesListCubit>(
+        create: (BuildContext context) {
+          return FavoritesListCubit(
+            mealsRepository: context.read(),
+            drinksRepository: context.read(),
+            favoritesRepository: context.read(),
+          );
+        },
+        child: const FavoritesListScreen(),
+      ),
+    );
   }
 }
 
@@ -122,6 +136,15 @@ class FavoriteDetailsRoute extends GoRouteData with $FavoriteDetailsRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return FavoriteDetailsScreen(id: id);
+    return BlocProvider<FavoritesDetailsCubit>(
+      create: (BuildContext context) {
+        return FavoritesDetailsCubit(
+          mealsRepository: context.read(),
+          drinksRepository: context.read(),
+          favoritesRepository: context.read(),
+        );
+      },
+      child: FavoriteDetailsScreen(id: id),
+    );
   }
 }

@@ -18,5 +18,14 @@ findFavoriteById:
 findAllFavorites:
     SELECT * FROM favorites ORDER BY created_at DESC;
 
-deleteFavorite:
+deleteFavoriteById:
     DELETE FROM favorites WHERE id = :favoriteId;
+
+deleteFavoriteByMealAndDrink:
+    DELETE FROM favorites WHERE meal_id = :mealId AND drink_id = :drinkId;
+
+isFavorite:
+    SELECT EXISTS(
+        SELECT 1 FROM favorites
+        WHERE meal_id = :mealId AND drink_id = :drinkId
+    );

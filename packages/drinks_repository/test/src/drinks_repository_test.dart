@@ -38,10 +38,10 @@ void main() {
           expect(
             await repository.getDrinkById('TEST_ID'),
             Drink(
-              idDrink: 'TEST_ID',
-              strDrink: '',
-              strInstructions: '',
-              strDrinkThumb: '',
+              id: 'TEST_ID',
+              title: '',
+              instructions: '',
+              thumbnail: '',
             ),
           );
 
@@ -88,10 +88,10 @@ void main() {
           expect(
             await repository.getDrinkById('TEST_ID'),
             Drink(
-              idDrink: 'TEST_ID',
-              strDrink: '',
-              strInstructions: '',
-              strDrinkThumb: '',
+              id: 'TEST_ID',
+              title: '',
+              instructions: '',
+              thumbnail: '',
             ),
           );
 
@@ -145,10 +145,10 @@ void main() {
           expect(
             await repository.getRandomDrink(),
             Drink(
-              idDrink: 'TEST_ID',
-              strDrink: '',
-              strInstructions: '',
-              strDrinkThumb: '',
+              id: 'TEST_ID',
+              title: '',
+              instructions: '',
+              thumbnail: '',
             ),
           );
 

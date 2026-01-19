@@ -32,14 +32,19 @@ class IdeasError implements IdeasState {
 
 @immutable
 class IdeasSuccess implements IdeasState {
-  const IdeasSuccess({required this.meal, required this.drink});
+  const IdeasSuccess({
+    required this.meal,
+    required this.drink,
+    required this.isFavorite,
+  });
 
   final Meal meal;
   final Drink drink;
+  final bool isFavorite;
 
   @override
   String toString() {
-    return 'IdeasSuccess{meal: $meal, drink: $drink}';
+    return 'IdeasSuccess{meal: $meal, drink: $drink, isFavorite: $isFavorite}';
   }
 
   @override
@@ -48,8 +53,9 @@ class IdeasSuccess implements IdeasState {
       other is IdeasSuccess &&
           runtimeType == other.runtimeType &&
           meal == other.meal &&
-          drink == other.drink;
+          drink == other.drink &&
+          isFavorite == other.isFavorite;
 
   @override
-  int get hashCode => Object.hash(meal, drink);
+  int get hashCode => Object.hash(meal, drink, isFavorite);
 }

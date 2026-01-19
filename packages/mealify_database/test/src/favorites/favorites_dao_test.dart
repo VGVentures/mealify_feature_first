@@ -78,7 +78,7 @@ void main() {
           ),
         );
 
-        await dao.deleteFavorite('1');
+        await dao.deleteFavoriteById('1');
 
         expect(await dao.getFavorite('1'), isNull);
 
@@ -124,6 +124,62 @@ void main() {
               createdAt: fixedDate,
             ),
           ]),
+        );
+
+        await db.close();
+      });
+    });
+
+    test('should check if a meal + drink combo is a favorite', () async {
+      final db = MealifyDatabase(
+        queryExecutor: DatabaseConnection(
+          NativeDatabase.memory(),
+          closeStreamsSynchronously: true,
+        ),
+      );
+      final dao = FavoritesDao(db);
+      final fixedDate = DateTime(2025, 1, 1, 12);
+
+      await withClock(Clock.fixed(fixedDate), () async {
+        expect(await dao.getIsFavorite('MEAL_ID_1', 'DRINK_ID_1'), isFalse);
+
+        await dao.addFavorite(
+          id: '1',
+          mealId: 'MEAL_ID_1',
+          drinkId: 'DRINK_ID_1',
+        );
+
+        expect(await dao.getIsFavorite('MEAL_ID_1', 'DRINK_ID_1'), isTrue);
+
+        await db.close();
+      });
+    });
+
+    test('should watch if a meal + drink combo is a favorite', () async {
+      final db = MealifyDatabase(
+        queryExecutor: DatabaseConnection(
+          NativeDatabase.memory(),
+          closeStreamsSynchronously: true,
+        ),
+      );
+      final dao = FavoritesDao(db);
+      final fixedDate = DateTime(2025, 1, 1, 12);
+
+      await withClock(Clock.fixed(fixedDate), () async {
+        await expectLater(
+          dao.watchIsFavorite('MEAL_ID_1', 'DRINK_ID_1'),
+          emits(false),
+        );
+
+        await dao.addFavorite(
+          id: '1',
+          mealId: 'MEAL_ID_1',
+          drinkId: 'DRINK_ID_1',
+        );
+
+        await expectLater(
+          dao.watchIsFavorite('MEAL_ID_1', 'DRINK_ID_1'),
+          emits(true),
         );
 
         await db.close();

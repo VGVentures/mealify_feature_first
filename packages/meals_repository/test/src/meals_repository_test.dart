@@ -38,10 +38,10 @@ void main() {
           expect(
             await repository.getMealById('TEST_ID'),
             Meal(
-              idMeal: 'TEST_ID',
-              strMeal: '',
-              strInstructions: '',
-              strMealThumb: '',
+              id: 'TEST_ID',
+              title: '',
+              instructions: '',
+              thumbnail: '',
             ),
           );
 
@@ -88,10 +88,10 @@ void main() {
           expect(
             await repository.getMealById('TEST_ID'),
             Meal(
-              idMeal: 'TEST_ID',
-              strMeal: '',
-              strInstructions: '',
-              strMealThumb: '',
+              id: 'TEST_ID',
+              title: '',
+              instructions: '',
+              thumbnail: '',
             ),
           );
 
@@ -145,10 +145,10 @@ void main() {
           expect(
             await repository.getRandomMeal(),
             Meal(
-              idMeal: 'TEST_ID',
-              strMeal: '',
-              strInstructions: '',
-              strMealThumb: '',
+              id: 'TEST_ID',
+              title: '',
+              instructions: '',
+              thumbnail: '',
             ),
           );
 

@@ -38,9 +38,9 @@ class _DrinkDetailsScreenState extends State<DrinkDetailsScreen> {
         final DrinkDetailsError e => ErrorView(error: e),
         final DrinkDetailsSuccess s => DetailsView(
           ingredients: s.drink.ingredients,
-          instructions: s.drink.strInstructions,
-          thumbnail: s.drink.strDrinkThumb,
-          title: s.drink.strDrink,
+          instructions: s.drink.instructions,
+          thumbnail: s.drink.thumbnail,
+          title: s.drink.title,
         ),
       },
     );
@@ -50,21 +50,21 @@ class _DrinkDetailsScreenState extends State<DrinkDetailsScreen> {
 extension DrinkIngredients on Drink {
   List<Ingredients> get ingredients {
     final allPossible = [
-      (strIngredient1, strMeasure1),
-      (strIngredient2, strMeasure2),
-      (strIngredient3, strMeasure3),
-      (strIngredient4, strMeasure4),
-      (strIngredient5, strMeasure5),
-      (strIngredient6, strMeasure6),
-      (strIngredient7, strMeasure7),
-      (strIngredient8, strMeasure8),
-      (strIngredient9, strMeasure9),
-      (strIngredient10, strMeasure10),
-      (strIngredient11, strMeasure11),
-      (strIngredient12, strMeasure12),
-      (strIngredient13, strMeasure13),
-      (strIngredient14, strMeasure14),
-      (strIngredient15, strMeasure15),
+      (ingredient1, measure1),
+      (ingredient2, measure2),
+      (ingredient3, measure3),
+      (ingredient4, measure4),
+      (ingredient5, measure5),
+      (ingredient6, measure6),
+      (ingredient7, measure7),
+      (ingredient8, measure8),
+      (ingredient9, measure9),
+      (ingredient10, measure10),
+      (ingredient11, measure11),
+      (ingredient12, measure12),
+      (ingredient13, measure13),
+      (ingredient14, measure14),
+      (ingredient15, measure15),
     ];
 
     return [

@@ -45,4 +45,28 @@ class FavoritesRepository {
   Future<void> removeFavorite(String favoriteId) {
     return _favoritesDao.removeFavorite(favoriteId);
   }
+
+  /// Remove a favorite from the user's collection by meal + drink id combo
+  Future<void> removeFavoriteByMealAndDrinkId({
+    required String mealId,
+    required String drinkId,
+  }) {
+    return _favoritesDao.removeFavoriteByMealAndDrinkId(
+      mealId: mealId,
+      drinkId: drinkId,
+    );
+  }
+
+  /// Returns whether or not a meal + drink combo is a favorite
+  Future<bool> isFavorite({required String mealId, required String drinkId}) {
+    return _favoritesDao.getIsFavorite(mealId, drinkId);
+  }
+
+  /// Watches whether a meal + drink combo is a favorite
+  Stream<bool> watchIsFavorite({
+    required String mealId,
+    required String drinkId,
+  }) {
+    return _favoritesDao.watchIsFavorite(mealId, drinkId);
+  }
 }

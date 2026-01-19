@@ -1,5 +1,9 @@
 {
   "@@locale": "en",
+  "addToFavoritesButtonText": "Add to favorites",
+  "@addToFavoritesButtonText": {
+    "description": "Text shown on the button that adds the meal + drink combo to favorites"
+  },
   "favoritesLabel": "Favorites",
   "@favoritesLabel": {
     "description": "The name of the favorites tab"
@@ -23,6 +27,14 @@
   "mealDetailsTitle": "Meal Details",
   "@mealDetailsTitle": {
     "description": "Text shown in the AppBar of the meal details page"
+  },
+  "favoriteDetailsNotFound": "Favorite Not Found",
+  "@favoriteDetailsNotFound": {
+    "description": "Text shown on the favorites details page when no favorite is found"
+  },
+  "removeFromFavoritesButtonText": "Remove favorite",
+  "@removeFromFavoritesButtonText": {
+    "description": "Text shown on the button that removes the meal + drink combo from favorites"
   },
   "showMeMoreButtonText": "Show me more!",
   "@showMeMoreButtonText": {
