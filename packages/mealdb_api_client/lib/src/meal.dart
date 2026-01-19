@@ -7,12 +7,12 @@ class Meal {
   /// Construct a Meal
   const Meal({
     required this.idMeal,
-    this.strMeal,
+    required this.strMeal,
+    required this.strInstructions,
+    required this.strMealThumb,
     this.strMealAlternate,
     this.strCategory,
     this.strArea,
-    this.strInstructions,
-    this.strMealThumb,
     this.strTags,
     this.strYoutube,
     this.strIngredient1,
@@ -65,12 +65,12 @@ class Meal {
   factory Meal.fromJson(Map<String, dynamic> json) {
     return Meal(
       idMeal: json['idMeal'] as String,
-      strMeal: json['strMeal'] as String?,
+      strMeal: json['strMeal'] as String,
       strMealAlternate: json['strMealAlternate'] as String?,
       strCategory: json['strCategory'] as String?,
       strArea: json['strArea'] as String?,
-      strInstructions: json['strInstructions'] as String?,
-      strMealThumb: json['strMealThumb'] as String?,
+      strInstructions: json['strInstructions'] as String,
+      strMealThumb: json['strMealThumb'] as String,
       strTags: json['strTags'] as String?,
       strYoutube: json['strYoutube'] as String?,
       strIngredient1: json['strIngredient1'] as String?,
@@ -122,12 +122,12 @@ class Meal {
   }
 
   final String idMeal;
-  final String? strMeal;
+  final String strMeal;
   final String? strMealAlternate;
   final String? strCategory;
   final String? strArea;
-  final String? strInstructions;
-  final String? strMealThumb;
+  final String strInstructions;
+  final String strMealThumb;
   final String? strTags;
   final String? strYoutube;
   final String? strIngredient1;

@@ -23,10 +23,10 @@ class Meals extends Table with TableInfo<Meals, Meal> {
   late final GeneratedColumn<String> strMeal = GeneratedColumn<String>(
     'str_meal',
     aliasedName,
-    true,
+    false,
     type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    $customConstraints: '',
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
   );
   static const VerificationMeta _strMealAlternateMeta = const VerificationMeta(
     'strMealAlternate',
@@ -67,10 +67,10 @@ class Meals extends Table with TableInfo<Meals, Meal> {
   late final GeneratedColumn<String> strInstructions = GeneratedColumn<String>(
     'str_instructions',
     aliasedName,
-    true,
+    false,
     type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    $customConstraints: '',
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
   );
   static const VerificationMeta _strMealThumbMeta = const VerificationMeta(
     'strMealThumb',
@@ -78,10 +78,10 @@ class Meals extends Table with TableInfo<Meals, Meal> {
   late final GeneratedColumn<String> strMealThumb = GeneratedColumn<String>(
     'str_meal_thumb',
     aliasedName,
-    true,
+    false,
     type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    $customConstraints: '',
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
   );
   static const VerificationMeta _strTagsMeta = const VerificationMeta(
     'strTags',
@@ -670,6 +670,8 @@ class Meals extends Table with TableInfo<Meals, Meal> {
         _strMealMeta,
         strMeal.isAcceptableOrUnknown(data['str_meal']!, _strMealMeta),
       );
+    } else if (isInserting) {
+      context.missing(_strMealMeta);
     }
     if (data.containsKey('str_meal_alternate')) {
       context.handle(
@@ -703,6 +705,8 @@ class Meals extends Table with TableInfo<Meals, Meal> {
           _strInstructionsMeta,
         ),
       );
+    } else if (isInserting) {
+      context.missing(_strInstructionsMeta);
     }
     if (data.containsKey('str_meal_thumb')) {
       context.handle(
@@ -712,6 +716,8 @@ class Meals extends Table with TableInfo<Meals, Meal> {
           _strMealThumbMeta,
         ),
       );
+    } else if (isInserting) {
+      context.missing(_strMealThumbMeta);
     }
     if (data.containsKey('str_tags')) {
       context.handle(
@@ -1134,7 +1140,7 @@ class Meals extends Table with TableInfo<Meals, Meal> {
       strMeal: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}str_meal'],
-      ),
+      )!,
       strMealAlternate: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}str_meal_alternate'],
@@ -1150,11 +1156,11 @@ class Meals extends Table with TableInfo<Meals, Meal> {
       strInstructions: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}str_instructions'],
-      ),
+      )!,
       strMealThumb: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}str_meal_thumb'],
-      ),
+      )!,
       strTags: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}str_tags'],
@@ -1353,16 +1359,14 @@ class Meals extends Table with TableInfo<Meals, Meal> {
 
 class Meal extends DataClass implements Insertable<Meal> {
   final String idMeal;
-  final String? strMeal;
+  final String strMeal;
   final String? strMealAlternate;
   final String? strCategory;
   final String? strArea;
-  final String? strInstructions;
-  final String? strMealThumb;
+  final String strInstructions;
+  final String strMealThumb;
   final String? strTags;
   final String? strYoutube;
-
-  /// Ingredients (1-20)
   final String? strIngredient1;
   final String? strIngredient2;
   final String? strIngredient3;
@@ -1383,8 +1387,6 @@ class Meal extends DataClass implements Insertable<Meal> {
   final String? strIngredient18;
   final String? strIngredient19;
   final String? strIngredient20;
-
-  /// Measures (1-20)
   final String? strMeasure1;
   final String? strMeasure2;
   final String? strMeasure3;
@@ -1411,12 +1413,12 @@ class Meal extends DataClass implements Insertable<Meal> {
   final String? dateModified;
   const Meal({
     required this.idMeal,
-    this.strMeal,
+    required this.strMeal,
     this.strMealAlternate,
     this.strCategory,
     this.strArea,
-    this.strInstructions,
-    this.strMealThumb,
+    required this.strInstructions,
+    required this.strMealThumb,
     this.strTags,
     this.strYoutube,
     this.strIngredient1,
@@ -1468,9 +1470,7 @@ class Meal extends DataClass implements Insertable<Meal> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id_meal'] = Variable<String>(idMeal);
-    if (!nullToAbsent || strMeal != null) {
-      map['str_meal'] = Variable<String>(strMeal);
-    }
+    map['str_meal'] = Variable<String>(strMeal);
     if (!nullToAbsent || strMealAlternate != null) {
       map['str_meal_alternate'] = Variable<String>(strMealAlternate);
     }
@@ -1480,12 +1480,8 @@ class Meal extends DataClass implements Insertable<Meal> {
     if (!nullToAbsent || strArea != null) {
       map['str_area'] = Variable<String>(strArea);
     }
-    if (!nullToAbsent || strInstructions != null) {
-      map['str_instructions'] = Variable<String>(strInstructions);
-    }
-    if (!nullToAbsent || strMealThumb != null) {
-      map['str_meal_thumb'] = Variable<String>(strMealThumb);
-    }
+    map['str_instructions'] = Variable<String>(strInstructions);
+    map['str_meal_thumb'] = Variable<String>(strMealThumb);
     if (!nullToAbsent || strTags != null) {
       map['str_tags'] = Variable<String>(strTags);
     }
@@ -1632,9 +1628,7 @@ class Meal extends DataClass implements Insertable<Meal> {
   MealsCompanion toCompanion(bool nullToAbsent) {
     return MealsCompanion(
       idMeal: Value(idMeal),
-      strMeal: strMeal == null && nullToAbsent
-          ? const Value.absent()
-          : Value(strMeal),
+      strMeal: Value(strMeal),
       strMealAlternate: strMealAlternate == null && nullToAbsent
           ? const Value.absent()
           : Value(strMealAlternate),
@@ -1644,12 +1638,8 @@ class Meal extends DataClass implements Insertable<Meal> {
       strArea: strArea == null && nullToAbsent
           ? const Value.absent()
           : Value(strArea),
-      strInstructions: strInstructions == null && nullToAbsent
-          ? const Value.absent()
-          : Value(strInstructions),
-      strMealThumb: strMealThumb == null && nullToAbsent
-          ? const Value.absent()
-          : Value(strMealThumb),
+      strInstructions: Value(strInstructions),
+      strMealThumb: Value(strMealThumb),
       strTags: strTags == null && nullToAbsent
           ? const Value.absent()
           : Value(strTags),
@@ -1799,14 +1789,14 @@ class Meal extends DataClass implements Insertable<Meal> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Meal(
       idMeal: serializer.fromJson<String>(json['id_meal']),
-      strMeal: serializer.fromJson<String?>(json['str_meal']),
+      strMeal: serializer.fromJson<String>(json['str_meal']),
       strMealAlternate: serializer.fromJson<String?>(
         json['str_meal_alternate'],
       ),
       strCategory: serializer.fromJson<String?>(json['str_category']),
       strArea: serializer.fromJson<String?>(json['str_area']),
-      strInstructions: serializer.fromJson<String?>(json['str_instructions']),
-      strMealThumb: serializer.fromJson<String?>(json['str_meal_thumb']),
+      strInstructions: serializer.fromJson<String>(json['str_instructions']),
+      strMealThumb: serializer.fromJson<String>(json['str_meal_thumb']),
       strTags: serializer.fromJson<String?>(json['str_tags']),
       strYoutube: serializer.fromJson<String?>(json['str_youtube']),
       strIngredient1: serializer.fromJson<String?>(json['str_ingredient1']),
@@ -1862,12 +1852,12 @@ class Meal extends DataClass implements Insertable<Meal> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id_meal': serializer.toJson<String>(idMeal),
-      'str_meal': serializer.toJson<String?>(strMeal),
+      'str_meal': serializer.toJson<String>(strMeal),
       'str_meal_alternate': serializer.toJson<String?>(strMealAlternate),
       'str_category': serializer.toJson<String?>(strCategory),
       'str_area': serializer.toJson<String?>(strArea),
-      'str_instructions': serializer.toJson<String?>(strInstructions),
-      'str_meal_thumb': serializer.toJson<String?>(strMealThumb),
+      'str_instructions': serializer.toJson<String>(strInstructions),
+      'str_meal_thumb': serializer.toJson<String>(strMealThumb),
       'str_tags': serializer.toJson<String?>(strTags),
       'str_youtube': serializer.toJson<String?>(strYoutube),
       'str_ingredient1': serializer.toJson<String?>(strIngredient1),
@@ -1921,12 +1911,12 @@ class Meal extends DataClass implements Insertable<Meal> {
 
   Meal copyWith({
     String? idMeal,
-    Value<String?> strMeal = const Value.absent(),
+    String? strMeal,
     Value<String?> strMealAlternate = const Value.absent(),
     Value<String?> strCategory = const Value.absent(),
     Value<String?> strArea = const Value.absent(),
-    Value<String?> strInstructions = const Value.absent(),
-    Value<String?> strMealThumb = const Value.absent(),
+    String? strInstructions,
+    String? strMealThumb,
     Value<String?> strTags = const Value.absent(),
     Value<String?> strYoutube = const Value.absent(),
     Value<String?> strIngredient1 = const Value.absent(),
@@ -1975,16 +1965,14 @@ class Meal extends DataClass implements Insertable<Meal> {
     Value<String?> dateModified = const Value.absent(),
   }) => Meal(
     idMeal: idMeal ?? this.idMeal,
-    strMeal: strMeal.present ? strMeal.value : this.strMeal,
+    strMeal: strMeal ?? this.strMeal,
     strMealAlternate: strMealAlternate.present
         ? strMealAlternate.value
         : this.strMealAlternate,
     strCategory: strCategory.present ? strCategory.value : this.strCategory,
     strArea: strArea.present ? strArea.value : this.strArea,
-    strInstructions: strInstructions.present
-        ? strInstructions.value
-        : this.strInstructions,
-    strMealThumb: strMealThumb.present ? strMealThumb.value : this.strMealThumb,
+    strInstructions: strInstructions ?? this.strInstructions,
+    strMealThumb: strMealThumb ?? this.strMealThumb,
     strTags: strTags.present ? strTags.value : this.strTags,
     strYoutube: strYoutube.present ? strYoutube.value : this.strYoutube,
     strIngredient1: strIngredient1.present
@@ -2408,12 +2396,12 @@ class Meal extends DataClass implements Insertable<Meal> {
 
 class MealsCompanion extends UpdateCompanion<Meal> {
   final Value<String> idMeal;
-  final Value<String?> strMeal;
+  final Value<String> strMeal;
   final Value<String?> strMealAlternate;
   final Value<String?> strCategory;
   final Value<String?> strArea;
-  final Value<String?> strInstructions;
-  final Value<String?> strMealThumb;
+  final Value<String> strInstructions;
+  final Value<String> strMealThumb;
   final Value<String?> strTags;
   final Value<String?> strYoutube;
   final Value<String?> strIngredient1;
@@ -2519,12 +2507,12 @@ class MealsCompanion extends UpdateCompanion<Meal> {
   });
   MealsCompanion.insert({
     required String idMeal,
-    this.strMeal = const Value.absent(),
+    required String strMeal,
     this.strMealAlternate = const Value.absent(),
     this.strCategory = const Value.absent(),
     this.strArea = const Value.absent(),
-    this.strInstructions = const Value.absent(),
-    this.strMealThumb = const Value.absent(),
+    required String strInstructions,
+    required String strMealThumb,
     this.strTags = const Value.absent(),
     this.strYoutube = const Value.absent(),
     this.strIngredient1 = const Value.absent(),
@@ -2572,7 +2560,10 @@ class MealsCompanion extends UpdateCompanion<Meal> {
     this.strCreativeCommonsConfirmed = const Value.absent(),
     this.dateModified = const Value.absent(),
     this.rowid = const Value.absent(),
-  }) : idMeal = Value(idMeal);
+  }) : idMeal = Value(idMeal),
+       strMeal = Value(strMeal),
+       strInstructions = Value(strInstructions),
+       strMealThumb = Value(strMealThumb);
   static Insertable<Meal> custom({
     Expression<String>? idMeal,
     Expression<String>? strMeal,
@@ -2690,12 +2681,12 @@ class MealsCompanion extends UpdateCompanion<Meal> {
 
   MealsCompanion copyWith({
     Value<String>? idMeal,
-    Value<String?>? strMeal,
+    Value<String>? strMeal,
     Value<String?>? strMealAlternate,
     Value<String?>? strCategory,
     Value<String?>? strArea,
-    Value<String?>? strInstructions,
-    Value<String?>? strMealThumb,
+    Value<String>? strInstructions,
+    Value<String>? strMealThumb,
     Value<String?>? strTags,
     Value<String?>? strYoutube,
     Value<String?>? strIngredient1,
@@ -3057,10 +3048,10 @@ class Drinks extends Table with TableInfo<Drinks, Drink> {
   late final GeneratedColumn<String> strDrink = GeneratedColumn<String>(
     'str_drink',
     aliasedName,
-    true,
+    false,
     type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    $customConstraints: '',
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
   );
   static const VerificationMeta _strDrinkAlternateMeta = const VerificationMeta(
     'strDrinkAlternate',
@@ -3144,10 +3135,10 @@ class Drinks extends Table with TableInfo<Drinks, Drink> {
   late final GeneratedColumn<String> strInstructions = GeneratedColumn<String>(
     'str_instructions',
     aliasedName,
-    true,
+    false,
     type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    $customConstraints: '',
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
   );
   static const VerificationMeta _strInstructionsEsMeta = const VerificationMeta(
     'strInstructionsEs',
@@ -3225,10 +3216,10 @@ class Drinks extends Table with TableInfo<Drinks, Drink> {
   late final GeneratedColumn<String> strDrinkThumb = GeneratedColumn<String>(
     'str_drink_thumb',
     aliasedName,
-    true,
+    false,
     type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    $customConstraints: '',
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
   );
   static const VerificationMeta _strIngredient1Meta = const VerificationMeta(
     'strIngredient1',
@@ -3683,6 +3674,8 @@ class Drinks extends Table with TableInfo<Drinks, Drink> {
         _strDrinkMeta,
         strDrink.isAcceptableOrUnknown(data['str_drink']!, _strDrinkMeta),
       );
+    } else if (isInserting) {
+      context.missing(_strDrinkMeta);
     }
     if (data.containsKey('str_drink_alternate')) {
       context.handle(
@@ -3743,6 +3736,8 @@ class Drinks extends Table with TableInfo<Drinks, Drink> {
           _strInstructionsMeta,
         ),
       );
+    } else if (isInserting) {
+      context.missing(_strInstructionsMeta);
     }
     if (data.containsKey('str_instructions_es')) {
       context.handle(
@@ -3806,6 +3801,8 @@ class Drinks extends Table with TableInfo<Drinks, Drink> {
           _strDrinkThumbMeta,
         ),
       );
+    } else if (isInserting) {
+      context.missing(_strDrinkThumbMeta);
     }
     if (data.containsKey('str_ingredient1')) {
       context.handle(
@@ -4129,7 +4126,7 @@ class Drinks extends Table with TableInfo<Drinks, Drink> {
       strDrink: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}str_drink'],
-      ),
+      )!,
       strDrinkAlternate: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}str_drink_alternate'],
@@ -4161,7 +4158,7 @@ class Drinks extends Table with TableInfo<Drinks, Drink> {
       strInstructions: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}str_instructions'],
-      ),
+      )!,
       strInstructionsEs: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}str_instructions_es'],
@@ -4189,7 +4186,7 @@ class Drinks extends Table with TableInfo<Drinks, Drink> {
       strDrinkThumb: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}str_drink_thumb'],
-      ),
+      )!,
       strIngredient1: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}str_ingredient1'],
@@ -4340,7 +4337,7 @@ class Drinks extends Table with TableInfo<Drinks, Drink> {
 
 class Drink extends DataClass implements Insertable<Drink> {
   final String idDrink;
-  final String? strDrink;
+  final String strDrink;
   final String? strDrinkAlternate;
   final String? strTags;
   final String? strVideo;
@@ -4348,18 +4345,14 @@ class Drink extends DataClass implements Insertable<Drink> {
   final String? strIba;
   final String? strAlcoholic;
   final String? strGlass;
-
-  /// Instructions in multiple languages
-  final String? strInstructions;
+  final String strInstructions;
   final String? strInstructionsEs;
   final String? strInstructionsDe;
   final String? strInstructionsFr;
   final String? strInstructionsIt;
   final String? strInstructionsZhHans;
   final String? strInstructionsZhHant;
-  final String? strDrinkThumb;
-
-  /// Ingredients (1-15)
+  final String strDrinkThumb;
   final String? strIngredient1;
   final String? strIngredient2;
   final String? strIngredient3;
@@ -4375,8 +4368,6 @@ class Drink extends DataClass implements Insertable<Drink> {
   final String? strIngredient13;
   final String? strIngredient14;
   final String? strIngredient15;
-
-  /// Measures (1-15)
   final String? strMeasure1;
   final String? strMeasure2;
   final String? strMeasure3;
@@ -4398,7 +4389,7 @@ class Drink extends DataClass implements Insertable<Drink> {
   final String? dateModified;
   const Drink({
     required this.idDrink,
-    this.strDrink,
+    required this.strDrink,
     this.strDrinkAlternate,
     this.strTags,
     this.strVideo,
@@ -4406,14 +4397,14 @@ class Drink extends DataClass implements Insertable<Drink> {
     this.strIba,
     this.strAlcoholic,
     this.strGlass,
-    this.strInstructions,
+    required this.strInstructions,
     this.strInstructionsEs,
     this.strInstructionsDe,
     this.strInstructionsFr,
     this.strInstructionsIt,
     this.strInstructionsZhHans,
     this.strInstructionsZhHant,
-    this.strDrinkThumb,
+    required this.strDrinkThumb,
     this.strIngredient1,
     this.strIngredient2,
     this.strIngredient3,
@@ -4453,9 +4444,7 @@ class Drink extends DataClass implements Insertable<Drink> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id_drink'] = Variable<String>(idDrink);
-    if (!nullToAbsent || strDrink != null) {
-      map['str_drink'] = Variable<String>(strDrink);
-    }
+    map['str_drink'] = Variable<String>(strDrink);
     if (!nullToAbsent || strDrinkAlternate != null) {
       map['str_drink_alternate'] = Variable<String>(strDrinkAlternate);
     }
@@ -4477,9 +4466,7 @@ class Drink extends DataClass implements Insertable<Drink> {
     if (!nullToAbsent || strGlass != null) {
       map['str_glass'] = Variable<String>(strGlass);
     }
-    if (!nullToAbsent || strInstructions != null) {
-      map['str_instructions'] = Variable<String>(strInstructions);
-    }
+    map['str_instructions'] = Variable<String>(strInstructions);
     if (!nullToAbsent || strInstructionsEs != null) {
       map['str_instructions_es'] = Variable<String>(strInstructionsEs);
     }
@@ -4498,9 +4485,7 @@ class Drink extends DataClass implements Insertable<Drink> {
     if (!nullToAbsent || strInstructionsZhHant != null) {
       map['str_instructions_zh_hant'] = Variable<String>(strInstructionsZhHant);
     }
-    if (!nullToAbsent || strDrinkThumb != null) {
-      map['str_drink_thumb'] = Variable<String>(strDrinkThumb);
-    }
+    map['str_drink_thumb'] = Variable<String>(strDrinkThumb);
     if (!nullToAbsent || strIngredient1 != null) {
       map['str_ingredient1'] = Variable<String>(strIngredient1);
     }
@@ -4611,9 +4596,7 @@ class Drink extends DataClass implements Insertable<Drink> {
   DrinksCompanion toCompanion(bool nullToAbsent) {
     return DrinksCompanion(
       idDrink: Value(idDrink),
-      strDrink: strDrink == null && nullToAbsent
-          ? const Value.absent()
-          : Value(strDrink),
+      strDrink: Value(strDrink),
       strDrinkAlternate: strDrinkAlternate == null && nullToAbsent
           ? const Value.absent()
           : Value(strDrinkAlternate),
@@ -4635,9 +4618,7 @@ class Drink extends DataClass implements Insertable<Drink> {
       strGlass: strGlass == null && nullToAbsent
           ? const Value.absent()
           : Value(strGlass),
-      strInstructions: strInstructions == null && nullToAbsent
-          ? const Value.absent()
-          : Value(strInstructions),
+      strInstructions: Value(strInstructions),
       strInstructionsEs: strInstructionsEs == null && nullToAbsent
           ? const Value.absent()
           : Value(strInstructionsEs),
@@ -4656,9 +4637,7 @@ class Drink extends DataClass implements Insertable<Drink> {
       strInstructionsZhHant: strInstructionsZhHant == null && nullToAbsent
           ? const Value.absent()
           : Value(strInstructionsZhHant),
-      strDrinkThumb: strDrinkThumb == null && nullToAbsent
-          ? const Value.absent()
-          : Value(strDrinkThumb),
+      strDrinkThumb: Value(strDrinkThumb),
       strIngredient1: strIngredient1 == null && nullToAbsent
           ? const Value.absent()
           : Value(strIngredient1),
@@ -4772,7 +4751,7 @@ class Drink extends DataClass implements Insertable<Drink> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Drink(
       idDrink: serializer.fromJson<String>(json['id_drink']),
-      strDrink: serializer.fromJson<String?>(json['str_drink']),
+      strDrink: serializer.fromJson<String>(json['str_drink']),
       strDrinkAlternate: serializer.fromJson<String?>(
         json['str_drink_alternate'],
       ),
@@ -4782,7 +4761,7 @@ class Drink extends DataClass implements Insertable<Drink> {
       strIba: serializer.fromJson<String?>(json['str_iba']),
       strAlcoholic: serializer.fromJson<String?>(json['str_alcoholic']),
       strGlass: serializer.fromJson<String?>(json['str_glass']),
-      strInstructions: serializer.fromJson<String?>(json['str_instructions']),
+      strInstructions: serializer.fromJson<String>(json['str_instructions']),
       strInstructionsEs: serializer.fromJson<String?>(
         json['str_instructions_es'],
       ),
@@ -4801,7 +4780,7 @@ class Drink extends DataClass implements Insertable<Drink> {
       strInstructionsZhHant: serializer.fromJson<String?>(
         json['str_instructions_zh_hant'],
       ),
-      strDrinkThumb: serializer.fromJson<String?>(json['str_drink_thumb']),
+      strDrinkThumb: serializer.fromJson<String>(json['str_drink_thumb']),
       strIngredient1: serializer.fromJson<String?>(json['str_ingredient1']),
       strIngredient2: serializer.fromJson<String?>(json['str_ingredient2']),
       strIngredient3: serializer.fromJson<String?>(json['str_ingredient3']),
@@ -4847,7 +4826,7 @@ class Drink extends DataClass implements Insertable<Drink> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id_drink': serializer.toJson<String>(idDrink),
-      'str_drink': serializer.toJson<String?>(strDrink),
+      'str_drink': serializer.toJson<String>(strDrink),
       'str_drink_alternate': serializer.toJson<String?>(strDrinkAlternate),
       'str_tags': serializer.toJson<String?>(strTags),
       'str_video': serializer.toJson<String?>(strVideo),
@@ -4855,7 +4834,7 @@ class Drink extends DataClass implements Insertable<Drink> {
       'str_iba': serializer.toJson<String?>(strIba),
       'str_alcoholic': serializer.toJson<String?>(strAlcoholic),
       'str_glass': serializer.toJson<String?>(strGlass),
-      'str_instructions': serializer.toJson<String?>(strInstructions),
+      'str_instructions': serializer.toJson<String>(strInstructions),
       'str_instructions_es': serializer.toJson<String?>(strInstructionsEs),
       'str_instructions_de': serializer.toJson<String?>(strInstructionsDe),
       'str_instructions_fr': serializer.toJson<String?>(strInstructionsFr),
@@ -4866,7 +4845,7 @@ class Drink extends DataClass implements Insertable<Drink> {
       'str_instructions_zh_hant': serializer.toJson<String?>(
         strInstructionsZhHant,
       ),
-      'str_drink_thumb': serializer.toJson<String?>(strDrinkThumb),
+      'str_drink_thumb': serializer.toJson<String>(strDrinkThumb),
       'str_ingredient1': serializer.toJson<String?>(strIngredient1),
       'str_ingredient2': serializer.toJson<String?>(strIngredient2),
       'str_ingredient3': serializer.toJson<String?>(strIngredient3),
@@ -4908,7 +4887,7 @@ class Drink extends DataClass implements Insertable<Drink> {
 
   Drink copyWith({
     String? idDrink,
-    Value<String?> strDrink = const Value.absent(),
+    String? strDrink,
     Value<String?> strDrinkAlternate = const Value.absent(),
     Value<String?> strTags = const Value.absent(),
     Value<String?> strVideo = const Value.absent(),
@@ -4916,14 +4895,14 @@ class Drink extends DataClass implements Insertable<Drink> {
     Value<String?> strIba = const Value.absent(),
     Value<String?> strAlcoholic = const Value.absent(),
     Value<String?> strGlass = const Value.absent(),
-    Value<String?> strInstructions = const Value.absent(),
+    String? strInstructions,
     Value<String?> strInstructionsEs = const Value.absent(),
     Value<String?> strInstructionsDe = const Value.absent(),
     Value<String?> strInstructionsFr = const Value.absent(),
     Value<String?> strInstructionsIt = const Value.absent(),
     Value<String?> strInstructionsZhHans = const Value.absent(),
     Value<String?> strInstructionsZhHant = const Value.absent(),
-    Value<String?> strDrinkThumb = const Value.absent(),
+    String? strDrinkThumb,
     Value<String?> strIngredient1 = const Value.absent(),
     Value<String?> strIngredient2 = const Value.absent(),
     Value<String?> strIngredient3 = const Value.absent(),
@@ -4960,7 +4939,7 @@ class Drink extends DataClass implements Insertable<Drink> {
     Value<String?> dateModified = const Value.absent(),
   }) => Drink(
     idDrink: idDrink ?? this.idDrink,
-    strDrink: strDrink.present ? strDrink.value : this.strDrink,
+    strDrink: strDrink ?? this.strDrink,
     strDrinkAlternate: strDrinkAlternate.present
         ? strDrinkAlternate.value
         : this.strDrinkAlternate,
@@ -4970,9 +4949,7 @@ class Drink extends DataClass implements Insertable<Drink> {
     strIba: strIba.present ? strIba.value : this.strIba,
     strAlcoholic: strAlcoholic.present ? strAlcoholic.value : this.strAlcoholic,
     strGlass: strGlass.present ? strGlass.value : this.strGlass,
-    strInstructions: strInstructions.present
-        ? strInstructions.value
-        : this.strInstructions,
+    strInstructions: strInstructions ?? this.strInstructions,
     strInstructionsEs: strInstructionsEs.present
         ? strInstructionsEs.value
         : this.strInstructionsEs,
@@ -4991,9 +4968,7 @@ class Drink extends DataClass implements Insertable<Drink> {
     strInstructionsZhHant: strInstructionsZhHant.present
         ? strInstructionsZhHant.value
         : this.strInstructionsZhHant,
-    strDrinkThumb: strDrinkThumb.present
-        ? strDrinkThumb.value
-        : this.strDrinkThumb,
+    strDrinkThumb: strDrinkThumb ?? this.strDrinkThumb,
     strIngredient1: strIngredient1.present
         ? strIngredient1.value
         : this.strIngredient1,
@@ -5383,7 +5358,7 @@ class Drink extends DataClass implements Insertable<Drink> {
 
 class DrinksCompanion extends UpdateCompanion<Drink> {
   final Value<String> idDrink;
-  final Value<String?> strDrink;
+  final Value<String> strDrink;
   final Value<String?> strDrinkAlternate;
   final Value<String?> strTags;
   final Value<String?> strVideo;
@@ -5391,14 +5366,14 @@ class DrinksCompanion extends UpdateCompanion<Drink> {
   final Value<String?> strIba;
   final Value<String?> strAlcoholic;
   final Value<String?> strGlass;
-  final Value<String?> strInstructions;
+  final Value<String> strInstructions;
   final Value<String?> strInstructionsEs;
   final Value<String?> strInstructionsDe;
   final Value<String?> strInstructionsFr;
   final Value<String?> strInstructionsIt;
   final Value<String?> strInstructionsZhHans;
   final Value<String?> strInstructionsZhHant;
-  final Value<String?> strDrinkThumb;
+  final Value<String> strDrinkThumb;
   final Value<String?> strIngredient1;
   final Value<String?> strIngredient2;
   final Value<String?> strIngredient3;
@@ -5490,7 +5465,7 @@ class DrinksCompanion extends UpdateCompanion<Drink> {
   });
   DrinksCompanion.insert({
     required String idDrink,
-    this.strDrink = const Value.absent(),
+    required String strDrink,
     this.strDrinkAlternate = const Value.absent(),
     this.strTags = const Value.absent(),
     this.strVideo = const Value.absent(),
@@ -5498,14 +5473,14 @@ class DrinksCompanion extends UpdateCompanion<Drink> {
     this.strIba = const Value.absent(),
     this.strAlcoholic = const Value.absent(),
     this.strGlass = const Value.absent(),
-    this.strInstructions = const Value.absent(),
+    required String strInstructions,
     this.strInstructionsEs = const Value.absent(),
     this.strInstructionsDe = const Value.absent(),
     this.strInstructionsFr = const Value.absent(),
     this.strInstructionsIt = const Value.absent(),
     this.strInstructionsZhHans = const Value.absent(),
     this.strInstructionsZhHant = const Value.absent(),
-    this.strDrinkThumb = const Value.absent(),
+    required String strDrinkThumb,
     this.strIngredient1 = const Value.absent(),
     this.strIngredient2 = const Value.absent(),
     this.strIngredient3 = const Value.absent(),
@@ -5541,7 +5516,10 @@ class DrinksCompanion extends UpdateCompanion<Drink> {
     this.strCreativeCommonsConfirmed = const Value.absent(),
     this.dateModified = const Value.absent(),
     this.rowid = const Value.absent(),
-  }) : idDrink = Value(idDrink);
+  }) : idDrink = Value(idDrink),
+       strDrink = Value(strDrink),
+       strInstructions = Value(strInstructions),
+       strDrinkThumb = Value(strDrinkThumb);
   static Insertable<Drink> custom({
     Expression<String>? idDrink,
     Expression<String>? strDrink,
@@ -5658,7 +5636,7 @@ class DrinksCompanion extends UpdateCompanion<Drink> {
 
   DrinksCompanion copyWith({
     Value<String>? idDrink,
-    Value<String?>? strDrink,
+    Value<String>? strDrink,
     Value<String?>? strDrinkAlternate,
     Value<String?>? strTags,
     Value<String?>? strVideo,
@@ -5666,14 +5644,14 @@ class DrinksCompanion extends UpdateCompanion<Drink> {
     Value<String?>? strIba,
     Value<String?>? strAlcoholic,
     Value<String?>? strGlass,
-    Value<String?>? strInstructions,
+    Value<String>? strInstructions,
     Value<String?>? strInstructionsEs,
     Value<String?>? strInstructionsDe,
     Value<String?>? strInstructionsFr,
     Value<String?>? strInstructionsIt,
     Value<String?>? strInstructionsZhHans,
     Value<String?>? strInstructionsZhHant,
-    Value<String?>? strDrinkThumb,
+    Value<String>? strDrinkThumb,
     Value<String?>? strIngredient1,
     Value<String?>? strIngredient2,
     Value<String?>? strIngredient3,
@@ -6418,12 +6396,12 @@ abstract class _$MealifyDatabase extends GeneratedDatabase {
 typedef $MealsCreateCompanionBuilder =
     MealsCompanion Function({
       required String idMeal,
-      Value<String?> strMeal,
+      required String strMeal,
       Value<String?> strMealAlternate,
       Value<String?> strCategory,
       Value<String?> strArea,
-      Value<String?> strInstructions,
-      Value<String?> strMealThumb,
+      required String strInstructions,
+      required String strMealThumb,
       Value<String?> strTags,
       Value<String?> strYoutube,
       Value<String?> strIngredient1,
@@ -6475,12 +6453,12 @@ typedef $MealsCreateCompanionBuilder =
 typedef $MealsUpdateCompanionBuilder =
     MealsCompanion Function({
       Value<String> idMeal,
-      Value<String?> strMeal,
+      Value<String> strMeal,
       Value<String?> strMealAlternate,
       Value<String?> strCategory,
       Value<String?> strArea,
-      Value<String?> strInstructions,
-      Value<String?> strMealThumb,
+      Value<String> strInstructions,
+      Value<String> strMealThumb,
       Value<String?> strTags,
       Value<String?> strYoutube,
       Value<String?> strIngredient1,
@@ -7444,12 +7422,12 @@ class $MealsTableManager
           updateCompanionCallback:
               ({
                 Value<String> idMeal = const Value.absent(),
-                Value<String?> strMeal = const Value.absent(),
+                Value<String> strMeal = const Value.absent(),
                 Value<String?> strMealAlternate = const Value.absent(),
                 Value<String?> strCategory = const Value.absent(),
                 Value<String?> strArea = const Value.absent(),
-                Value<String?> strInstructions = const Value.absent(),
-                Value<String?> strMealThumb = const Value.absent(),
+                Value<String> strInstructions = const Value.absent(),
+                Value<String> strMealThumb = const Value.absent(),
                 Value<String?> strTags = const Value.absent(),
                 Value<String?> strYoutube = const Value.absent(),
                 Value<String?> strIngredient1 = const Value.absent(),
@@ -7557,12 +7535,12 @@ class $MealsTableManager
           createCompanionCallback:
               ({
                 required String idMeal,
-                Value<String?> strMeal = const Value.absent(),
+                required String strMeal,
                 Value<String?> strMealAlternate = const Value.absent(),
                 Value<String?> strCategory = const Value.absent(),
                 Value<String?> strArea = const Value.absent(),
-                Value<String?> strInstructions = const Value.absent(),
-                Value<String?> strMealThumb = const Value.absent(),
+                required String strInstructions,
+                required String strMealThumb,
                 Value<String?> strTags = const Value.absent(),
                 Value<String?> strYoutube = const Value.absent(),
                 Value<String?> strIngredient1 = const Value.absent(),
@@ -7712,7 +7690,7 @@ typedef $MealsProcessedTableManager =
 typedef $DrinksCreateCompanionBuilder =
     DrinksCompanion Function({
       required String idDrink,
-      Value<String?> strDrink,
+      required String strDrink,
       Value<String?> strDrinkAlternate,
       Value<String?> strTags,
       Value<String?> strVideo,
@@ -7720,14 +7698,14 @@ typedef $DrinksCreateCompanionBuilder =
       Value<String?> strIba,
       Value<String?> strAlcoholic,
       Value<String?> strGlass,
-      Value<String?> strInstructions,
+      required String strInstructions,
       Value<String?> strInstructionsEs,
       Value<String?> strInstructionsDe,
       Value<String?> strInstructionsFr,
       Value<String?> strInstructionsIt,
       Value<String?> strInstructionsZhHans,
       Value<String?> strInstructionsZhHant,
-      Value<String?> strDrinkThumb,
+      required String strDrinkThumb,
       Value<String?> strIngredient1,
       Value<String?> strIngredient2,
       Value<String?> strIngredient3,
@@ -7767,7 +7745,7 @@ typedef $DrinksCreateCompanionBuilder =
 typedef $DrinksUpdateCompanionBuilder =
     DrinksCompanion Function({
       Value<String> idDrink,
-      Value<String?> strDrink,
+      Value<String> strDrink,
       Value<String?> strDrinkAlternate,
       Value<String?> strTags,
       Value<String?> strVideo,
@@ -7775,14 +7753,14 @@ typedef $DrinksUpdateCompanionBuilder =
       Value<String?> strIba,
       Value<String?> strAlcoholic,
       Value<String?> strGlass,
-      Value<String?> strInstructions,
+      Value<String> strInstructions,
       Value<String?> strInstructionsEs,
       Value<String?> strInstructionsDe,
       Value<String?> strInstructionsFr,
       Value<String?> strInstructionsIt,
       Value<String?> strInstructionsZhHans,
       Value<String?> strInstructionsZhHant,
-      Value<String?> strDrinkThumb,
+      Value<String> strDrinkThumb,
       Value<String?> strIngredient1,
       Value<String?> strIngredient2,
       Value<String?> strIngredient3,
@@ -8702,7 +8680,7 @@ class $DrinksTableManager
           updateCompanionCallback:
               ({
                 Value<String> idDrink = const Value.absent(),
-                Value<String?> strDrink = const Value.absent(),
+                Value<String> strDrink = const Value.absent(),
                 Value<String?> strDrinkAlternate = const Value.absent(),
                 Value<String?> strTags = const Value.absent(),
                 Value<String?> strVideo = const Value.absent(),
@@ -8710,14 +8688,14 @@ class $DrinksTableManager
                 Value<String?> strIba = const Value.absent(),
                 Value<String?> strAlcoholic = const Value.absent(),
                 Value<String?> strGlass = const Value.absent(),
-                Value<String?> strInstructions = const Value.absent(),
+                Value<String> strInstructions = const Value.absent(),
                 Value<String?> strInstructionsEs = const Value.absent(),
                 Value<String?> strInstructionsDe = const Value.absent(),
                 Value<String?> strInstructionsFr = const Value.absent(),
                 Value<String?> strInstructionsIt = const Value.absent(),
                 Value<String?> strInstructionsZhHans = const Value.absent(),
                 Value<String?> strInstructionsZhHant = const Value.absent(),
-                Value<String?> strDrinkThumb = const Value.absent(),
+                Value<String> strDrinkThumb = const Value.absent(),
                 Value<String?> strIngredient1 = const Value.absent(),
                 Value<String?> strIngredient2 = const Value.absent(),
                 Value<String?> strIngredient3 = const Value.absent(),
@@ -8811,7 +8789,7 @@ class $DrinksTableManager
           createCompanionCallback:
               ({
                 required String idDrink,
-                Value<String?> strDrink = const Value.absent(),
+                required String strDrink,
                 Value<String?> strDrinkAlternate = const Value.absent(),
                 Value<String?> strTags = const Value.absent(),
                 Value<String?> strVideo = const Value.absent(),
@@ -8819,14 +8797,14 @@ class $DrinksTableManager
                 Value<String?> strIba = const Value.absent(),
                 Value<String?> strAlcoholic = const Value.absent(),
                 Value<String?> strGlass = const Value.absent(),
-                Value<String?> strInstructions = const Value.absent(),
+                required String strInstructions,
                 Value<String?> strInstructionsEs = const Value.absent(),
                 Value<String?> strInstructionsDe = const Value.absent(),
                 Value<String?> strInstructionsFr = const Value.absent(),
                 Value<String?> strInstructionsIt = const Value.absent(),
                 Value<String?> strInstructionsZhHans = const Value.absent(),
                 Value<String?> strInstructionsZhHant = const Value.absent(),
-                Value<String?> strDrinkThumb = const Value.absent(),
+                required String strDrinkThumb,
                 Value<String?> strIngredient1 = const Value.absent(),
                 Value<String?> strIngredient2 = const Value.absent(),
                 Value<String?> strIngredient3 = const Value.absent(),

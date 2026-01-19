@@ -9,7 +9,9 @@ import 'package:meta/meta.dart';
 class Drink {
   const Drink({
     required this.idDrink,
-    this.strDrink,
+    required this.strDrink,
+    required this.strInstructions,
+    required this.strDrinkThumb,
     this.strDrinkAlternate,
     this.strTags,
     this.strVideo,
@@ -17,14 +19,12 @@ class Drink {
     this.strIba,
     this.strAlcoholic,
     this.strGlass,
-    this.strInstructions,
     this.strInstructionsEs,
     this.strInstructionsDe,
     this.strInstructionsFr,
     this.strInstructionsIt,
     this.strInstructionsZhHans,
     this.strInstructionsZhHant,
-    this.strDrinkThumb,
     this.strIngredient1,
     this.strIngredient2,
     this.strIngredient3,
@@ -62,7 +62,7 @@ class Drink {
   });
 
   final String idDrink;
-  final String? strDrink;
+  final String strDrink;
   final String? strDrinkAlternate;
   final String? strTags;
   final String? strVideo;
@@ -70,14 +70,14 @@ class Drink {
   final String? strIba;
   final String? strAlcoholic;
   final String? strGlass;
-  final String? strInstructions;
+  final String strInstructions;
   final String? strInstructionsEs;
   final String? strInstructionsDe;
   final String? strInstructionsFr;
   final String? strInstructionsIt;
   final String? strInstructionsZhHans;
   final String? strInstructionsZhHant;
-  final String? strDrinkThumb;
+  final String strDrinkThumb;
   final String? strIngredient1;
   final String? strIngredient2;
   final String? strIngredient3;
@@ -112,32 +112,6 @@ class Drink {
   final String? strImageAttribution;
   final String? strCreativeCommonsConfirmed;
   final String? dateModified;
-
-  List<MapEntry<String, String?>> get ingredients {
-    final allPossible = [
-      MapEntry(strIngredient1, strMeasure1),
-      MapEntry(strIngredient2, strMeasure2),
-      MapEntry(strIngredient3, strMeasure3),
-      MapEntry(strIngredient4, strMeasure4),
-      MapEntry(strIngredient5, strMeasure5),
-      MapEntry(strIngredient6, strMeasure6),
-      MapEntry(strIngredient7, strMeasure7),
-      MapEntry(strIngredient8, strMeasure8),
-      MapEntry(strIngredient9, strMeasure9),
-      MapEntry(strIngredient10, strMeasure10),
-      MapEntry(strIngredient11, strMeasure11),
-      MapEntry(strIngredient12, strMeasure12),
-      MapEntry(strIngredient13, strMeasure13),
-      MapEntry(strIngredient14, strMeasure14),
-      MapEntry(strIngredient15, strMeasure15),
-    ];
-
-    return [
-      for (final entry in allPossible)
-        if (entry.key != null && entry.key!.trim().isNotEmpty)
-          MapEntry(entry.key!, entry.value),
-    ];
-  }
 
   @override
   bool operator ==(Object other) =>

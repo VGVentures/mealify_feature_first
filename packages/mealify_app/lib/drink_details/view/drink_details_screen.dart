@@ -1,51 +1,53 @@
 import 'dart:async';
 
+import 'package:drinks_repository/drinks_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mealify_app/meal_details/bloc/meal_details_cubit.dart';
-import 'package:mealify_app/meal_details/bloc/meal_details_state.dart';
+import 'package:mealify_app/drink_details/bloc/drink_details_cubit.dart';
+import 'package:mealify_app/drink_details/bloc/drink_details_state.dart';
 import 'package:mealify_app/widgets/details_view.dart';
 import 'package:mealify_app/widgets/error_view.dart';
 import 'package:mealify_app/widgets/loading_view.dart';
-import 'package:meals_repository/meals_repository.dart';
 
-class MealDetailsScreen extends StatefulWidget {
-  const MealDetailsScreen({required this.mealId, super.key});
+class DrinkDetailsScreen extends StatefulWidget {
+  const DrinkDetailsScreen({required this.drinkId, super.key});
 
-  final String mealId;
+  final String drinkId;
 
   @override
-  State<MealDetailsScreen> createState() => _MealDetailsScreenState();
+  State<DrinkDetailsScreen> createState() => _DrinkDetailsScreenState();
 }
 
-class _MealDetailsScreenState extends State<MealDetailsScreen> {
+class _DrinkDetailsScreenState extends State<DrinkDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    unawaited(context.read<MealDetailsCubit>().loadMealDetails(widget.mealId));
+    unawaited(
+      context.read<DrinkDetailsCubit>().loadDrinkDetails(widget.drinkId),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<MealDetailsCubit>().state;
+    final state = context.watch<DrinkDetailsCubit>().state;
 
     return ColoredBox(
       color: Theme.of(context).scaffoldBackgroundColor,
       child: switch (state) {
-        MealDetailsLoading() => const LoadingView(),
-        final MealDetailsError e => ErrorView(error: e),
-        final MealDetailsSuccess s => DetailsView(
-          ingredients: s.meal.ingredients,
-          instructions: s.meal.strInstructions,
-          thumbnail: s.meal.strMealThumb,
-          title: s.meal.strMeal,
+        DrinkDetailsLoading() => const LoadingView(),
+        final DrinkDetailsError e => ErrorView(error: e),
+        final DrinkDetailsSuccess s => DetailsView(
+          ingredients: s.drink.ingredients,
+          instructions: s.drink.strInstructions,
+          thumbnail: s.drink.strDrinkThumb,
+          title: s.drink.strDrink,
         ),
       },
     );
   }
 }
 
-extension MealIngredients on Meal {
+extension DrinkIngredients on Drink {
   List<Ingredients> get ingredients {
     final allPossible = [
       (strIngredient1, strMeasure1),
@@ -63,11 +65,6 @@ extension MealIngredients on Meal {
       (strIngredient13, strMeasure13),
       (strIngredient14, strMeasure14),
       (strIngredient15, strMeasure15),
-      (strIngredient16, strMeasure16),
-      (strIngredient17, strMeasure17),
-      (strIngredient18, strMeasure18),
-      (strIngredient19, strMeasure19),
-      (strIngredient20, strMeasure20),
     ];
 
     return [

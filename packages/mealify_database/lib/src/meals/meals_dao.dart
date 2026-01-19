@@ -18,12 +18,12 @@ class MealsDao extends DatabaseAccessor<MealifyDatabase> with _$MealsDaoMixin {
   /// Save a meal to the database
   Future<void> saveMeal({
     required String idMeal,
-    String? strMeal,
+    required String strMeal,
+    required String strInstructions,
+    required String strMealThumb,
     String? strMealAlternate,
     String? strCategory,
     String? strArea,
-    String? strInstructions,
-    String? strMealThumb,
     String? strTags,
     String? strYoutube,
     String? strIngredient1,
@@ -74,12 +74,12 @@ class MealsDao extends DatabaseAccessor<MealifyDatabase> with _$MealsDaoMixin {
     return into(meals).insertOnConflictUpdate(
       MealsCompanion.insert(
         idMeal: idMeal,
-        strMeal: Value.absentIfNull(strMeal),
+        strMeal: strMeal,
         strMealAlternate: Value.absentIfNull(strMealAlternate),
         strCategory: Value.absentIfNull(strCategory),
         strArea: Value.absentIfNull(strArea),
-        strInstructions: Value.absentIfNull(strInstructions),
-        strMealThumb: Value.absentIfNull(strMealThumb),
+        strInstructions: strInstructions,
+        strMealThumb: strMealThumb,
         strTags: Value.absentIfNull(strTags),
         strYoutube: Value.absentIfNull(strYoutube),
         strIngredient1: Value.absentIfNull(strIngredient1),

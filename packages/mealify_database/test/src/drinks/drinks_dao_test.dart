@@ -28,9 +28,22 @@ void main() {
       );
       final dao = DrinksDao(db);
 
-      await dao.saveDrink(idDrink: 'TEST_ID');
+      await dao.saveDrink(
+        idDrink: 'TEST_ID',
+        strDrink: '',
+        strInstructions: '',
+        strDrinkThumb: '',
+      );
 
-      expect(await dao.getDrink('TEST_ID'), const Drink(idDrink: 'TEST_ID'));
+      expect(
+        await dao.getDrink('TEST_ID'),
+        const Drink(
+          idDrink: 'TEST_ID',
+          strDrink: '',
+          strInstructions: '',
+          strDrinkThumb: '',
+        ),
+      );
 
       await db.close();
     });
@@ -44,16 +57,36 @@ void main() {
       );
       final dao = DrinksDao(db);
 
-      await dao.saveDrink(idDrink: 'TEST_ID_1');
-      await dao.saveDrink(idDrink: 'TEST_ID_2');
+      await dao.saveDrink(
+        idDrink: 'TEST_ID_1',
+        strDrink: '',
+        strInstructions: '',
+        strDrinkThumb: '',
+      );
+      await dao.saveDrink(
+        idDrink: 'TEST_ID_2',
+        strDrink: '',
+        strInstructions: '',
+        strDrinkThumb: '',
+      );
 
       expect(
         await dao.getDrink('TEST_ID_1'),
-        const Drink(idDrink: 'TEST_ID_1'),
+        const Drink(
+          idDrink: 'TEST_ID_1',
+          strDrink: '',
+          strInstructions: '',
+          strDrinkThumb: '',
+        ),
       );
       expect(
         await dao.getDrink('TEST_ID_2'),
-        const Drink(idDrink: 'TEST_ID_2'),
+        const Drink(
+          idDrink: 'TEST_ID_2',
+          strDrink: '',
+          strInstructions: '',
+          strDrinkThumb: '',
+        ),
       );
 
       await db.close();

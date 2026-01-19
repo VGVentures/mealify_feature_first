@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mealify_app/app_router/responsive_scaffold.dart';
+import 'package:mealify_app/drink_details/bloc/drink_details_cubit.dart';
+import 'package:mealify_app/drink_details/drink_details.dart';
 import 'package:mealify_app/favorites/favorites.dart';
 import 'package:mealify_app/ideas/ideas.dart';
 import 'package:mealify_app/meal_details/bloc/meal_details_cubit.dart';
@@ -95,7 +97,12 @@ class DrinkDetailsRoute extends GoRouteData with $DrinkDetailsRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return DrinkDetailsScreen(id: id);
+    return BlocProvider<DrinkDetailsCubit>(
+      create: (BuildContext context) {
+        return DrinkDetailsCubit(drinksRepository: context.read());
+      },
+      child: DrinkDetailsScreen(drinkId: id),
+    );
   }
 }
 

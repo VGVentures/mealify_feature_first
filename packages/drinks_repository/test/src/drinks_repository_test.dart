@@ -26,11 +26,23 @@ void main() {
 
           when(
             () => drinksDao.getDrink('TEST_ID'),
-          ).thenAnswer((_) async => db.Drink(idDrink: 'TEST_ID'));
+          ).thenAnswer(
+            (_) async => db.Drink(
+              idDrink: 'TEST_ID',
+              strDrink: '',
+              strInstructions: '',
+              strDrinkThumb: '',
+            ),
+          );
 
           expect(
             await repository.getDrinkById('TEST_ID'),
-            Drink(idDrink: 'TEST_ID'),
+            Drink(
+              idDrink: 'TEST_ID',
+              strDrink: '',
+              strInstructions: '',
+              strDrinkThumb: '',
+            ),
           );
 
           verify(() => drinksDao.getDrink('TEST_ID')).called(1);
@@ -54,21 +66,45 @@ void main() {
           ).thenAnswer((_) async => null);
 
           when(
-            () => drinksDao.saveDrink(idDrink: 'TEST_ID'),
+            () => drinksDao.saveDrink(
+              idDrink: 'TEST_ID',
+              strDrink: '',
+              strInstructions: '',
+              strDrinkThumb: '',
+            ),
           ).thenAnswer((_) async {});
 
           when(
             () => cocktailDbApiClient.fetchDrinkById('TEST_ID'),
-          ).thenAnswer((_) async => api.Drink(idDrink: 'TEST_ID'));
+          ).thenAnswer(
+            (_) async => api.Drink(
+              idDrink: 'TEST_ID',
+              strDrink: '',
+              strInstructions: '',
+              strDrinkThumb: '',
+            ),
+          );
 
           expect(
             await repository.getDrinkById('TEST_ID'),
-            Drink(idDrink: 'TEST_ID'),
+            Drink(
+              idDrink: 'TEST_ID',
+              strDrink: '',
+              strInstructions: '',
+              strDrinkThumb: '',
+            ),
           );
 
           verify(() => drinksDao.getDrink('TEST_ID')).called(1);
           verify(() => cocktailDbApiClient.fetchDrinkById('TEST_ID')).called(1);
-          verify(() => drinksDao.saveDrink(idDrink: 'TEST_ID')).called(1);
+          verify(
+            () => drinksDao.saveDrink(
+              idDrink: 'TEST_ID',
+              strDrink: '',
+              strInstructions: '',
+              strDrinkThumb: '',
+            ),
+          ).called(1);
           verifyNoMoreInteractions(drinksDao);
           verifyNoMoreInteractions(cocktailDbApiClient);
         },
@@ -87,20 +123,44 @@ void main() {
           );
 
           when(
-            () => drinksDao.saveDrink(idDrink: 'TEST_ID'),
+            () => drinksDao.saveDrink(
+              idDrink: 'TEST_ID',
+              strDrink: '',
+              strInstructions: '',
+              strDrinkThumb: '',
+            ),
           ).thenAnswer((_) async {});
 
           when(
             cocktailDbApiClient.fetchRandomDrink,
-          ).thenAnswer((_) async => api.Drink(idDrink: 'TEST_ID'));
+          ).thenAnswer(
+            (_) async => api.Drink(
+              idDrink: 'TEST_ID',
+              strDrink: '',
+              strInstructions: '',
+              strDrinkThumb: '',
+            ),
+          );
 
           expect(
             await repository.getRandomDrink(),
-            Drink(idDrink: 'TEST_ID'),
+            Drink(
+              idDrink: 'TEST_ID',
+              strDrink: '',
+              strInstructions: '',
+              strDrinkThumb: '',
+            ),
           );
 
           verify(cocktailDbApiClient.fetchRandomDrink).called(1);
-          verify(() => drinksDao.saveDrink(idDrink: 'TEST_ID')).called(1);
+          verify(
+            () => drinksDao.saveDrink(
+              idDrink: 'TEST_ID',
+              strDrink: '',
+              strInstructions: '',
+              strDrinkThumb: '',
+            ),
+          ).called(1);
           verifyNoMoreInteractions(drinksDao);
           verifyNoMoreInteractions(cocktailDbApiClient);
         },

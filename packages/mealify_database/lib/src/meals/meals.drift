@@ -1,15 +1,13 @@
 CREATE TABLE meals (
     id_meal TEXT NOT NULL PRIMARY KEY,
-    str_meal TEXT,
+    str_meal TEXT NOT NULL,
     str_meal_alternate TEXT,
     str_category TEXT,
     str_area TEXT,
-    str_instructions TEXT,
-    str_meal_thumb TEXT,
+    str_instructions TEXT NOT NULL,
+    str_meal_thumb TEXT NOT NULL,
     str_tags TEXT,
     str_youtube TEXT,
-    
-    -- Ingredients (1-20)
     str_ingredient1 TEXT,
     str_ingredient2 TEXT,
     str_ingredient3 TEXT,
@@ -30,8 +28,6 @@ CREATE TABLE meals (
     str_ingredient18 TEXT,
     str_ingredient19 TEXT,
     str_ingredient20 TEXT,
-
-    -- Measures (1-20)
     str_measure1 TEXT,
     str_measure2 TEXT,
     str_measure3 TEXT,

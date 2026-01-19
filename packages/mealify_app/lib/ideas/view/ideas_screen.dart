@@ -60,7 +60,7 @@ class _SuccessView extends StatelessWidget {
           Expanded(
             child: MaterialButton(
               onPressed: () => MealDetailsRoute(id: meal.idMeal).go(context),
-              child: Image.network(meal.strMealThumb!),
+              child: Image.network(meal.strMealThumb),
             ),
           ),
           Padding(
@@ -70,7 +70,12 @@ class _SuccessView extends StatelessWidget {
               child: Text(AppLocalizations.of(context).showMeMoreButtonText),
             ),
           ),
-          Expanded(child: Image.network(drink.strDrinkThumb!)),
+          Expanded(
+            child: MaterialButton(
+              onPressed: () => DrinkDetailsRoute(id: drink.idDrink).go(context),
+              child: Image.network(drink.strDrinkThumb),
+            ),
+          ),
         ],
       ),
     );

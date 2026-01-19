@@ -28,9 +28,22 @@ void main() {
       );
       final dao = MealsDao(db);
 
-      await dao.saveMeal(idMeal: 'TEST_ID');
+      await dao.saveMeal(
+        idMeal: 'TEST_ID',
+        strMeal: '',
+        strInstructions: '',
+        strMealThumb: '',
+      );
 
-      expect(await dao.getMeal('TEST_ID'), const Meal(idMeal: 'TEST_ID'));
+      expect(
+        await dao.getMeal('TEST_ID'),
+        const Meal(
+          idMeal: 'TEST_ID',
+          strMeal: '',
+          strInstructions: '',
+          strMealThumb: '',
+        ),
+      );
 
       await db.close();
     });
@@ -44,16 +57,36 @@ void main() {
       );
       final dao = MealsDao(db);
 
-      await dao.saveMeal(idMeal: 'TEST_ID_1');
-      await dao.saveMeal(idMeal: 'TEST_ID_2');
+      await dao.saveMeal(
+        idMeal: 'TEST_ID_1',
+        strMeal: '',
+        strInstructions: '',
+        strMealThumb: '',
+      );
+      await dao.saveMeal(
+        idMeal: 'TEST_ID_2',
+        strMeal: '',
+        strInstructions: '',
+        strMealThumb: '',
+      );
 
       expect(
         await dao.getMeal('TEST_ID_1'),
-        const Meal(idMeal: 'TEST_ID_1'),
+        const Meal(
+          idMeal: 'TEST_ID_1',
+          strMeal: '',
+          strInstructions: '',
+          strMealThumb: '',
+        ),
       );
       expect(
         await dao.getMeal('TEST_ID_2'),
-        const Meal(idMeal: 'TEST_ID_2'),
+        const Meal(
+          idMeal: 'TEST_ID_2',
+          strMeal: '',
+          strInstructions: '',
+          strMealThumb: '',
+        ),
       );
 
       await db.close();

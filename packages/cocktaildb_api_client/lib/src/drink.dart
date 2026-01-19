@@ -8,7 +8,9 @@ import 'package:meta/meta.dart';
 class Drink {
   const Drink({
     required this.idDrink,
-    this.strDrink,
+    required this.strDrink,
+    required this.strInstructions,
+    required this.strDrinkThumb,
     this.strDrinkAlternate,
     this.strTags,
     this.strVideo,
@@ -16,14 +18,12 @@ class Drink {
     this.strIba,
     this.strAlcoholic,
     this.strGlass,
-    this.strInstructions,
     this.strInstructionsEs,
     this.strInstructionsDe,
     this.strInstructionsFr,
     this.strInstructionsIt,
     this.strInstructionsZhHans,
     this.strInstructionsZhHant,
-    this.strDrinkThumb,
     this.strIngredient1,
     this.strIngredient2,
     this.strIngredient3,
@@ -64,7 +64,7 @@ class Drink {
   factory Drink.fromJson(Map<String, dynamic> json) {
     return Drink(
       idDrink: json['idDrink'] as String,
-      strDrink: json['strDrink'] as String?,
+      strDrink: json['strDrink'] as String,
       strDrinkAlternate: json['strDrinkAlternate'] as String?,
       strTags: json['strTags'] as String?,
       strVideo: json['strVideo'] as String?,
@@ -72,14 +72,14 @@ class Drink {
       strIba: json['strIBA'] as String?,
       strAlcoholic: json['strAlcoholic'] as String?,
       strGlass: json['strGlass'] as String?,
-      strInstructions: json['strInstructions'] as String?,
+      strInstructions: json['strInstructions'] as String,
       strInstructionsEs: json['strInstructionsES'] as String?,
       strInstructionsDe: json['strInstructionsDE'] as String?,
       strInstructionsFr: json['strInstructionsFR'] as String?,
       strInstructionsIt: json['strInstructionsIT'] as String?,
       strInstructionsZhHans: json['strInstructionsZH-HANS'] as String?,
       strInstructionsZhHant: json['strInstructionsZH-HANT'] as String?,
-      strDrinkThumb: json['strDrinkThumb'] as String?,
+      strDrinkThumb: json['strDrinkThumb'] as String,
       strIngredient1: json['strIngredient1'] as String?,
       strIngredient2: json['strIngredient2'] as String?,
       strIngredient3: json['strIngredient3'] as String?,
@@ -119,7 +119,7 @@ class Drink {
   }
 
   final String idDrink;
-  final String? strDrink;
+  final String strDrink;
   final String? strDrinkAlternate;
   final String? strTags;
   final String? strVideo;
@@ -127,14 +127,14 @@ class Drink {
   final String? strIba;
   final String? strAlcoholic;
   final String? strGlass;
-  final String? strInstructions;
+  final String strInstructions;
   final String? strInstructionsEs;
   final String? strInstructionsDe;
   final String? strInstructionsFr;
   final String? strInstructionsIt;
   final String? strInstructionsZhHans;
   final String? strInstructionsZhHant;
-  final String? strDrinkThumb;
+  final String strDrinkThumb;
   final String? strIngredient1;
   final String? strIngredient2;
   final String? strIngredient3;

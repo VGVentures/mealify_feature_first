@@ -26,11 +26,23 @@ void main() {
 
           when(
             () => mealsDao.getMeal('TEST_ID'),
-          ).thenAnswer((_) async => db.Meal(idMeal: 'TEST_ID'));
+          ).thenAnswer(
+            (_) async => db.Meal(
+              idMeal: 'TEST_ID',
+              strMeal: '',
+              strInstructions: '',
+              strMealThumb: '',
+            ),
+          );
 
           expect(
             await repository.getMealById('TEST_ID'),
-            Meal(idMeal: 'TEST_ID'),
+            Meal(
+              idMeal: 'TEST_ID',
+              strMeal: '',
+              strInstructions: '',
+              strMealThumb: '',
+            ),
           );
 
           verify(() => mealsDao.getMeal('TEST_ID')).called(1);
@@ -54,21 +66,45 @@ void main() {
           ).thenAnswer((_) async => null);
 
           when(
-            () => mealsDao.saveMeal(idMeal: 'TEST_ID'),
+            () => mealsDao.saveMeal(
+              idMeal: 'TEST_ID',
+              strMeal: '',
+              strInstructions: '',
+              strMealThumb: '',
+            ),
           ).thenAnswer((_) async {});
 
           when(
             () => mealDbApiClient.fetchMealById('TEST_ID'),
-          ).thenAnswer((_) async => api.Meal(idMeal: 'TEST_ID'));
+          ).thenAnswer(
+            (_) async => api.Meal(
+              idMeal: 'TEST_ID',
+              strMeal: '',
+              strInstructions: '',
+              strMealThumb: '',
+            ),
+          );
 
           expect(
             await repository.getMealById('TEST_ID'),
-            Meal(idMeal: 'TEST_ID'),
+            Meal(
+              idMeal: 'TEST_ID',
+              strMeal: '',
+              strInstructions: '',
+              strMealThumb: '',
+            ),
           );
 
           verify(() => mealsDao.getMeal('TEST_ID')).called(1);
           verify(() => mealDbApiClient.fetchMealById('TEST_ID')).called(1);
-          verify(() => mealsDao.saveMeal(idMeal: 'TEST_ID')).called(1);
+          verify(
+            () => mealsDao.saveMeal(
+              idMeal: 'TEST_ID',
+              strMeal: '',
+              strInstructions: '',
+              strMealThumb: '',
+            ),
+          ).called(1);
           verifyNoMoreInteractions(mealsDao);
           verifyNoMoreInteractions(mealDbApiClient);
         },
@@ -87,20 +123,44 @@ void main() {
           );
 
           when(
-            () => mealsDao.saveMeal(idMeal: 'TEST_ID'),
+            () => mealsDao.saveMeal(
+              idMeal: 'TEST_ID',
+              strMeal: '',
+              strInstructions: '',
+              strMealThumb: '',
+            ),
           ).thenAnswer((_) async {});
 
           when(
             mealDbApiClient.fetchRandomMeal,
-          ).thenAnswer((_) async => api.Meal(idMeal: 'TEST_ID'));
+          ).thenAnswer(
+            (_) async => api.Meal(
+              idMeal: 'TEST_ID',
+              strMeal: '',
+              strInstructions: '',
+              strMealThumb: '',
+            ),
+          );
 
           expect(
             await repository.getRandomMeal(),
-            Meal(idMeal: 'TEST_ID'),
+            Meal(
+              idMeal: 'TEST_ID',
+              strMeal: '',
+              strInstructions: '',
+              strMealThumb: '',
+            ),
           );
 
           verify(mealDbApiClient.fetchRandomMeal).called(1);
-          verify(() => mealsDao.saveMeal(idMeal: 'TEST_ID')).called(1);
+          verify(
+            () => mealsDao.saveMeal(
+              idMeal: 'TEST_ID',
+              strMeal: '',
+              strInstructions: '',
+              strMealThumb: '',
+            ),
+          ).called(1);
           verifyNoMoreInteractions(mealsDao);
           verifyNoMoreInteractions(mealDbApiClient);
         },
