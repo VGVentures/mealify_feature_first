@@ -1,16 +1,16 @@
 import 'package:cocktaildb_api_client/cocktaildb_api_client.dart';
 
 /// The response from MealDB for a single Random Drink call
-class RandomDrinkResponse {
-  const RandomDrinkResponse._({required this.drink});
+class SingleDrinkResponse {
+  const SingleDrinkResponse._({required this.drink});
 
   /// Convert a json response of a random meal into a proper Dart object
-  factory RandomDrinkResponse.fromJson(Map<String, dynamic> json) {
+  factory SingleDrinkResponse.fromJson(Map<String, dynamic> json) {
     if (json['drinks'] == null) {
-      throw RandomDrinkResponseNoMealException();
+      throw SingleDrinkResponseNoMealException();
     }
 
-    return RandomDrinkResponse._(
+    return SingleDrinkResponse._(
       drink: Drink.fromJson(
         (json['drinks'] as List<dynamic>).cast<Map<String, dynamic>>().first,
       ),
@@ -22,4 +22,4 @@ class RandomDrinkResponse {
 }
 
 /// Thrown if the random meal response does not contain a Meal
-class RandomDrinkResponseNoMealException implements Exception {}
+class SingleDrinkResponseNoMealException implements Exception {}

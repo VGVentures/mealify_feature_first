@@ -6,23 +6,23 @@ import 'package:meta/meta.dart';
 /// A drink from the CocktailDB api
 @immutable
 class Drink {
-  const Drink._({
-    this.idDrink,
+  const Drink({
+    required this.idDrink,
     this.strDrink,
     this.strDrinkAlternate,
     this.strTags,
     this.strVideo,
     this.strCategory,
-    this.strIBA,
+    this.strIba,
     this.strAlcoholic,
     this.strGlass,
     this.strInstructions,
-    this.strInstructionsES,
-    this.strInstructionsDE,
-    this.strInstructionsFR,
-    this.strInstructionsIT,
-    this.strInstructionsZHHANS,
-    this.strInstructionsZHHANT,
+    this.strInstructionsEs,
+    this.strInstructionsDe,
+    this.strInstructionsFr,
+    this.strInstructionsIt,
+    this.strInstructionsZhHans,
+    this.strInstructionsZhHant,
     this.strDrinkThumb,
     this.strIngredient1,
     this.strIngredient2,
@@ -62,23 +62,23 @@ class Drink {
 
   /// Construct a Drink from a json response from the CocktailDB api
   factory Drink.fromJson(Map<String, dynamic> json) {
-    return Drink._(
-      idDrink: json['idDrink'] as String?,
+    return Drink(
+      idDrink: json['idDrink'] as String,
       strDrink: json['strDrink'] as String?,
       strDrinkAlternate: json['strDrinkAlternate'] as String?,
       strTags: json['strTags'] as String?,
       strVideo: json['strVideo'] as String?,
       strCategory: json['strCategory'] as String?,
-      strIBA: json['strIBA'] as String?,
+      strIba: json['strIBA'] as String?,
       strAlcoholic: json['strAlcoholic'] as String?,
       strGlass: json['strGlass'] as String?,
       strInstructions: json['strInstructions'] as String?,
-      strInstructionsES: json['strInstructionsES'] as String?,
-      strInstructionsDE: json['strInstructionsDE'] as String?,
-      strInstructionsFR: json['strInstructionsFR'] as String?,
-      strInstructionsIT: json['strInstructionsIT'] as String?,
-      strInstructionsZHHANS: json['strInstructionsZH-HANS'] as String?,
-      strInstructionsZHHANT: json['strInstructionsZH-HANT'] as String?,
+      strInstructionsEs: json['strInstructionsES'] as String?,
+      strInstructionsDe: json['strInstructionsDE'] as String?,
+      strInstructionsFr: json['strInstructionsFR'] as String?,
+      strInstructionsIt: json['strInstructionsIT'] as String?,
+      strInstructionsZhHans: json['strInstructionsZH-HANS'] as String?,
+      strInstructionsZhHant: json['strInstructionsZH-HANT'] as String?,
       strDrinkThumb: json['strDrinkThumb'] as String?,
       strIngredient1: json['strIngredient1'] as String?,
       strIngredient2: json['strIngredient2'] as String?,
@@ -118,22 +118,22 @@ class Drink {
     );
   }
 
-  final String? idDrink;
+  final String idDrink;
   final String? strDrink;
   final String? strDrinkAlternate;
   final String? strTags;
   final String? strVideo;
   final String? strCategory;
-  final String? strIBA;
+  final String? strIba;
   final String? strAlcoholic;
   final String? strGlass;
   final String? strInstructions;
-  final String? strInstructionsES;
-  final String? strInstructionsDE;
-  final String? strInstructionsFR;
-  final String? strInstructionsIT;
-  final String? strInstructionsZHHANS;
-  final String? strInstructionsZHHANT;
+  final String? strInstructionsEs;
+  final String? strInstructionsDe;
+  final String? strInstructionsFr;
+  final String? strInstructionsIt;
+  final String? strInstructionsZhHans;
+  final String? strInstructionsZhHant;
   final String? strDrinkThumb;
   final String? strIngredient1;
   final String? strIngredient2;

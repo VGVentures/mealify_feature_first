@@ -16,6 +16,26 @@ class CocktailDbApiClient {
   final http.Client _httpClient;
 
   /// Fetch a random meal from the MealDB api
+  Future<Drink> fetchDrinkById(String id) async {
+    final uri = Uri.parse(
+      'https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=$id',
+    );
+    final httpResponse = await _httpClient.get(uri);
+
+    if (httpResponse.statusCode >= HttpStatusCode.badRequest) {
+      throw CocktailDbApiHttpException(
+        uri: uri,
+        statusCode: httpResponse.statusCode,
+        body: httpResponse.body,
+      );
+    } else {
+      return SingleDrinkResponse.fromJson(
+        jsonDecode(httpResponse.body) as Map<String, dynamic>,
+      ).drink;
+    }
+  }
+
+  /// Fetch a random meal from the MealDB api
   Future<Drink> fetchRandomDrink() async {
     final uri = Uri.parse(
       'https://www.thecocktaildb.com/api/json/v1/1/random.php',
@@ -29,7 +49,7 @@ class CocktailDbApiClient {
         body: httpResponse.body,
       );
     } else {
-      return RandomDrinkResponse.fromJson(
+      return SingleDrinkResponse.fromJson(
         jsonDecode(httpResponse.body) as Map<String, dynamic>,
       ).drink;
     }

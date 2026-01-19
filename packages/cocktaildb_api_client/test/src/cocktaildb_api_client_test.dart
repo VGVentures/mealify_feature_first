@@ -4,12 +4,20 @@ import 'package:test/test.dart';
 
 void main() {
   group('$CocktailDbApiClient Integration Test', () {
-    test('should fetch a random meal', () async {
+    test('should fetch a drink by id', () async {
       final client = CocktailDbApiClient(httpClient: httpClientFactory());
 
-      final randomMeal = await client.fetchRandomDrink();
+      final drink = await client.fetchDrinkById('11007');
 
-      expect(randomMeal, isNotNull);
+      expect(drink, isNotNull);
+    });
+
+    test('should fetch a random drink', () async {
+      final client = CocktailDbApiClient(httpClient: httpClientFactory());
+
+      final randomDrink = await client.fetchRandomDrink();
+
+      expect(randomDrink, isNotNull);
     });
   });
 }
