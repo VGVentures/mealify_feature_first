@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:http_status/http_status.dart';
 import 'package:mealdb_api_client/src/meal.dart';
-import 'package:mealdb_api_client/src/random_meal_response.dart';
+import 'package:mealdb_api_client/src/single_meal_response.dart';
 
 /// A client that interacts with the MealDB api
 class MealDbApiClient {
@@ -14,6 +14,26 @@ class MealDbApiClient {
   }) : _httpClient = httpClient;
 
   final http.Client _httpClient;
+
+  /// Fetch a random meal from the MealDB api
+  Future<Meal> fetchMealById(String id) async {
+    final uri = Uri.parse(
+      'https://www.themealdb.com/api/json/v1/1/lookup.php?i=$id',
+    );
+    final httpResponse = await _httpClient.get(uri);
+
+    if (httpResponse.statusCode >= HttpStatusCode.badRequest) {
+      throw MealDbApiHttpException(
+        uri: uri,
+        statusCode: httpResponse.statusCode,
+        body: httpResponse.body,
+      );
+    } else {
+      return SingleMealResponse.fromJson(
+        jsonDecode(httpResponse.body) as Map<String, dynamic>,
+      ).meal;
+    }
+  }
 
   /// Fetch a random meal from the MealDB api
   Future<Meal> fetchRandomMeal() async {
@@ -27,7 +47,7 @@ class MealDbApiClient {
         body: httpResponse.body,
       );
     } else {
-      return RandomMealResponse.fromJson(
+      return SingleMealResponse.fromJson(
         jsonDecode(httpResponse.body) as Map<String, dynamic>,
       ).meal;
     }
