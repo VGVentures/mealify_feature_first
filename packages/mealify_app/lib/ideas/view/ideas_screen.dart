@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:cocktaildb_api_client/cocktaildb_api_client.dart';
+import 'package:drinks_repository/drinks_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mealify_app/ideas/bloc/ideas_cubit.dart';

@@ -9,10 +9,15 @@ environment:
   flutter: ^3.35.0
 
 dependencies:
-  bloc: ^9.0.1
+  async:
+  bloc:
   cocktaildb_api_client:
     path: ../cocktaildb_api_client
   drift:
+  drinks_repository:
+    path: ../drinks_repository
+  favorites_repository:
+    path: ../favorites_repository
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1

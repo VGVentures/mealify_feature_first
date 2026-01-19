@@ -1,15 +1,10 @@
-import 'package:cocktaildb_api_client/cocktaildb_api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart' as http;
-import 'package:mealdb_api_client/mealdb_api_client.dart';
 import 'package:mealify_app/app_router/responsive_scaffold.dart';
 import 'package:mealify_app/details/details.dart';
 import 'package:mealify_app/favorites/favorites.dart';
 import 'package:mealify_app/ideas/ideas.dart';
-import 'package:mealify_database/mealify_database.dart';
-import 'package:meals_repository/meals_repository.dart';
 
 part 'routes.g.dart';
 
@@ -64,17 +59,12 @@ class IdeasRoute extends GoRouteData with $IdeasRoute {
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
-    final httpClient = context.read<http.Client>();
-
     return NoTransitionPage(
       child: BlocProvider<IdeasCubit>(
         child: const IdeasScreen(),
         create: (context) => IdeasCubit(
-          cocktailDbApiClient: CocktailDbApiClient(httpClient: httpClient),
-          mealsRepository: MealsRepository(
-            mealsDao: context.read<MealsDao>(),
-            mealDbApiClient: MealDbApiClient(httpClient: httpClient),
-          ),
+          drinksRepository: context.read(),
+          mealsRepository: context.read(),
         ),
       ),
     );

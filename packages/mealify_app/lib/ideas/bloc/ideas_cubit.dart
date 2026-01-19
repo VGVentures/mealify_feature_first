@@ -1,28 +1,35 @@
+import 'package:async/async.dart';
 import 'package:bloc/bloc.dart';
-import 'package:cocktaildb_api_client/cocktaildb_api_client.dart';
+import 'package:drinks_repository/drinks_repository.dart';
 import 'package:mealify_app/ideas/bloc/ideas_state.dart';
 import 'package:meals_repository/meals_repository.dart';
 
 class IdeasCubit extends Cubit<IdeasState> {
   IdeasCubit({
-    required CocktailDbApiClient cocktailDbApiClient,
+    required DrinksRepository drinksRepository,
     required MealsRepository mealsRepository,
     IdeasState initialState = const IdeasLoading(),
   }) : _mealsRepository = mealsRepository,
-       _cocktailDbApiClient = cocktailDbApiClient,
+       _drinksRepository = drinksRepository,
        super(initialState);
 
-  final CocktailDbApiClient _cocktailDbApiClient;
+  final DrinksRepository _drinksRepository;
   final MealsRepository _mealsRepository;
+  CancelableOperation<List<dynamic>>? _fetchRandomMealsOperation;
 
   Future<void> fetchRandomMeal() async {
+    await _fetchRandomMealsOperation?.cancel();
     emit(const IdeasLoading());
 
     try {
-      final [meal, drink] = await Future.wait([
-        _mealsRepository.getRandomMeal(),
-        _cocktailDbApiClient.fetchRandomDrink(),
-      ]);
+      _fetchRandomMealsOperation =
+          CancelableOperation<List<dynamic>>.fromFuture(
+            Future.wait([
+              _mealsRepository.getRandomMeal(),
+              _drinksRepository.getRandomDrink(),
+            ]),
+          );
+      final [meal, drink] = await _fetchRandomMealsOperation!.value;
 
       emit(IdeasSuccess(meal: meal as Meal, drink: drink as Drink));
     } on Object catch (e) {
