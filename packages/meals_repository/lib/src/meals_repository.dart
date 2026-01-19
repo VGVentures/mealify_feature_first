@@ -1,6 +1,7 @@
 import 'package:mealdb_api_client/mealdb_api_client.dart' as api;
 import 'package:mealify_database/mealify_database.dart' as db;
 import 'package:meals_repository/src/api_to_domain_meal_converter.dart';
+import 'package:meals_repository/src/db_to_domain_meal_converter.dart';
 import 'package:meals_repository/src/meal.dart';
 
 /// A class that coordinates meal objects from the remote MealDb Api and the
@@ -13,20 +14,36 @@ class MealsRepository {
     required api.MealDbApiClient mealDbApiClient,
     ApiToDomainMealConverter apiToDomainMealConverter =
         const ApiToDomainMealConverter(),
+    DbToDomainMealConverter dbToDomainMealConverter =
+        const DbToDomainMealConverter(),
   }) : _mealsDao = mealsDao,
        _mealDbApiClient = mealDbApiClient,
-       _apiToDomainMealConverter = apiToDomainMealConverter;
+       _apiToDomainMealConverter = apiToDomainMealConverter,
+       _dbToDomainMealConverter = dbToDomainMealConverter;
 
   final db.MealsDao _mealsDao;
   final api.MealDbApiClient _mealDbApiClient;
   final ApiToDomainMealConverter _apiToDomainMealConverter;
+  final DbToDomainMealConverter _dbToDomainMealConverter;
+
+  /// Gets a meal by id. First tries the local database, falls back to the
+  /// internet if one doesn't exist.
+  Future<Meal> getMealById(String id) async {
+    final dbMeal = await _mealsDao.getMeal(id);
+
+    if (dbMeal != null) {
+      return _dbToDomainMealConverter.convert(dbMeal);
+    }
+
+    final apiMeal = await _mealDbApiClient.fetchMealById(id);
+    await _saveMealToDatabase(apiMeal);
+    return _apiToDomainMealConverter.convert(apiMeal);
+  }
 
   /// Gets a random meal from the internet and stores it in the database.
   Future<Meal> getRandomMeal() async {
     final apiMeal = await _mealDbApiClient.fetchRandomMeal();
-
     await _saveMealToDatabase(apiMeal);
-
     return _apiToDomainMealConverter.convert(apiMeal);
   }
 
