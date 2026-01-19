@@ -3,9 +3,12 @@ import 'dart:async';
 import 'package:drinks_repository/drinks_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mealify_app/app_router/routes.dart';
 import 'package:mealify_app/ideas/bloc/ideas_cubit.dart';
 import 'package:mealify_app/ideas/bloc/ideas_state.dart';
 import 'package:mealify_app/l10n/gen/app_localizations.dart';
+import 'package:mealify_app/widgets/error_view.dart';
+import 'package:mealify_app/widgets/loading_view.dart';
 import 'package:meals_repository/meals_repository.dart';
 
 class IdeasScreen extends StatefulWidget {
@@ -32,8 +35,8 @@ class _IdeasScreenState extends State<IdeasScreen> {
         title: Text(AppLocalizations.of(context).mealifyAppTitle),
       ),
       body: switch (state) {
-        IdeasLoading() => const _LoadingView(),
-        final IdeasError e => _ErrorView(e: e.error),
+        IdeasLoading() => const LoadingView(),
+        final IdeasError e => ErrorView(error: e.error),
         final IdeasSuccess s => _SuccessView(meal: s.meal, drink: s.drink),
       },
     );
@@ -54,7 +57,12 @@ class _SuccessView extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          Expanded(child: Image.network(meal.strMealThumb!)),
+          Expanded(
+            child: MaterialButton(
+              onPressed: () => MealDetailsRoute(id: meal.idMeal).go(context),
+              child: Image.network(meal.strMealThumb!),
+            ),
+          ),
           Padding(
             padding: const EdgeInsetsGeometry.symmetric(vertical: 20),
             child: MaterialButton(
@@ -65,41 +73,6 @@ class _SuccessView extends StatelessWidget {
           Expanded(child: Image.network(drink.strDrinkThumb!)),
         ],
       ),
-    );
-  }
-}
-
-class _ErrorView extends StatelessWidget {
-  const _ErrorView({
-    required this.e,
-  });
-
-  final Object e;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(
-            Icons.error,
-            size: 40,
-          ),
-          Text('$e'),
-        ],
-      ),
-    );
-  }
-}
-
-class _LoadingView extends StatelessWidget {
-  const _LoadingView();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: CircularProgressIndicator(),
     );
   }
 }

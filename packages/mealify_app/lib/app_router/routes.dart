@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mealify_app/app_router/responsive_scaffold.dart';
-import 'package:mealify_app/details/details.dart';
 import 'package:mealify_app/favorites/favorites.dart';
 import 'package:mealify_app/ideas/ideas.dart';
+import 'package:mealify_app/meal_details/bloc/meal_details_cubit.dart';
+import 'package:mealify_app/meal_details/meal_details.dart';
 
 part 'routes.g.dart';
 
@@ -78,7 +79,12 @@ class MealDetailsRoute extends GoRouteData with $MealDetailsRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return MealDetailsScreen(id: id);
+    return BlocProvider<MealDetailsCubit>(
+      create: (BuildContext context) {
+        return MealDetailsCubit(mealsRepository: context.read());
+      },
+      child: MealDetailsScreen(mealId: id),
+    );
   }
 }
 

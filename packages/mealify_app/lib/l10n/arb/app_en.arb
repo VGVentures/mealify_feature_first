@@ -1,19 +1,23 @@
 {
-    "@@locale": "en",
-    "favoritesLabel": "Favorites",
-    "@favoritesLabel": {
-        "description": "The name of the favorites tab"
-    },
-    "ideasLabel": "Ideas",
-    "@ideasLabel": {
-        "description": "The name of the ideas tab"
-    },
-    "mealifyAppTitle": "Mealify",
-    "@mealifyAppTitle": {
-        "description": "Text shown in the AppBar of the Mealify App"
-    },
-    "showMeMoreButtonText": "Show me more!",
-    "@showMeMoreButtonText": {
-        "description": "Text shown on the button that loads another random meal"
-    }
+  "@@locale": "en",
+  "favoritesLabel": "Favorites",
+  "@favoritesLabel": {
+    "description": "The name of the favorites tab"
+  },
+  "ideasLabel": "Ideas",
+  "@ideasLabel": {
+    "description": "The name of the ideas tab"
+  },
+  "mealifyAppTitle": "Mealify",
+  "@mealifyAppTitle": {
+    "description": "Text shown in the AppBar of the Mealify App"
+  },
+  "mealDetailsTitle": "Meal Details",
+  "@mealDetailsTitle": {
+    "description": "Text shown in the AppBar of the meal details page"
+  },
+  "showMeMoreButtonText": "Show me more!",
+  "@showMeMoreButtonText": {
+    "description": "Text shown on the button that loads another random meal"
+  }
 }
