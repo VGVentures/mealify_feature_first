@@ -16,8 +16,8 @@ class FavoritesDao extends DatabaseAccessor<MealifyDatabase>
   Future<Favorite?> getFavorite(String favoriteId) =>
       findFavoriteById(favoriteId).getSingleOrNull();
 
-  /// Get all favorites
-  Future<List<Favorite>> getAll() => findAllFavorites().get();
+  /// Watch the list of favorites
+  Stream<List<Favorite>> watchAll() => findAllFavorites().watch();
 
   /// Add a favorite to the database
   Future<void> addFavorite({

@@ -15,7 +15,7 @@ void main() {
       );
       final dao = FavoritesDao(db);
 
-      expect(await dao.getAll(), isEmpty);
+      expect(dao.watchAll(), isEmpty);
 
       await db.close();
     });
@@ -108,7 +108,7 @@ void main() {
           drinkId: 'DRINK_ID_2',
         );
 
-        expect(await dao.getAll(), [
+        expect(dao.watchAll(), [
           Favorite(
             id: '1',
             mealId: 'MEAL_ID_1',

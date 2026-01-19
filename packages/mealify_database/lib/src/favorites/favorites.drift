@@ -15,11 +15,8 @@ CREATE TABLE favorites (
 findFavoriteById: 
     SELECT * FROM favorites WHERE id = :favoriteId;
 
-findAllFavorites: 
-    SELECT * FROM favorites;
-
-findFavorite:
-    SELECT * FROM favorites WHERE meal_id = :mealId AND drink_id = :drinkId;
+findAllFavorites:
+    SELECT * FROM favorites ORDER BY created_at DESC;
 
 deleteFavorite:
     DELETE FROM favorites WHERE id = :favoriteId;

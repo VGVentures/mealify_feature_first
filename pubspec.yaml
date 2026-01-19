@@ -5,6 +5,7 @@ environment:
 workspace:
   - packages/cocktaildb_api_client
   - packages/drinks_repository
+  - packages/favorites_repository
   - packages/http_client_factory
   - packages/mealdb_api_client
   - packages/mealify_app

@@ -17,16 +17,8 @@ mixin _$FavoritesDaoMixin on DatabaseAccessor<MealifyDatabase> {
 
   Selectable<Favorite> findAllFavorites() {
     return customSelect(
-      'SELECT * FROM favorites',
+      'SELECT * FROM favorites ORDER BY created_at DESC',
       variables: [],
-      readsFrom: {favorites},
-    ).asyncMap(favorites.mapFromRow);
-  }
-
-  Selectable<Favorite> findFavorite(String mealId, String drinkId) {
-    return customSelect(
-      'SELECT * FROM favorites WHERE meal_id = ?1 AND drink_id = ?2',
-      variables: [Variable<String>(mealId), Variable<String>(drinkId)],
       readsFrom: {favorites},
     ).asyncMap(favorites.mapFromRow);
   }
