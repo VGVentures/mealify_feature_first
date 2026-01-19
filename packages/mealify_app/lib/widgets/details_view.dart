@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mealify_app/l10n/gen/app_localizations.dart';
 
 class DetailsView extends StatelessWidget {
   const DetailsView({
@@ -27,13 +28,13 @@ class DetailsView extends StatelessWidget {
                 pinned: true,
                 expandedHeight: 250,
                 title: Text(title),
-                bottom: const TabBar(
+                bottom: TabBar(
                   tabs: [
                     Tab(
-                      text: 'Ingredients',
+                      text: AppLocalizations.of(context).ingredientsTabText,
                     ),
                     Tab(
-                      text: 'Instructions',
+                      text: AppLocalizations.of(context).instructionsTabText,
                     ),
                   ],
                 ),

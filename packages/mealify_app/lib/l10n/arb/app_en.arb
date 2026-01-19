@@ -8,6 +8,14 @@
   "@ideasLabel": {
     "description": "The name of the ideas tab"
   },
+  "ingredientsTabText": "Ingredients",
+  "@ingredientsTabText": {
+    "description": "Text shown on the tab that shows ingredients for a meal or drink"
+  },
+  "instructionsTabText": "Instructions",
+  "@instructionsTabText": {
+    "description": "Text shown on the tab that shows instructions for a meal or drink"
+  },
   "mealifyAppTitle": "Mealify",
   "@mealifyAppTitle": {
     "description": "Text shown in the AppBar of the Mealify App"
