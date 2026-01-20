@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mealify_app/app_router/deferred_loader.dart';
 import 'package:mealify_app/app_router/responsive_scaffold.dart';
 import 'package:mealify_app/drink_details/drink_details.dart'
     deferred as drink_details;
@@ -10,7 +11,6 @@ import 'package:mealify_app/favorites/view/favorites_list_module.dart'
 import 'package:mealify_app/ideas/ideas.dart' deferred as ideas;
 import 'package:mealify_app/meal_details/meal_details.dart'
     deferred as meal_details;
-import 'package:mealify_app/widgets/loading_screen.dart';
 
 part 'routes.g.dart';
 
@@ -66,13 +66,10 @@ class IdeasRoute extends GoRouteData with $IdeasRoute {
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return NoTransitionPage(
-      child: FutureBuilder(
-        future: ideas.loadLibrary(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return ideas.IdeasModule();
-          }
-          return const LoadingScreen();
+      child: DeferredLoader(
+        loader: ideas.loadLibrary,
+        builder: (context) {
+          return ideas.IdeasModule();
         },
       ),
     );
@@ -86,50 +83,41 @@ class MealDetailsRoute extends GoRouteData with $MealDetailsRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return FutureBuilder(
-      future: meal_details.loadLibrary(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return meal_details.MealDetailsModule(mealId: id);
-        }
-        return const LoadingScreen();
+    return DeferredLoader(
+      loader: meal_details.loadLibrary,
+      builder: (context) {
+        return meal_details.MealDetailsModule(mealId: id);
       },
     );
   }
 }
 
-class DrinkDetailsRoute extends GoRouteData {
+class DrinkDetailsRoute extends GoRouteData with $DrinkDetailsRoute {
   const DrinkDetailsRoute({required this.id});
 
   final String id;
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return FutureBuilder(
-      future: drink_details.loadLibrary(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return drink_details.DrinkDetailsModule(drinkId: id);
-        }
-        return const LoadingScreen();
+    return DeferredLoader(
+      loader: drink_details.loadLibrary,
+      builder: (context) {
+        return drink_details.DrinkDetailsModule(drinkId: id);
       },
     );
   }
 }
 
-class FavoritesListRoute extends GoRouteData with $FavoritesRoute {
+class FavoritesListRoute extends GoRouteData with $FavoritesListRoute {
   const FavoritesListRoute();
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return NoTransitionPage(
-      child: FutureBuilder(
-        future: favorites_list.loadLibrary(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return favorites_list.FavoritesListModule();
-          }
-          return const LoadingScreen();
+      child: DeferredLoader(
+        loader: favorites_list.loadLibrary,
+        builder: (context) {
+          return favorites_list.FavoritesListModule();
         },
       ),
     );
@@ -143,15 +131,12 @@ class FavoriteDetailsRoute extends GoRouteData with $FavoriteDetailsRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return FutureBuilder(
-      future: favorite_details.loadLibrary(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return favorite_details.FavoriteDetailsModule(
-            id: id,
-          );
-        }
-        return const LoadingScreen();
+    return DeferredLoader(
+      loader: favorite_details.loadLibrary,
+      builder: (context) {
+        return favorite_details.FavoriteDetailsModule(
+          id: id,
+        );
       },
     );
   }

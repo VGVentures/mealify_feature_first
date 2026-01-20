@@ -32,8 +32,10 @@ class _FavoritesListScreenState extends State<FavoritesListScreen> {
       ),
       body: switch (state) {
         FavoritesListLoading() => const LoadingView(),
-        final FavoritesListError e => ErrorView(error: e),
-        final FavoritesListSuccess s => _SuccessView(favorites: s.favorites),
+        FavoritesListError(:final error) => ErrorView(error: error),
+        FavoritesListSuccess(:final favorites) => _SuccessView(
+          favorites: favorites,
+        ),
       },
     );
   }

@@ -33,7 +33,7 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
       color: Theme.of(context).scaffoldBackgroundColor,
       child: switch (state) {
         MealDetailsLoading() => const LoadingView(),
-        final MealDetailsError e => ErrorView(error: e),
+        MealDetailsError(:final error) => ErrorView(error: error),
         final MealDetailsSuccess s => DetailsView(
           ingredients: s.meal.ingredients,
           instructions: s.meal.instructions,

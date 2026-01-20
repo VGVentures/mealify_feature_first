@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:drinks_repository/drinks_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,20 +9,8 @@ import 'package:mealify_app/widgets/error_view.dart';
 import 'package:mealify_app/widgets/loading_view.dart';
 import 'package:meals_repository/meals_repository.dart';
 
-class IdeasScreen extends StatefulWidget {
+class IdeasScreen extends StatelessWidget {
   const IdeasScreen({super.key});
-
-  @override
-  State<IdeasScreen> createState() => _IdeasScreenState();
-}
-
-class _IdeasScreenState extends State<IdeasScreen> {
-  @override
-  void initState() {
-    unawaited(context.read<IdeasCubit>().fetchRandomMeal());
-
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +22,7 @@ class _IdeasScreenState extends State<IdeasScreen> {
       ),
       body: switch (state) {
         IdeasLoading() => const LoadingView(),
-        final IdeasError e => ErrorView(error: e.error),
+        IdeasError(:final error) => ErrorView(error: error),
         final IdeasSuccess s => _SuccessView(
           meal: s.meal,
           drink: s.drink,

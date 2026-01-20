@@ -38,9 +38,9 @@ class _FavoriteDetailsScreenState extends State<FavoriteDetailsScreen> {
         FavoriteNotFoundState() => ErrorView(
           error: AppLocalizations.of(context).favoriteDetailsNotFound,
         ),
-        final FavoritesDetailsError e => ErrorView(error: e.error),
-        final FavoritesDetailsSuccess s => _FavoriteDetailsSuccessView(
-          favorite: s.favorite,
+        FavoritesDetailsError(:final error) => ErrorView(error: error),
+        FavoritesDetailsSuccess(:final favorite) => _FavoriteDetailsSuccessView(
+          favorite: favorite,
         ),
       },
     );

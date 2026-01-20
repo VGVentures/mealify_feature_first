@@ -33,7 +33,7 @@ RouteBase get $appShellRouteData => StatefulShellRouteData.$route(
       routes: [
         GoRouteData.$route(
           path: '/favorites',
-          factory: $FavoritesRoute._fromState,
+          factory: $FavoritesListRoute._fromState,
           routes: [
             GoRouteData.$route(
               path: ':id',
@@ -119,7 +119,7 @@ mixin $DrinkDetailsRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin $FavoritesRoute on GoRouteData {
+mixin $FavoritesListRoute on GoRouteData {
   static FavoritesListRoute _fromState(GoRouterState state) =>
       const FavoritesListRoute();
 
