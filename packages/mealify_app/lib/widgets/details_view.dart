@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mealify_app/l10n/gen/app_localizations.dart';
+import 'package:mealify_app/l10n/l10n.dart';
 
 class DetailsView extends StatelessWidget {
   const DetailsView({

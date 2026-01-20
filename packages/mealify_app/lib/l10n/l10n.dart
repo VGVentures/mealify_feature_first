@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:mealify_app/l10n/gen/app_localizations.dart';
+import 'package:mealify_app/l10n/l10n.dart';
 
 export 'package:mealify_app/l10n/gen/app_localizations.dart';
 

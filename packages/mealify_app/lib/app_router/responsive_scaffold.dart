@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mealify_app/l10n/gen/app_localizations.dart';
+import 'package:mealify_app/l10n/l10n.dart';
 
 /// A scaffold that shows a bottom navigation bar for small screens and a
 /// navigation rail for larger screens

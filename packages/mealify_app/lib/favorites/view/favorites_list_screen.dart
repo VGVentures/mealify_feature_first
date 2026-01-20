@@ -4,7 +4,7 @@ import 'package:mealify_app/app_router/routes.dart';
 import 'package:mealify_app/favorites/bloc/favorites_list_cubit.dart';
 import 'package:mealify_app/favorites/bloc/favorites_list_state.dart';
 import 'package:mealify_app/favorites/bloc/populated_favorite.dart';
-import 'package:mealify_app/l10n/gen/app_localizations.dart';
+import 'package:mealify_app/l10n/l10n.dart';
 import 'package:mealify_app/widgets/error_view.dart';
 import 'package:mealify_app/widgets/loading_view.dart';
 

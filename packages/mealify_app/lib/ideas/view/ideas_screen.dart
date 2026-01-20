@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mealify_app/app_router/routes.dart';
 import 'package:mealify_app/ideas/bloc/ideas_cubit.dart';
 import 'package:mealify_app/ideas/bloc/ideas_state.dart';
-import 'package:mealify_app/l10n/gen/app_localizations.dart';
+import 'package:mealify_app/l10n/l10n.dart';
 import 'package:mealify_app/widgets/error_view.dart';
 import 'package:mealify_app/widgets/loading_view.dart';
 
