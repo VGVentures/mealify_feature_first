@@ -35,12 +35,12 @@ class _DrinkDetailsScreenState extends State<DrinkDetailsScreen> {
       color: Theme.of(context).scaffoldBackgroundColor,
       child: switch (state) {
         DrinkDetailsLoading() => const LoadingView(),
-        final DrinkDetailsError e => ErrorView(error: e),
-        final DrinkDetailsSuccess s => DetailsView(
-          ingredients: s.drink.ingredients,
-          instructions: s.drink.instructions,
-          thumbnail: s.drink.thumbnail,
-          title: s.drink.title,
+        DrinkDetailsError(:final error) => ErrorView(error: error),
+        DrinkDetailsSuccess(:final drink) => DetailsView(
+          ingredients: drink.ingredients,
+          instructions: drink.instructions,
+          thumbnail: drink.thumbnail,
+          title: drink.title,
         ),
       },
     );

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mealify_app/app_router/responsive_scaffold.dart';
-import 'package:mealify_app/drink_details/bloc/drink_details_cubit.dart';
-import 'package:mealify_app/drink_details/drink_details.dart';
-import 'package:mealify_app/favorites/bloc/favorites_details_cubit.dart';
-import 'package:mealify_app/favorites/bloc/favorites_list_cubit.dart';
-import 'package:mealify_app/favorites/favorites.dart';
-import 'package:mealify_app/ideas/ideas.dart';
-import 'package:mealify_app/meal_details/bloc/meal_details_cubit.dart';
-import 'package:mealify_app/meal_details/meal_details.dart';
+import 'package:mealify_app/drink_details/drink_details.dart'
+    deferred as drink_details;
+import 'package:mealify_app/favorites/view/favorite_details_module.dart'
+    deferred as favorite_details;
+import 'package:mealify_app/favorites/view/favorites_list_module.dart'
+    deferred as favorites_list;
+import 'package:mealify_app/ideas/ideas.dart' deferred as ideas;
+import 'package:mealify_app/meal_details/meal_details.dart'
+    deferred as meal_details;
+import 'package:mealify_app/widgets/loading_screen.dart';
 
 part 'routes.g.dart';
 
@@ -28,7 +29,7 @@ part 'routes.g.dart';
     ),
     TypedStatefulShellBranch<FavoritesBranch>(
       routes: [
-        TypedGoRoute<FavoritesRoute>(
+        TypedGoRoute<FavoritesListRoute>(
           path: '/favorites',
           routes: [
             TypedGoRoute<FavoriteDetailsRoute>(path: ':id'),
@@ -65,13 +66,14 @@ class IdeasRoute extends GoRouteData with $IdeasRoute {
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return NoTransitionPage(
-      child: BlocProvider<IdeasCubit>(
-        child: const IdeasScreen(),
-        create: (context) => IdeasCubit(
-          drinksRepository: context.read(),
-          mealsRepository: context.read(),
-          favoritesRepository: context.read(),
-        ),
+      child: FutureBuilder(
+        future: ideas.loadLibrary(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return ideas.IdeasModule();
+          }
+          return const LoadingScreen();
+        },
       ),
     );
   }
@@ -84,46 +86,51 @@ class MealDetailsRoute extends GoRouteData with $MealDetailsRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider<MealDetailsCubit>(
-      create: (BuildContext context) {
-        return MealDetailsCubit(mealsRepository: context.read());
+    return FutureBuilder(
+      future: meal_details.loadLibrary(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return meal_details.MealDetailsModule(mealId: id);
+        }
+        return const LoadingScreen();
       },
-      child: MealDetailsScreen(mealId: id),
     );
   }
 }
 
-class DrinkDetailsRoute extends GoRouteData with $DrinkDetailsRoute {
+class DrinkDetailsRoute extends GoRouteData {
   const DrinkDetailsRoute({required this.id});
 
   final String id;
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider<DrinkDetailsCubit>(
-      create: (BuildContext context) {
-        return DrinkDetailsCubit(drinksRepository: context.read());
+    return FutureBuilder(
+      future: drink_details.loadLibrary(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return drink_details.DrinkDetailsModule(drinkId: id);
+        }
+        return const LoadingScreen();
       },
-      child: DrinkDetailsScreen(drinkId: id),
     );
   }
 }
 
-class FavoritesRoute extends GoRouteData with $FavoritesRoute {
-  const FavoritesRoute();
+class FavoritesListRoute extends GoRouteData with $FavoritesRoute {
+  const FavoritesListRoute();
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return NoTransitionPage(
-      child: BlocProvider<FavoritesListCubit>(
-        create: (BuildContext context) {
-          return FavoritesListCubit(
-            mealsRepository: context.read(),
-            drinksRepository: context.read(),
-            favoritesRepository: context.read(),
-          );
+      child: FutureBuilder(
+        future: favorites_list.loadLibrary(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return favorites_list.FavoritesListModule();
+          }
+          return const LoadingScreen();
         },
-        child: const FavoritesListScreen(),
       ),
     );
   }
@@ -136,15 +143,16 @@ class FavoriteDetailsRoute extends GoRouteData with $FavoriteDetailsRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider<FavoritesDetailsCubit>(
-      create: (BuildContext context) {
-        return FavoritesDetailsCubit(
-          mealsRepository: context.read(),
-          drinksRepository: context.read(),
-          favoritesRepository: context.read(),
-        );
+    return FutureBuilder(
+      future: favorite_details.loadLibrary(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return favorite_details.FavoriteDetailsModule(
+            id: id,
+          );
+        }
+        return const LoadingScreen();
       },
-      child: FavoriteDetailsScreen(id: id),
     );
   }
 }

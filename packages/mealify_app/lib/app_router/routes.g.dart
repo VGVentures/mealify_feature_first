@@ -120,8 +120,8 @@ mixin $DrinkDetailsRoute on GoRouteData {
 }
 
 mixin $FavoritesRoute on GoRouteData {
-  static FavoritesRoute _fromState(GoRouterState state) =>
-      const FavoritesRoute();
+  static FavoritesListRoute _fromState(GoRouterState state) =>
+      const FavoritesListRoute();
 
   @override
   String get location => GoRouteData.$location('/favorites');
