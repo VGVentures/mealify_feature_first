@@ -16,8 +16,14 @@ jobs:
 
       - name: Setup Flutter (FVM)
         uses: kuhnroyal/flutter-fvm-config-action/setup@v3
-        with:
-          post-setup-script: fvm install && fvm use --force
+
+      - name: Install FVM CLI
+        run: |
+          dart pub global activate fvm
+          echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH
+
+      - name: Create FVM Symlink
+        run: fvm use --force
 
       - name: Install Dependencies
         run: fvm flutter pub get
