@@ -8,12 +8,19 @@ find_pubspec_dirs = $(shell find ./packages -maxdepth 2 -name 'pubspec.yaml' -ex
 # Helper function to find directories with test subdirectory inside the packages folder, up to 2 directories deep
 find_test_dirs = $(shell find ./packages -maxdepth 2 -name 'test' -type d -exec dirname {} \; | xargs realpath)
 
-.PHONY: lint_all
-lint_all:
+.PHONY: analyze
+analyze:
 	@set -e; \
 	for dir in $(call find_pubspec_dirs); do \
-		echo "Running lint and format in $$dir"; \
+		echo "Running analyze in $$dir"; \
 		$(DART) analyze $$dir --fatal-infos; \
+	done
+
+.PHONY: check_formatting
+check_formatting:
+	@set -e; \
+	for dir in $(call find_pubspec_dirs); do \
+		echo "Checking formatting in $$dir"; \
 		$(DART) format --set-exit-if-changed $$dir; \
 	done
 
@@ -31,4 +38,14 @@ test:
 	for dir in $(call find_test_dirs); do \
 		echo "Running tests in $$dir"; \
 		cd $$dir && fvm flutter test --no-pub; \
+	done
+
+.PHONY: clean
+clean:
+	@set -e; \
+	echo "Cleaning workspace"; \
+	fvm flutter clean; \
+	for dir in $(call find_pubspec_dirs); do \
+		echo "Cleaning $$dir"; \
+		cd $$dir && fvm flutter clean; \
 	done
