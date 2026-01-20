@@ -14,15 +14,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Flutter (FVM)
-        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
-
       - name: Install FVM CLI
         run: |
           dart pub global activate fvm
           echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH
 
-      - name: Create FVM Symlink
+      - name: Cache FVM SDK
+        uses: actions/cache@v4
+        with:
+          path: ~/fvm/versions
+          key: fvm-${{ runner.os }}-${{ hashFiles('.fvmrc') }}
+
+      - name: Setup Flutter via FVM
+        run: fvm install
+
+      - name: Create Project Symlink
         run: fvm use --force
 
       - name: Install Dependencies
