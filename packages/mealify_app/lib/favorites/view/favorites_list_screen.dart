@@ -60,7 +60,15 @@ class _SuccessView extends StatelessWidget {
               favorite.favoriteId,
             );
           },
-          background: const ColoredBox(color: Colors.red),
+          background: Container(
+            color: Theme.of(context).colorScheme.error,
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Icon(
+              Icons.delete,
+              color: Theme.of(context).colorScheme.onError,
+            ),
+          ),
           child: ListTile(
             title: Text(favorite.meal.title),
             subtitle: Text(favorite.drink.title),
