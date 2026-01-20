@@ -4,9 +4,17 @@
   "@addToFavoritesButtonText": {
     "description": "Text shown on the button that adds the meal + drink combo to favorites"
   },
+  "drinkDetailsTitle": "Cocktail",
+  "@drinkDetailsTitle": {
+    "description": "Text shown in the TabBar of the favorites details page"
+  },
   "favoritesLabel": "Favorites",
   "@favoritesLabel": {
     "description": "The name of the favorites tab"
+  },
+  "favoriteDetailsTitle": "Favorite",
+  "@favoriteDetailsTitle": {
+    "description": "The name of the favorite details page"
   },
   "ideasLabel": "Ideas",
   "@ideasLabel": {
@@ -24,9 +32,9 @@
   "@mealifyAppTitle": {
     "description": "Text shown in the AppBar of the Mealify App"
   },
-  "mealDetailsTitle": "Meal Details",
+  "mealDetailsTitle": "Meal",
   "@mealDetailsTitle": {
-    "description": "Text shown in the AppBar of the meal details page"
+    "description": "Text shown in the TabBar of the favorites details page"
   },
   "favoriteDetailsNotFound": "Favorite Not Found",
   "@favoriteDetailsNotFound": {
