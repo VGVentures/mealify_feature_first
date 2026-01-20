@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:drinks_repository/drinks_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,8 +11,19 @@ import 'package:mealify_app/widgets/error_view.dart';
 import 'package:mealify_app/widgets/loading_view.dart';
 import 'package:meals_repository/meals_repository.dart';
 
-class IdeasScreen extends StatelessWidget {
+class IdeasScreen extends StatefulWidget {
   const IdeasScreen({super.key});
+
+  @override
+  State<IdeasScreen> createState() => _IdeasScreenState();
+}
+
+class _IdeasScreenState extends State<IdeasScreen> {
+  @override
+  void initState() {
+    super.initState();
+    unawaited(context.read<IdeasCubit>().fetchRandomMeal());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,41 +63,60 @@ class _SuccessView extends StatelessWidget {
       child: Column(
         children: [
           Expanded(
-            child: MaterialButton(
-              onPressed: () => MealDetailsRoute(id: meal.id).go(context),
-              child: Image.network(meal.thumbnail),
+            child: Material(
+              color: Colors.transparent,
+              child: Ink.image(
+                image: NetworkImage(meal.thumbnail),
+                fit: BoxFit.cover,
+                child: InkWell(
+                  onTap: () => MealDetailsRoute(id: meal.id).go(context),
+                ),
+              ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsetsGeometry.symmetric(vertical: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                MaterialButton(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: MaterialButton(
                   onPressed: () => context.read<IdeasCubit>().fetchRandomMeal(),
-                  child: Text(
-                    AppLocalizations.of(context).showMeMoreButtonText,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Text(
+                      AppLocalizations.of(context).showMeMoreButtonText,
+                    ),
                   ),
                 ),
-                MaterialButton(
+              ),
+              Expanded(
+                child: MaterialButton(
                   onPressed: () => context.read<IdeasCubit>().toggleFavorite(),
-                  child: Text(
-                    isFavorite
-                        ? AppLocalizations.of(
-                            context,
-                          ).removeFromFavoritesButtonText
-                        : AppLocalizations.of(
-                            context,
-                          ).addToFavoritesButtonText,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Text(
+                      isFavorite
+                          ? AppLocalizations.of(
+                              context,
+                            ).removeFromFavoritesButtonText
+                          : AppLocalizations.of(
+                              context,
+                            ).addToFavoritesButtonText,
+                    ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           Expanded(
-            child: MaterialButton(
-              onPressed: () => DrinkDetailsRoute(id: drink.id).go(context),
-              child: Image.network(drink.thumbnail),
+            child: Material(
+              color: Colors.transparent,
+              child: Ink.image(
+                image: NetworkImage(drink.thumbnail),
+                fit: BoxFit.cover,
+                child: InkWell(
+                  onTap: () => DrinkDetailsRoute(id: drink.id).go(context),
+                ),
+              ),
             ),
           ),
         ],
