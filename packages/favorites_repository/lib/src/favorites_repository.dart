@@ -57,11 +57,6 @@ class FavoritesRepository {
     );
   }
 
-  /// Returns whether or not a meal + drink combo is a favorite
-  Future<bool> isFavorite({required String mealId, required String drinkId}) {
-    return _favoritesDao.getIsFavorite(mealId, drinkId);
-  }
-
   /// Watches whether a meal + drink combo is a favorite
   Stream<bool> watchIsFavorite({
     required String mealId,

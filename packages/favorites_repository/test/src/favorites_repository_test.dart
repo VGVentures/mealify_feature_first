@@ -115,25 +115,6 @@ void main() {
       verifyNoMoreInteractions(favoritesDao);
     });
 
-    test('returns whether a meal + drink combo is a favorite', () async {
-      final favoritesDao = MockFavoritesDao();
-      final repository = FavoritesRepository(favoritesDao: favoritesDao);
-
-      when(
-        () => favoritesDao.getIsFavorite('MEAL_ID', 'DRINK_ID'),
-      ).thenAnswer((_) async => false);
-
-      expect(
-        await repository.isFavorite(mealId: 'MEAL_ID', drinkId: 'DRINK_ID'),
-        false,
-      );
-
-      verify(
-        () => favoritesDao.getIsFavorite('MEAL_ID', 'DRINK_ID'),
-      ).called(1);
-      verifyNoMoreInteractions(favoritesDao);
-    });
-
     test('watches if a meal + drink combo is a favorite', () async {
       final favoritesDao = MockFavoritesDao();
       final repository = FavoritesRepository(favoritesDao: favoritesDao);

@@ -46,11 +46,6 @@ class FavoritesDao extends DatabaseAccessor<MealifyDatabase>
     required String drinkId,
   }) => deleteFavoriteByMealAndDrink(mealId, drinkId);
 
-  /// Gets whether or not a combo of meal + drink is a favorite
-  Future<bool> getIsFavorite(String mealId, String drinkId) {
-    return isFavorite(mealId, drinkId).getSingle();
-  }
-
   /// Watches whether or not a combo of meal + drink is a favorite
   Stream<bool> watchIsFavorite(String mealId, String drinkId) {
     return isFavorite(mealId, drinkId).watchSingle();
