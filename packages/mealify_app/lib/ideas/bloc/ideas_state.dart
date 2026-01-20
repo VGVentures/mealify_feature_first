@@ -33,6 +33,8 @@ class IdeasError implements IdeasState {
 @immutable
 class IdeasSuccess implements IdeasState {
   const IdeasSuccess({
+    required this.drinkLocked,
+    required this.mealLocked,
     required this.meal,
     required this.drink,
     required this.isFavorite,
@@ -41,10 +43,14 @@ class IdeasSuccess implements IdeasState {
   final Meal meal;
   final Drink drink;
   final bool isFavorite;
+  final bool mealLocked;
+  final bool drinkLocked;
 
   @override
   String toString() {
-    return 'IdeasSuccess{meal: $meal, drink: $drink, isFavorite: $isFavorite}';
+    // toString can be longer than 80 chars.
+    // ignore: lines_longer_than_80_chars
+    return 'IdeasSuccess{meal: ${meal.title}, drink: ${drink.title}, isFavorite: $isFavorite, mealLocked: $mealLocked, drinkLocked: $drinkLocked}';
   }
 
   @override
@@ -54,8 +60,11 @@ class IdeasSuccess implements IdeasState {
           runtimeType == other.runtimeType &&
           meal == other.meal &&
           drink == other.drink &&
-          isFavorite == other.isFavorite;
+          isFavorite == other.isFavorite &&
+          mealLocked == other.mealLocked &&
+          drinkLocked == other.drinkLocked;
 
   @override
-  int get hashCode => Object.hash(meal, drink, isFavorite);
+  int get hashCode =>
+      Object.hash(meal, drink, isFavorite, mealLocked, drinkLocked);
 }

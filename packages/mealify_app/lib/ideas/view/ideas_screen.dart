@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:drinks_repository/drinks_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mealify_app/app_router/routes.dart';
@@ -9,7 +8,6 @@ import 'package:mealify_app/ideas/bloc/ideas_state.dart';
 import 'package:mealify_app/l10n/gen/app_localizations.dart';
 import 'package:mealify_app/widgets/error_view.dart';
 import 'package:mealify_app/widgets/loading_view.dart';
-import 'package:meals_repository/meals_repository.dart';
 
 class IdeasScreen extends StatefulWidget {
   const IdeasScreen({super.key});
@@ -33,29 +31,24 @@ class _IdeasScreenState extends State<IdeasScreen> {
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).mealifyAppTitle),
       ),
-      body: switch (state) {
-        IdeasLoading() => const LoadingView(),
-        IdeasError(:final error) => ErrorView(error: error),
-        final IdeasSuccess s => _SuccessView(
-          meal: s.meal,
-          drink: s.drink,
-          isFavorite: s.isFavorite,
-        ),
-      },
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 150),
+        child: switch (state) {
+          IdeasLoading() => const LoadingView(),
+          IdeasError(:final error) => ErrorView(error: error),
+          final IdeasSuccess state => _SuccessView(state: state),
+        },
+      ),
     );
   }
 }
 
 class _SuccessView extends StatelessWidget {
   const _SuccessView({
-    required this.meal,
-    required this.drink,
-    required this.isFavorite,
+    required this.state,
   });
 
-  final Meal meal;
-  final Drink drink;
-  final bool isFavorite;
+  final IdeasSuccess state;
 
   @override
   Widget build(BuildContext context) {
@@ -63,15 +56,25 @@ class _SuccessView extends StatelessWidget {
       child: Column(
         children: [
           Expanded(
-            child: Material(
-              color: Colors.transparent,
-              child: Ink.image(
-                image: NetworkImage(meal.thumbnail),
-                fit: BoxFit.cover,
-                child: InkWell(
-                  onTap: () => MealDetailsRoute(id: meal.id).go(context),
+            child: Stack(
+              children: [
+                Material(
+                  color: Colors.transparent,
+                  child: Ink.image(
+                    image: NetworkImage(state.meal.thumbnail),
+                    fit: BoxFit.cover,
+                    child: InkWell(
+                      onTap: () =>
+                          MealDetailsRoute(id: state.meal.id).go(context),
+                    ),
+                  ),
                 ),
-              ),
+                _LockedWidget(
+                  isLocked: state.mealLocked,
+                  onPressed: () =>
+                      context.read<IdeasCubit>().toggleMealLocked(),
+                ),
+              ],
             ),
           ),
           Row(
@@ -94,7 +97,7 @@ class _SuccessView extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(20),
                     child: Text(
-                      isFavorite
+                      state.isFavorite
                           ? AppLocalizations.of(
                               context,
                             ).removeFromFavoritesButtonText
@@ -108,18 +111,61 @@ class _SuccessView extends StatelessWidget {
             ],
           ),
           Expanded(
-            child: Material(
-              color: Colors.transparent,
-              child: Ink.image(
-                image: NetworkImage(drink.thumbnail),
-                fit: BoxFit.cover,
-                child: InkWell(
-                  onTap: () => DrinkDetailsRoute(id: drink.id).go(context),
+            child: Stack(
+              children: [
+                Material(
+                  color: Colors.transparent,
+                  child: Ink.image(
+                    image: NetworkImage(state.drink.thumbnail),
+                    fit: BoxFit.cover,
+                    child: InkWell(
+                      onTap: () {
+                        DrinkDetailsRoute(id: state.drink.id).go(context);
+                      },
+                    ),
+                  ),
                 ),
-              ),
+                _LockedWidget(
+                  isLocked: state.drinkLocked,
+                  onPressed: () =>
+                      context.read<IdeasCubit>().toggleDrinkLocked(),
+                ),
+              ],
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _LockedWidget extends StatelessWidget {
+  const _LockedWidget({
+    required this.isLocked,
+    required this.onPressed,
+  });
+
+  final VoidCallback onPressed;
+  final bool isLocked;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomRight,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: IconButton.filledTonal(
+          style: IconButton.styleFrom(
+            backgroundColor: Theme.of(
+              context,
+            ).colorScheme.surfaceContainerHighest.withAlpha(200),
+          ),
+          onPressed: onPressed,
+          icon: Icon(
+            isLocked ? Icons.lock_outline : Icons.lock_open,
+          ),
+          iconSize: 32,
+        ),
       ),
     );
   }

@@ -27,14 +27,24 @@ class IdeasCubit extends Cubit<IdeasState> {
   Future<void> fetchRandomMeal() async {
     await _fetchRandomMealsOperation?.cancel();
     await _isFavoriteSubscription?.cancel();
+    final initialState = state;
+    final mealLocked = initialState is IdeasSuccess && initialState.mealLocked;
+    final drinkLocked =
+        initialState is IdeasSuccess && initialState.drinkLocked;
     emit(const IdeasLoading());
 
     try {
       _fetchRandomMealsOperation =
           CancelableOperation<List<dynamic>>.fromFuture(
             Future.wait([
-              _mealsRepository.getRandomMeal(),
-              _drinksRepository.getRandomDrink(),
+              if (mealLocked)
+                Future.value(initialState.meal)
+              else
+                _mealsRepository.getRandomMeal(),
+              if (drinkLocked)
+                Future.value(initialState.drink)
+              else
+                _drinksRepository.getRandomDrink(),
             ]),
           );
       final results = await _fetchRandomMealsOperation!.value;
@@ -50,6 +60,8 @@ class IdeasCubit extends Cubit<IdeasState> {
                   meal: meal,
                   drink: drink,
                   isFavorite: isFavorite,
+                  drinkLocked: drinkLocked,
+                  mealLocked: mealLocked,
                 ),
               );
             },
@@ -62,21 +74,46 @@ class IdeasCubit extends Cubit<IdeasState> {
     }
   }
 
-  Future<void> toggleFavorite() async {
-    if (state is! IdeasSuccess) {
-      throw ToggleFavoriteBeforeSuccessException();
-    }
-    final s = state as IdeasSuccess;
+  void toggleMealLocked() {
+    final currentState = state as IdeasSuccess;
 
-    if (s.isFavorite) {
+    emit(
+      IdeasSuccess(
+        meal: currentState.meal,
+        drink: currentState.drink,
+        isFavorite: currentState.isFavorite,
+        drinkLocked: currentState.drinkLocked,
+        mealLocked: !currentState.mealLocked,
+      ),
+    );
+  }
+
+  void toggleDrinkLocked() {
+    final currentState = state as IdeasSuccess;
+
+    emit(
+      IdeasSuccess(
+        meal: currentState.meal,
+        drink: currentState.drink,
+        isFavorite: currentState.isFavorite,
+        drinkLocked: !currentState.drinkLocked,
+        mealLocked: currentState.mealLocked,
+      ),
+    );
+  }
+
+  Future<void> toggleFavorite() async {
+    final currentState = state as IdeasSuccess;
+
+    if (currentState.isFavorite) {
       await _favoritesRepository.removeFavoriteByMealAndDrinkId(
-        mealId: s.meal.id,
-        drinkId: s.drink.id,
+        mealId: currentState.meal.id,
+        drinkId: currentState.drink.id,
       );
     } else {
       await _favoritesRepository.addFavorite(
-        mealId: s.meal.id,
-        drinkId: s.drink.id,
+        mealId: currentState.meal.id,
+        drinkId: currentState.drink.id,
       );
     }
   }
@@ -88,5 +125,3 @@ class IdeasCubit extends Cubit<IdeasState> {
     return super.close();
   }
 }
-
-class ToggleFavoriteBeforeSuccessException implements Exception {}
