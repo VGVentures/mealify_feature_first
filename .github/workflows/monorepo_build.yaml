@@ -1,0 +1,48 @@
+name: Monorepo Build
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+    paths:
+      - "packages/**"
+      - ".github/workflows/monorepo_build.yaml"
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      flutter_version: ${{ steps.read_fvm.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: read_fvm
+        name: Extract Version from .fvmrc
+        run: |
+          VERSION=$(jq -r .flutter .fvmrc)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+  build:
+    needs: setup
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - cocktaildb_api_client
+          - drinks_repository
+          - favorites_repository
+          - http_client_factory
+          - mealdb_api_client
+          - mealify_app
+          - mealify_database
+          - meals_repository
+
+    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
+    with:
+      flutter_version: ${{ needs.setup.outputs.flutter_version }}
+      working_directory: packages/${{ matrix.package }}
+      coverage_excludes: "**/*.g.dart"

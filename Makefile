@@ -1,6 +1,7 @@
 # Setup the paths to the Dart SDK and the Flutter SDK. Use realpath to resolve absolute paths.
 SDK_PATH := $(shell realpath .fvm/flutter_sdk)
 DART := $(shell realpath $(SDK_PATH)/bin/dart)
+FLUTTER := $(shell realpath $(SDK_PATH)/bin/flutter)
 
 # Helper function to find directories with pubspec.yaml inside the packages folder, up to 2 directories deep
 find_pubspec_dirs = $(shell find ./packages -maxdepth 2 -name 'pubspec.yaml' -exec dirname {} \; | xargs realpath)
@@ -37,15 +38,15 @@ test:
 	@set -e; \
 	for dir in $(call find_test_dirs); do \
 		echo "Running tests in $$dir"; \
-		cd $$dir && fvm flutter test --no-pub; \
+		cd $$dir && $(FLUTTER) test --no-pub; \
 	done
 
 .PHONY: clean
 clean:
 	@set -e; \
 	echo "Cleaning workspace"; \
-	fvm flutter clean; \
+	$(FLUTTER) clean; \
 	for dir in $(call find_pubspec_dirs); do \
 		echo "Cleaning $$dir"; \
-		cd $$dir && fvm flutter clean; \
+		cd $$dir && $(FLUTTER) clean; \
 	done
