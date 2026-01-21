@@ -31,6 +31,7 @@ class IdeasCubit extends Cubit<IdeasState> {
     final mealLocked = initialState is IdeasSuccess && initialState.mealLocked;
     final drinkLocked =
         initialState is IdeasSuccess && initialState.drinkLocked;
+    final completer = Completer<void>();
     emit(const IdeasLoading());
 
     try {
@@ -64,14 +65,19 @@ class IdeasCubit extends Cubit<IdeasState> {
                   mealLocked: mealLocked,
                 ),
               );
+              if (!completer.isCompleted) completer.complete();
             },
             onError: (Object e) {
+              if (!completer.isCompleted) completer.complete();
               emit(IdeasError(e));
             },
           );
     } on Object catch (e) {
+      if (!completer.isCompleted) completer.complete();
       emit(IdeasError(e));
     }
+
+    return completer.future;
   }
 
   void toggleMealLocked() {
