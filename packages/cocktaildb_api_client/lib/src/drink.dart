@@ -169,4 +169,123 @@ class Drink {
   final String? strImageAttribution;
   final String? strCreativeCommonsConfirmed;
   final String? dateModified;
+
+  @override
+  String toString() {
+    // toString can be longer than 80 chars
+    // ignore: lines_longer_than_80_chars
+    return 'Drink{idDrink: $idDrink, strDrink: $strDrink, strDrinkAlternate: $strDrinkAlternate, strTags: $strTags, strVideo: $strVideo, strCategory: $strCategory, strIba: $strIba, strAlcoholic: $strAlcoholic, strGlass: $strGlass, strInstructions: $strInstructions, strInstructionsEs: $strInstructionsEs, strInstructionsDe: $strInstructionsDe, strInstructionsFr: $strInstructionsFr, strInstructionsIt: $strInstructionsIt, strInstructionsZhHans: $strInstructionsZhHans, strInstructionsZhHant: $strInstructionsZhHant, strDrinkThumb: $strDrinkThumb, strIngredient1: $strIngredient1, strIngredient2: $strIngredient2, strIngredient3: $strIngredient3, strIngredient4: $strIngredient4, strIngredient5: $strIngredient5, strIngredient6: $strIngredient6, strIngredient7: $strIngredient7, strIngredient8: $strIngredient8, strIngredient9: $strIngredient9, strIngredient10: $strIngredient10, strIngredient11: $strIngredient11, strIngredient12: $strIngredient12, strIngredient13: $strIngredient13, strIngredient14: $strIngredient14, strIngredient15: $strIngredient15, strMeasure1: $strMeasure1, strMeasure2: $strMeasure2, strMeasure3: $strMeasure3, strMeasure4: $strMeasure4, strMeasure5: $strMeasure5, strMeasure6: $strMeasure6, strMeasure7: $strMeasure7, strMeasure8: $strMeasure8, strMeasure9: $strMeasure9, strMeasure10: $strMeasure10, strMeasure11: $strMeasure11, strMeasure12: $strMeasure12, strMeasure13: $strMeasure13, strMeasure14: $strMeasure14, strMeasure15: $strMeasure15, strImageSource: $strImageSource, strImageAttribution: $strImageAttribution, strCreativeCommonsConfirmed: $strCreativeCommonsConfirmed, dateModified: $dateModified}';
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Drink &&
+          runtimeType == other.runtimeType &&
+          idDrink == other.idDrink &&
+          strDrink == other.strDrink &&
+          strDrinkAlternate == other.strDrinkAlternate &&
+          strTags == other.strTags &&
+          strVideo == other.strVideo &&
+          strCategory == other.strCategory &&
+          strIba == other.strIba &&
+          strAlcoholic == other.strAlcoholic &&
+          strGlass == other.strGlass &&
+          strInstructions == other.strInstructions &&
+          strInstructionsEs == other.strInstructionsEs &&
+          strInstructionsDe == other.strInstructionsDe &&
+          strInstructionsFr == other.strInstructionsFr &&
+          strInstructionsIt == other.strInstructionsIt &&
+          strInstructionsZhHans == other.strInstructionsZhHans &&
+          strInstructionsZhHant == other.strInstructionsZhHant &&
+          strDrinkThumb == other.strDrinkThumb &&
+          strIngredient1 == other.strIngredient1 &&
+          strIngredient2 == other.strIngredient2 &&
+          strIngredient3 == other.strIngredient3 &&
+          strIngredient4 == other.strIngredient4 &&
+          strIngredient5 == other.strIngredient5 &&
+          strIngredient6 == other.strIngredient6 &&
+          strIngredient7 == other.strIngredient7 &&
+          strIngredient8 == other.strIngredient8 &&
+          strIngredient9 == other.strIngredient9 &&
+          strIngredient10 == other.strIngredient10 &&
+          strIngredient11 == other.strIngredient11 &&
+          strIngredient12 == other.strIngredient12 &&
+          strIngredient13 == other.strIngredient13 &&
+          strIngredient14 == other.strIngredient14 &&
+          strIngredient15 == other.strIngredient15 &&
+          strMeasure1 == other.strMeasure1 &&
+          strMeasure2 == other.strMeasure2 &&
+          strMeasure3 == other.strMeasure3 &&
+          strMeasure4 == other.strMeasure4 &&
+          strMeasure5 == other.strMeasure5 &&
+          strMeasure6 == other.strMeasure6 &&
+          strMeasure7 == other.strMeasure7 &&
+          strMeasure8 == other.strMeasure8 &&
+          strMeasure9 == other.strMeasure9 &&
+          strMeasure10 == other.strMeasure10 &&
+          strMeasure11 == other.strMeasure11 &&
+          strMeasure12 == other.strMeasure12 &&
+          strMeasure13 == other.strMeasure13 &&
+          strMeasure14 == other.strMeasure14 &&
+          strMeasure15 == other.strMeasure15 &&
+          strImageSource == other.strImageSource &&
+          strImageAttribution == other.strImageAttribution &&
+          strCreativeCommonsConfirmed == other.strCreativeCommonsConfirmed &&
+          dateModified == other.dateModified;
+
+  @override
+  int get hashCode => Object.hashAll([
+    idDrink,
+    strDrink,
+    strDrinkAlternate,
+    strTags,
+    strVideo,
+    strCategory,
+    strIba,
+    strAlcoholic,
+    strGlass,
+    strInstructions,
+    strInstructionsEs,
+    strInstructionsDe,
+    strInstructionsFr,
+    strInstructionsIt,
+    strInstructionsZhHans,
+    strInstructionsZhHant,
+    strDrinkThumb,
+    strIngredient1,
+    strIngredient2,
+    strIngredient3,
+    strIngredient4,
+    strIngredient5,
+    strIngredient6,
+    strIngredient7,
+    strIngredient8,
+    strIngredient9,
+    strIngredient10,
+    strIngredient11,
+    strIngredient12,
+    strIngredient13,
+    strIngredient14,
+    strIngredient15,
+    strMeasure1,
+    strMeasure2,
+    strMeasure3,
+    strMeasure4,
+    strMeasure5,
+    strMeasure6,
+    strMeasure7,
+    strMeasure8,
+    strMeasure9,
+    strMeasure10,
+    strMeasure11,
+    strMeasure12,
+    strMeasure13,
+    strMeasure14,
+    strMeasure15,
+    strImageSource,
+    strImageAttribution,
+    strCreativeCommonsConfirmed,
+    dateModified,
+  ]);
 }

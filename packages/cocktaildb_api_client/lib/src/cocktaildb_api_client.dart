@@ -1,9 +1,10 @@
 import 'dart:convert';
 
 import 'package:cocktaildb_api_client/cocktaildb_api_client.dart';
-import 'package:cocktaildb_api_client/src/random_drink_response.dart';
+import 'package:cocktaildb_api_client/src/single_drink_response.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_status/http_status.dart';
+import 'package:meta/meta.dart';
 
 /// A client that interacts with the MealDB api
 class CocktailDbApiClient {
@@ -15,31 +16,24 @@ class CocktailDbApiClient {
 
   final http.Client _httpClient;
 
+  /// The uri to fetch a random drink
+  static final Uri randomDrinkUri = Uri.parse(
+    'https://www.thecocktaildb.com/api/json/v1/1/random.php',
+  );
+
   /// Fetch a random meal from the MealDB api
   Future<Drink> fetchDrinkById(String id) async {
-    final uri = Uri.parse(
-      'https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=$id',
+    return _fetchSingleDrink(
+      Uri.parse(
+        'https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=$id',
+      ),
     );
-    final httpResponse = await _httpClient.get(uri);
-
-    if (httpResponse.statusCode >= HttpStatusCode.badRequest) {
-      throw CocktailDbApiHttpException(
-        uri: uri,
-        statusCode: httpResponse.statusCode,
-        body: httpResponse.body,
-      );
-    } else {
-      return SingleDrinkResponse.fromJson(
-        jsonDecode(httpResponse.body) as Map<String, dynamic>,
-      ).drink;
-    }
   }
 
   /// Fetch a random meal from the MealDB api
-  Future<Drink> fetchRandomDrink() async {
-    final uri = Uri.parse(
-      'https://www.thecocktaildb.com/api/json/v1/1/random.php',
-    );
+  Future<Drink> fetchRandomDrink() => _fetchSingleDrink(randomDrinkUri);
+
+  Future<Drink> _fetchSingleDrink(Uri uri) async {
     final httpResponse = await _httpClient.get(uri);
 
     if (httpResponse.statusCode >= HttpStatusCode.badRequest) {
@@ -48,15 +42,16 @@ class CocktailDbApiClient {
         statusCode: httpResponse.statusCode,
         body: httpResponse.body,
       );
-    } else {
-      return SingleDrinkResponse.fromJson(
-        jsonDecode(httpResponse.body) as Map<String, dynamic>,
-      ).drink;
     }
+
+    return SingleDrinkResponse.fromJson(
+      jsonDecode(httpResponse.body) as Map<String, dynamic>,
+    ).drink;
   }
 }
 
 /// There was an error fetching the http request
+@immutable
 class CocktailDbApiHttpException implements Exception {
   /// Constructs an HttpException
   const CocktailDbApiHttpException({
@@ -75,5 +70,19 @@ class CocktailDbApiHttpException implements Exception {
   final String body;
 
   @override
-  String toString() => 'HttpException {\n  $uri,\n  $statusCode,\n  $body\n}';
+  String toString() {
+    return 'CocktailDbApiHttpException{uri: $uri, statusCode: $statusCode, body: $body}';
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CocktailDbApiHttpException &&
+          runtimeType == other.runtimeType &&
+          uri == other.uri &&
+          statusCode == other.statusCode &&
+          body == other.body;
+
+  @override
+  int get hashCode => Object.hash(uri, statusCode, body);
 }
