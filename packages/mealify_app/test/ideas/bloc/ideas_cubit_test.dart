@@ -20,13 +20,13 @@ void main() {
     late _MockDrinksRepository drinksRepository;
     late _MockMealsRepository mealsRepository;
     late _MockFavoritesRepository favoritesRepository;
-    late StreamController<bool> _watchIsFavoritesController;
+    late StreamController<bool> watchIsFavoritesController;
 
     setUp(() {
       drinksRepository = _MockDrinksRepository();
       mealsRepository = _MockMealsRepository();
       favoritesRepository = _MockFavoritesRepository();
-      _watchIsFavoritesController = StreamController();
+      watchIsFavoritesController = StreamController();
     });
 
     test('starts in a loading state', () {
@@ -274,7 +274,7 @@ void main() {
             thumbnail: '',
           ),
         );
-        _watchIsFavoritesController.add(false);
+        watchIsFavoritesController.add(false);
         when(
           () => favoritesRepository.addFavorite(mealId: 'MID', drinkId: 'DID'),
         ).thenAnswer((_) async {});
@@ -283,7 +283,7 @@ void main() {
             mealId: 'MID',
             drinkId: 'DID',
           ),
-        ).thenAnswer((_) => _watchIsFavoritesController.stream);
+        ).thenAnswer((_) => watchIsFavoritesController.stream);
       },
       build: () {
         return IdeasCubit(
@@ -295,7 +295,7 @@ void main() {
       act: (bloc) async {
         await bloc.fetchRandomMeal();
         await bloc.toggleFavorite();
-        _watchIsFavoritesController.add(true);
+        watchIsFavoritesController.add(true);
       },
       expect: () => [
         const IdeasLoading(),
@@ -355,7 +355,7 @@ void main() {
             thumbnail: '',
           ),
         );
-        _watchIsFavoritesController.add(true);
+        watchIsFavoritesController.add(true);
         when(
           () => favoritesRepository.removeFavoriteByMealAndDrinkId(
             mealId: 'MID',
@@ -367,7 +367,7 @@ void main() {
             mealId: 'MID',
             drinkId: 'DID',
           ),
-        ).thenAnswer((_) => _watchIsFavoritesController.stream);
+        ).thenAnswer((_) => watchIsFavoritesController.stream);
       },
       build: () {
         return IdeasCubit(
@@ -379,7 +379,7 @@ void main() {
       act: (bloc) async {
         await bloc.fetchRandomMeal();
         await bloc.toggleFavorite();
-        _watchIsFavoritesController.add(false);
+        watchIsFavoritesController.add(false);
       },
       expect: () => [
         const IdeasLoading(),
