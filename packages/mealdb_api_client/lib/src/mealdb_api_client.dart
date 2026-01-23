@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:http_status/http_status.dart';
 import 'package:mealdb_api_client/src/meal.dart';
 import 'package:mealdb_api_client/src/single_meal_response.dart';
+import 'package:meta/meta.dart';
 
 /// A client that interacts with the MealDB api
 class MealDbApiClient {
@@ -15,29 +16,23 @@ class MealDbApiClient {
 
   final http.Client _httpClient;
 
+  static final Uri randomMealUri = Uri.parse(
+    'https://www.themealdb.com/api/json/v1/1/random.php',
+  );
+
   /// Fetch a random meal from the MealDB api
   Future<Meal> fetchMealById(String id) async {
-    final uri = Uri.parse(
-      'https://www.themealdb.com/api/json/v1/1/lookup.php?i=$id',
+    return _fetchSingleMeal(
+      Uri.parse(
+        'https://www.themealdb.com/api/json/v1/1/lookup.php?i=$id',
+      ),
     );
-    final httpResponse = await _httpClient.get(uri);
-
-    if (httpResponse.statusCode >= HttpStatusCode.badRequest) {
-      throw MealDbApiHttpException(
-        uri: uri,
-        statusCode: httpResponse.statusCode,
-        body: httpResponse.body,
-      );
-    } else {
-      return SingleMealResponse.fromJson(
-        jsonDecode(httpResponse.body) as Map<String, dynamic>,
-      ).meal;
-    }
   }
 
   /// Fetch a random meal from the MealDB api
-  Future<Meal> fetchRandomMeal() async {
-    final uri = Uri.parse('https://www.themealdb.com/api/json/v1/1/random.php');
+  Future<Meal> fetchRandomMeal() async => _fetchSingleMeal(randomMealUri);
+
+  Future<Meal> _fetchSingleMeal(Uri uri) async {
     final httpResponse = await _httpClient.get(uri);
 
     if (httpResponse.statusCode >= HttpStatusCode.badRequest) {
@@ -46,15 +41,16 @@ class MealDbApiClient {
         statusCode: httpResponse.statusCode,
         body: httpResponse.body,
       );
-    } else {
-      return SingleMealResponse.fromJson(
-        jsonDecode(httpResponse.body) as Map<String, dynamic>,
-      ).meal;
     }
+
+    return SingleMealResponse.fromJson(
+      jsonDecode(httpResponse.body) as Map<String, dynamic>,
+    ).meal;
   }
 }
 
 /// There was an error fetching the http request
+@immutable
 class MealDbApiHttpException implements Exception {
   /// Constructs an HttpException
   const MealDbApiHttpException({
@@ -74,4 +70,16 @@ class MealDbApiHttpException implements Exception {
 
   @override
   String toString() => 'HttpException {\n  $uri,\n  $statusCode,\n  $body\n}';
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MealDbApiHttpException &&
+          runtimeType == other.runtimeType &&
+          uri == other.uri &&
+          statusCode == other.statusCode &&
+          body == other.body;
+
+  @override
+  int get hashCode => Object.hash(uri, statusCode, body);
 }

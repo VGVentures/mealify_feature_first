@@ -26,7 +26,8 @@ jobs:
           VERSION=$(jq -r .flutter .fvmrc)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-  build:
+  verify_and_test:
+    name: Verify and Test
     needs: setup
     strategy:
       fail-fast: false

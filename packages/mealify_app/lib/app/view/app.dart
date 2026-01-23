@@ -23,9 +23,6 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  final MealifyDatabase mealifyDatabase = MealifyDatabase(
-    queryExecutor: queryExecutorFactory(),
-  );
   late final GoRouter _router;
 
   @override
@@ -42,11 +39,16 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        Provider<MealifyDatabase>(
+          create: (context) {
+            return MealifyDatabase(queryExecutor: queryExecutorFactory());
+          },
+        ),
         Provider<http.Client>(create: (context) => httpClientFactory()),
-        Provider<DrinksDao>(create: (context) => DrinksDao(mealifyDatabase)),
-        Provider<MealsDao>(create: (context) => MealsDao(mealifyDatabase)),
+        Provider<DrinksDao>(create: (context) => DrinksDao(context.read())),
+        Provider<MealsDao>(create: (context) => MealsDao(context.read())),
         Provider<FavoritesDao>(
-          create: (context) => FavoritesDao(mealifyDatabase),
+          create: (context) => FavoritesDao(context.read()),
         ),
         Provider<MealsRepository>(
           create: (context) => MealsRepository(
