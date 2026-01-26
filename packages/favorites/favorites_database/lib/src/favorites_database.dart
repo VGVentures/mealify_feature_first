@@ -22,7 +22,7 @@ class FavoritesDatabase extends _$FavoritesDatabase {
       findFavoriteById(favoriteId).getSingleOrNull();
 
   /// Watch the list of favorites
-  Stream<List<Favorite>> watchAll() => findAllFavorites().watch();
+  Stream<List<String>> watchAllIds() => findAllFavoriteIds().watch();
 
   /// Add a favorite to the database
   Future<void> addFavorite({

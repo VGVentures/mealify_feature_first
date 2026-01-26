@@ -1,4 +1,3 @@
-import 'package:favorites_domain/favorites_domain.dart';
 import 'package:flutter/cupertino.dart';
 
 /// The State for the favorites list screen
@@ -16,8 +15,10 @@ class FavoritesListSuccess implements FavoritesListState {
   /// The success state for the favorites list screen
   const FavoritesListSuccess({required this.favorites});
 
-  /// The list of favorites the screen will display
-  final List<Favorite> favorites;
+  /// The list of ids for the user's favorites. The individual ListTile is
+  /// responsible for loading data about the Favorite. This is useful for
+  /// pagination scenarios
+  final List<String> favorites;
 
   @override
   String toString() {

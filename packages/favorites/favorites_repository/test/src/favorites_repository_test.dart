@@ -84,34 +84,16 @@ void main() {
       final repository = FavoritesRepository(favoritesDb: favoritesDb);
 
       when(
-        favoritesDb.watchAll,
-      ).thenAnswer(
-        (_) => Stream.value([
-          db.Favorite(
-            id: 'FAVORITE_ID',
-            mealId: 'MEAL_ID',
-            drinkId: 'DRINK_ID',
-            createdAt: DateTime(2026),
-          ),
-        ]),
-      );
+        favoritesDb.watchAllIds,
+      ).thenAnswer((_) => Stream.value(['FAVORITE_ID']));
 
       expect(
-        repository.watchAllFavorites(),
-        emits(
-          [
-            RawFavorite(
-              id: 'FAVORITE_ID',
-              mealId: 'MEAL_ID',
-              drinkId: 'DRINK_ID',
-              createdAt: DateTime(2026),
-            ),
-          ],
-        ),
+        repository.watchAllFavoriteIds(),
+        emits(['FAVORITE_ID']),
       );
 
       verify(
-        favoritesDb.watchAll,
+        favoritesDb.watchAllIds,
       ).called(1);
       verifyNoMoreInteractions(favoritesDb);
     });

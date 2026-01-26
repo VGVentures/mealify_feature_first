@@ -19,8 +19,8 @@ class FavoritesListModule extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider(
-      create: (context) => WatchAllFavoritesQuery(
+    return Provider<GetFavoriteQuery>(
+      create: (context) => GetFavoriteQuery(
         mealsRepository: context.read(),
         drinksRepository: context.read(),
         favoritesRepository: context.read(),
@@ -28,7 +28,6 @@ class FavoritesListModule extends StatelessWidget {
       child: BlocProvider<FavoritesListCubit>(
         create: (BuildContext context) {
           return FavoritesListCubit(
-            watchAllFavoritesQuery: context.read(),
             favoritesRepository: context.read(),
           );
         },

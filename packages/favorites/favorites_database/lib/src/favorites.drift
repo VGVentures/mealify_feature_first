@@ -10,8 +10,8 @@ CREATE TABLE favorites (
 findFavoriteById: 
     SELECT * FROM favorites WHERE id = :favoriteId;
 
-findAllFavorites:
-    SELECT * FROM favorites ORDER BY created_at DESC;
+findAllFavoriteIds:
+    SELECT id FROM favorites ORDER BY created_at DESC;
 
 deleteFavoriteById:
     DELETE FROM favorites WHERE id = :favoriteId;

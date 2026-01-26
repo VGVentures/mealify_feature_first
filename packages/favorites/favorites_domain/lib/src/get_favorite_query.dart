@@ -27,13 +27,10 @@ class GetFavoriteQuery {
       throw FavoriteNotFoundException(favoriteId);
     }
 
-    final meal = await _mealsRepository.getMealById(rawFavorite.mealId);
-    final drink = await _drinksRepository.getDrinkById(rawFavorite.drinkId);
-
     return Favorite(
       id: favoriteId,
-      meal: meal,
-      drink: drink,
+      meal: await _mealsRepository.getMealById(rawFavorite.mealId),
+      drink: await _drinksRepository.getDrinkById(rawFavorite.drinkId),
       createdAt: rawFavorite.createdAt,
     );
   }

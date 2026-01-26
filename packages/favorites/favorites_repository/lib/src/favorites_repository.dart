@@ -25,13 +25,7 @@ class FavoritesRepository implements IFavoritesRepository {
   }
 
   @override
-  Stream<List<RawFavorite>> watchAllFavorites() {
-    return _favoritesDb.watchAll().map(
-      (favorites) => favorites
-          .map(_dbToDomainFavoriteConverter.convert)
-          .toList(growable: false),
-    );
-  }
+  Stream<List<String>> watchAllFavoriteIds() => _favoritesDb.watchAllIds();
 
   @override
   Future<void> addFavorite({

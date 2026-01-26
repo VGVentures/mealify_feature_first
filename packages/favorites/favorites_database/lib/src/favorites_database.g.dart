@@ -331,12 +331,12 @@ abstract class _$FavoritesDatabase extends GeneratedDatabase {
     ).asyncMap(favorites.mapFromRow);
   }
 
-  Selectable<Favorite> findAllFavorites() {
+  Selectable<String> findAllFavoriteIds() {
     return customSelect(
-      'SELECT * FROM favorites ORDER BY created_at DESC',
+      'SELECT id FROM favorites ORDER BY created_at DESC',
       variables: [],
       readsFrom: {favorites},
-    ).asyncMap(favorites.mapFromRow);
+    ).map((QueryRow row) => row.read<String>('id'));
   }
 
   Future<int> deleteFavoriteById(String favoriteId) {

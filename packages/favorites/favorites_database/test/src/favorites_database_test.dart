@@ -14,7 +14,7 @@ void main() {
         ),
       );
 
-      await expectLater(db.watchAll(), emits([]));
+      await expectLater(db.watchAllIds(), emits([]));
 
       await db.close();
     });
@@ -105,21 +105,8 @@ void main() {
         );
 
         await expectLater(
-          db.watchAll(),
-          emits([
-            Favorite(
-              id: '1',
-              mealId: 'MEAL_ID_1',
-              drinkId: 'DRINK_ID_1',
-              createdAt: fixedDate,
-            ),
-            Favorite(
-              id: '2',
-              mealId: 'MEAL_ID_2',
-              drinkId: 'DRINK_ID_2',
-              createdAt: fixedDate,
-            ),
-          ]),
+          db.watchAllIds(),
+          emits(['1', '2']),
         );
 
         await db.close();

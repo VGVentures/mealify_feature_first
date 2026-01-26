@@ -6,7 +6,7 @@ abstract interface class IFavoritesRepository {
   Future<RawFavorite?> getFavoriteById(String favoriteId);
 
   /// Watch a list of all favorites
-  Stream<List<RawFavorite>> watchAllFavorites();
+  Stream<List<String>> watchAllFavoriteIds();
 
   /// Save a favorite on behalf of the user
   Future<void> addFavorite({
