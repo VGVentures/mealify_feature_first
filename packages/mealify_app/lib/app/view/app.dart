@@ -1,5 +1,9 @@
 import 'package:cocktaildb_api_client/cocktaildb_api_client.dart';
+import 'package:drinks_database/drinks_database.dart';
+import 'package:drinks_domain/drinks_domain.dart';
 import 'package:drinks_repository/drinks_repository.dart';
+import 'package:favorites_database/favorites_database.dart';
+import 'package:favorites_domain/favorites_domain.dart';
 import 'package:favorites_repository/favorites_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -7,11 +11,12 @@ import 'package:http/http.dart' as http;
 import 'package:http_client_factory/http_client_factory.dart';
 import 'package:mealdb_api_client/mealdb_api_client.dart';
 import 'package:mealify_app/app_router/routes.dart';
-import 'package:mealify_app/database/query_executor_factory.dart';
-import 'package:mealify_app/l10n/l10n.dart';
-import 'package:mealify_database/mealify_database.dart';
+import 'package:mealify_localizations/mealify_localizations.dart';
+import 'package:meals_database/meals_database.dart';
+import 'package:meals_domain/meals_domain.dart';
 import 'package:meals_repository/meals_repository.dart';
 import 'package:provider/provider.dart';
+import 'package:query_executor_factory/query_executor_factory.dart';
 
 class App extends StatefulWidget {
   const App({required this.navigatorKey, super.key});
@@ -39,36 +44,32 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<MealifyDatabase>(
-          create: (context) {
-            return MealifyDatabase(queryExecutor: queryExecutorFactory());
-          },
-        ),
         Provider<http.Client>(create: (context) => httpClientFactory()),
-        Provider<DrinksDao>(create: (context) => DrinksDao(context.read())),
-        Provider<MealsDao>(create: (context) => MealsDao(context.read())),
-        Provider<FavoritesDao>(
-          create: (context) => FavoritesDao(context.read()),
+        Provider<IDrinksRepository>(
+          create: (context) => DrinksRepository(
+            drinksDb: DrinksDatabase(
+              queryExecutor: queryExecutorFactory('mealify_drinks_database'),
+            ),
+            cocktailDbApiClient: CocktailDbApiClient(
+              httpClient: context.read(),
+            ),
+          ),
         ),
-        Provider<MealsRepository>(
+        Provider<IFavoritesRepository>(
+          create: (context) => FavoritesRepository(
+            favoritesDb: FavoritesDatabase(
+              queryExecutor: queryExecutorFactory('mealify_favorites_database'),
+            ),
+          ),
+        ),
+        Provider<IMealsRepository>(
           create: (context) => MealsRepository(
-            mealsDao: context.read<MealsDao>(),
+            mealsDb: MealsDatabase(
+              queryExecutor: queryExecutorFactory('mealify_meals_database'),
+            ),
             mealDbApiClient: MealDbApiClient(
               httpClient: context.read<http.Client>(),
             ),
-          ),
-        ),
-        Provider<DrinksRepository>(
-          create: (context) => DrinksRepository(
-            drinksDao: context.read<DrinksDao>(),
-            cocktailDbApiClient: CocktailDbApiClient(
-              httpClient: context.read<http.Client>(),
-            ),
-          ),
-        ),
-        Provider<FavoritesRepository>(
-          create: (context) => FavoritesRepository(
-            favoritesDao: context.read<FavoritesDao>(),
           ),
         ),
       ],
@@ -76,8 +77,8 @@ class _AppState extends State<App> {
         routerConfig: _router,
         theme: ThemeData(),
         darkTheme: ThemeData.dark(),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: MealifyLocalizations.localizationsDelegates,
+        supportedLocales: MealifyLocalizations.supportedLocales,
       ),
     );
   }

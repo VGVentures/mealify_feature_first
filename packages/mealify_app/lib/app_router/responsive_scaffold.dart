@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mealify_app/l10n/l10n.dart';
+import 'package:mealify_localizations/mealify_localizations.dart';
 
 /// A scaffold that shows a bottom navigation bar for small screens and a
 /// navigation rail for larger screens
@@ -54,19 +54,17 @@ class _MobileScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context);
-
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: NavigationBar(
         selectedIndex: navigationShell.currentIndex,
         destinations: [
           NavigationDestination(
-            label: localizations.ideasLabel,
+            label: context.l10n.ideasLabel,
             icon: const Icon(Icons.lightbulb),
           ),
           NavigationDestination(
-            label: localizations.favoritesLabel,
+            label: context.l10n.favoritesLabel,
             icon: const Icon(Icons.favorite),
           ),
         ],
@@ -89,8 +87,6 @@ class _DesktopScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context);
-
     return Scaffold(
       body: Row(
         children: [
@@ -99,11 +95,11 @@ class _DesktopScaffold extends StatelessWidget {
             destinations: [
               NavigationRailDestination(
                 icon: const Icon(Icons.lightbulb),
-                label: Text(localizations.ideasLabel),
+                label: Text(context.l10n.ideasLabel),
               ),
               NavigationRailDestination(
                 icon: const Icon(Icons.favorite),
-                label: Text(localizations.favoritesLabel),
+                label: Text(context.l10n.favoritesLabel),
               ),
             ],
             selectedIndex: navigationShell.currentIndex,

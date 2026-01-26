@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mealify_app/l10n/l10n.dart';
+import 'package:mealify_localizations/mealify_localizations.dart';
 
 extension PumpApp on WidgetTester {
   Future<void> pumpApp(Widget widget) {
     return pumpWidget(
       MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: MealifyLocalizations.localizationsDelegates,
+        supportedLocales: MealifyLocalizations.supportedLocales,
         home: widget,
       ),
     );

@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:mealify_app/widgets/loading_screen.dart';
+import 'package:mealify_design_system/mealify_design_system.dart';
 
 typedef LibraryLoader = Future<void> Function();
 

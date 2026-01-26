@@ -1,15 +1,15 @@
+import 'package:drinks_presentation/drinks_presentation.dart'
+    deferred as drink_details;
+import 'package:favorites_presentation/favorite_details.dart'
+    deferred as favorite_details;
+import 'package:favorites_presentation/favorites_list.dart'
+    deferred as favorites_list;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ideas_presentation/ideas_presentation.dart' deferred as ideas;
 import 'package:mealify_app/app_router/deferred_loader.dart';
 import 'package:mealify_app/app_router/responsive_scaffold.dart';
-import 'package:mealify_app/drink_details/drink_details.dart'
-    deferred as drink_details;
-import 'package:mealify_app/favorites/view/favorite_details_module.dart'
-    deferred as favorite_details;
-import 'package:mealify_app/favorites/view/favorites_list_module.dart'
-    deferred as favorites_list;
-import 'package:mealify_app/ideas/ideas.dart' deferred as ideas;
-import 'package:mealify_app/meal_details/meal_details.dart'
+import 'package:meals_presentation/meals_presentation.dart'
     deferred as meal_details;
 
 part 'routes.g.dart';
@@ -69,7 +69,14 @@ class IdeasRoute extends GoRouteData with $IdeasRoute {
       child: DeferredLoader(
         loader: ideas.loadLibrary,
         builder: (context) {
-          return ideas.IdeasModule();
+          return ideas.IdeasModule(
+            onDrinkTapped: (drink) {
+              DrinkDetailsRoute(id: drink.id).go(context);
+            },
+            onMealTapped: (meal) {
+              MealDetailsRoute(id: meal.id).go(context);
+            },
+          );
         },
       ),
     );
@@ -117,7 +124,11 @@ class FavoritesListRoute extends GoRouteData with $FavoritesListRoute {
       child: DeferredLoader(
         loader: favorites_list.loadLibrary,
         builder: (context) {
-          return favorites_list.FavoritesListModule();
+          return favorites_list.FavoritesListModule(
+            onFavoriteTapped: (favorite) {
+              FavoriteDetailsRoute(id: favorite.id).go(context);
+            },
+          );
         },
       ),
     );

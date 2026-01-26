@@ -1,0 +1,32 @@
+name: favorites_presentation
+description: A Very Good Project created by Very Good CLI.
+version: 0.1.0+1
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.9.0
+  flutter: ^3.35.0
+
+dependencies:
+  bloc:
+  favorites_domain:
+    path: ../favorites_domain
+  favorites_repository:
+    path: ../favorites_repository
+  flutter:
+    sdk: flutter
+  flutter_bloc:
+  intl:
+  mealify_design_system:
+    path: ../../mealify_design_system
+  mealify_localizations:
+    path: ../../mealify_localizations
+  provider:
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  intl_utils:
+  mocktail: ^1.0.4
+  very_good_analysis: ^10.0.0

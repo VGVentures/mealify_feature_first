@@ -1,0 +1,33 @@
+name: ideas_presentation
+description: A Very Good Project created by Very Good CLI.
+version: 0.1.0+1
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.9.0
+  flutter: ^3.35.0
+
+dependencies:
+  async:
+  drinks_domain:
+    path: ../../drinks/drinks_domain
+  favorites_domain:
+    path: ../../favorites/favorites_domain
+  flutter:
+    sdk: flutter
+  flutter_bloc:
+  mealify_design_system:
+    path: ../../mealify_design_system
+  mealify_localizations:
+    path: ../../mealify_localizations
+  meals_domain:
+    path: ../../meals/meals_domain
+
+
+dev_dependencies:
+  bloc_test:
+  flutter_test:
+    sdk: flutter
+  mocktail: ^1.0.4
+  very_good_analysis: ^10.0.0

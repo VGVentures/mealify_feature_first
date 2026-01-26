@@ -1,0 +1,19 @@
+name: ingredients_domain
+description: A Very Good Project created by Very Good CLI.
+version: 0.1.0+1
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.9.0
+
+dependencies:
+  drinks_domain:
+    path: ../../drinks/drinks_domain
+  meals_domain:
+    path: ../../meals/meals_domain
+
+dev_dependencies:
+  mocktail: ^1.0.4
+  test: ^1.26.3
+  very_good_analysis: ^10.0.0
