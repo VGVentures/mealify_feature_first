@@ -3,11 +3,11 @@ SDK_PATH := $(shell realpath .fvm/flutter_sdk)
 DART := $(shell realpath $(SDK_PATH)/bin/dart)
 FLUTTER := $(shell realpath $(SDK_PATH)/bin/flutter)
 
-# Helper function to find directories with pubspec.yaml inside the packages folder, up to 2 directories deep
-find_pubspec_dirs = $(shell find ./packages -maxdepth 2 -name 'pubspec.yaml' -exec dirname {} \; | xargs realpath)
+# Helper function to find directories with pubspec.yaml inside the packages folder, up to 3 directories deep
+find_pubspec_dirs = $(shell find ./packages -maxdepth 3 -name 'pubspec.yaml' -exec dirname {} \; | xargs realpath)
 
-# Helper function to find directories with test subdirectory inside the packages folder, up to 2 directories deep
-find_test_dirs = $(shell find ./packages -maxdepth 2 -name 'test' -type d -exec dirname {} \; | xargs realpath)
+# Helper function to find directories with test subdirectory inside the packages folder, up to 3 directories deep
+find_test_dirs = $(shell find ./packages -maxdepth 3 -name 'test' -type d -exec dirname {} \; | xargs realpath)
 
 .PHONY: analyze
 analyze:

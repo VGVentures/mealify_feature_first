@@ -33,13 +33,19 @@ jobs:
       fail-fast: false
       matrix:
         package:
-          - cocktaildb_api_client
-          - drinks_repository
-          - favorites_repository
-          - mealdb_api_client
+          - drinks/cocktaildb_api_client
+          - drinks/drinks_database
+          - drinks/drinks_presentation
+          - drinks/drinks_repository
+          - favorites/favorites_database
+          - favorites/favorites_presentation
+          - favorites/favorites_repository
+          - ideas/ideas_presentation
+          - ingredients/ingredients_domain
           - mealify_app
-          - mealify_database
-          - meals_repository
+          - meals/mealdb_api_client
+          - meals/mealify_database
+          - meals/meals_repository
 
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
     with:
