@@ -41,10 +41,9 @@ jobs:
           - favorites/favorites_presentation
           - favorites/favorites_repository
           - ideas/ideas_presentation
-          - ingredients/ingredients_domain
           - mealify_app
           - meals/mealdb_api_client
-          - meals/mealify_database
+          - meals/meals_database
           - meals/meals_repository
 
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
