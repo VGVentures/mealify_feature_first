@@ -1,4 +1,4 @@
-name: favorites_presentation
+name: favorites_data
 description: A Very Good Project created by Very Good CLI.
 version: 0.1.0+1
 publish_to: none
@@ -9,24 +9,20 @@ environment:
   flutter: ^3.35.0
 
 dependencies:
-  bloc:
-  favorites_data:
-    path: ../favorites_data
+  clock:
+  drift:
+  drift_flutter:
   favorites_domain:
     path: ../favorites_domain
   flutter:
     sdk: flutter
-  flutter_bloc:
-  intl:
-  mealify_design_system:
-    path: ../../../shared/mealify_design_system
-  mealify_localizations:
-    path: ../../../shared/mealify_localizations
-  provider:
+  meta:
+  uuid:
 
 dev_dependencies:
+  build_runner: ^2.4.8
+  drift_dev: ^2.16.0
   flutter_test:
     sdk: flutter
-  intl_utils:
   mocktail: ^1.0.4
   very_good_analysis: ^10.0.0

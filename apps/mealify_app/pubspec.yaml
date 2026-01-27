@@ -11,24 +11,18 @@ environment:
 dependencies:
   async:
   bloc:
-  cocktaildb_api_client:
-    path: ../../features/drinks/cocktaildb_api_client
-  drinks_database:
-    path: ../../features/drinks/drinks_database
+  drinks_data:
+    path: ../../features/drinks/drinks_data
   drinks_domain:
     path: ../../features/drinks/drinks_domain
   drinks_presentation:
     path: ../../features/drinks/drinks_presentation
-  drinks_repository:
-    path: ../../features/drinks/drinks_repository
-  favorites_database:
-    path: ../../features/favorites/favorites_database
+  favorites_data:
+    path: ../../features/favorites/favorites_data
   favorites_domain:
     path: ../../features/favorites/favorites_domain
   favorites_presentation:
     path: ../../features/favorites/favorites_presentation
-  favorites_repository:
-    path: ../../features/favorites/favorites_repository
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
@@ -39,20 +33,16 @@ dependencies:
   ideas_presentation:
     path: ../../features/ideas/ideas_presentation
   intl: ^0.20.2
-  mealdb_api_client:
-    path: ../../features/meals/mealdb_api_client
   mealify_design_system:
     path: ../../shared/mealify_design_system
   mealify_localizations:
     path: ../../shared/mealify_localizations
-  meals_database:
-    path: ../../features/meals/meals_database
+  meals_data:
+    path: ../../features/meals/meals_data
   meals_domain:
     path: ../../features/meals/meals_domain
   meals_presentation:
     path: ../../features/meals/meals_presentation
-  meals_repository:
-    path: ../../features/meals/meals_repository
   provider:
   query_executor_factory:
     path: ../../shared/query_executor_factory

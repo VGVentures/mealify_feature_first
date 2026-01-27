@@ -1,20 +1,15 @@
-import 'package:cocktaildb_api_client/cocktaildb_api_client.dart';
-import 'package:drinks_database/drinks_database.dart';
+import 'package:drinks_data/drinks_data.dart';
 import 'package:drinks_domain/drinks_domain.dart';
-import 'package:drinks_repository/drinks_repository.dart';
-import 'package:favorites_database/favorites_database.dart';
+import 'package:favorites_data/favorites_data.dart';
 import 'package:favorites_domain/favorites_domain.dart';
-import 'package:favorites_repository/favorites_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_client_factory/http_client_factory.dart';
-import 'package:mealdb_api_client/mealdb_api_client.dart';
 import 'package:mealify_app/app_router/routes.dart';
 import 'package:mealify_localizations/mealify_localizations.dart';
-import 'package:meals_database/meals_database.dart';
+import 'package:meals_data/meals_data.dart';
 import 'package:meals_domain/meals_domain.dart';
-import 'package:meals_repository/meals_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:query_executor_factory/query_executor_factory.dart';
 
