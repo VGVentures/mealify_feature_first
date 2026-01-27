@@ -3,23 +3,24 @@ publish_to: none
 environment:
   sdk: ^3.9.0
 workspace:
-  - packages/drinks/cocktaildb_api_client
-  - packages/drinks/drinks_database
-  - packages/drinks/drinks_domain
-  - packages/drinks/drinks_presentation
-  - packages/drinks/drinks_repository
-  - packages/favorites/favorites_database
-  - packages/favorites/favorites_domain
-  - packages/favorites/favorites_presentation
-  - packages/favorites/favorites_repository
-  - packages/http_client_factory
-  - packages/ideas/ideas_presentation
-  - packages/ingredients/ingredients_domain
-  - packages/meals/mealdb_api_client
-  - packages/mealify_app
-  - packages/mealify_localizations
-  - packages/meals/meals_database
-  - packages/meals/meals_domain
-  - packages/meals/meals_presentation
-  - packages/meals/meals_repository
-  - packages/query_executor_factory
+  - apps/mealify_app
+  - features/drinks/cocktaildb_api_client
+  - features/drinks/drinks_database
+  - features/drinks/drinks_domain
+  - features/drinks/drinks_presentation
+  - features/drinks/drinks_repository
+  - features/favorites/favorites_database
+  - features/favorites/favorites_domain
+  - features/favorites/favorites_presentation
+  - features/favorites/favorites_repository
+  - features/ideas/ideas_presentation
+  - features/ingredients/ingredients_domain
+  - features/meals/mealdb_api_client
+  - features/meals/meals_database
+  - features/meals/meals_domain
+  - features/meals/meals_presentation
+  - features/meals/meals_repository
+  - shared/http_client_factory
+  - shared/mealify_design_system
+  - shared/mealify_localizations
+  - shared/query_executor_factory

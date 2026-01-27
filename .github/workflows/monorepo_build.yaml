@@ -10,7 +10,9 @@ on:
   pull_request:
     branches: [ main ]
     paths:
-      - "packages/**"
+      - "apps/**"
+      - "features/**"
+      - "shared/**"
       - ".github/workflows/monorepo_build.yaml"
 
 jobs:
@@ -33,23 +35,23 @@ jobs:
       fail-fast: false
       matrix:
         package:
-          - drinks/cocktaildb_api_client
-          - drinks/drinks_database
-          - drinks/drinks_presentation
-          - drinks/drinks_repository
-          - favorites/favorites_database
-          - favorites/favorites_presentation
-          - favorites/favorites_repository
-          - ideas/ideas_presentation
-          - mealify_app
-          - meals/mealdb_api_client
-          - meals/meals_database
-          - meals/meals_repository
+          - apps/mealify_app
+          - features/drinks/cocktaildb_api_client
+          - features/drinks/drinks_database
+          - features/drinks/drinks_presentation
+          - features/drinks/drinks_repository
+          - features/favorites/favorites_database
+          - features/favorites/favorites_presentation
+          - features/favorites/favorites_repository
+          - features/ideas/ideas_presentation
+          - features/meals/mealdb_api_client
+          - features/meals/meals_database
+          - features/meals/meals_repository
 
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
     with:
       flutter_version: ${{ needs.setup.outputs.flutter_version }}
-      working_directory: packages/${{ matrix.package }}
+      working_directory: ${{ matrix.package }}
       coverage_excludes: "**/*.g.dart"
       # I know I'm naughty, but 100% coverage wasn't helpful to this learning exercise 🙈
       min_coverage: 0

@@ -8,7 +8,7 @@
       "name": "Launch development",
       "request": "launch",
       "type": "dart",
-      "cwd": "packages/mealify_app",
+      "cwd": "apps/mealify_app",
       "program": "lib/main_development.dart",
       "args": [
         "--flavor",
@@ -21,7 +21,7 @@
       "name": "Launch staging",
       "request": "launch",
       "type": "dart",
-      "cwd": "packages/mealify_app",
+      "cwd": "apps/mealify_app",
       "program": "lib/main_staging.dart",
       "args": [
         "--flavor",
@@ -34,7 +34,7 @@
       "name": "Launch production",
       "request": "launch",
       "type": "dart",
-      "cwd": "packages/mealify_app",
+      "cwd": "apps/mealify_app",
       "program": "lib/main_production.dart",
       "args": [
         "--flavor",

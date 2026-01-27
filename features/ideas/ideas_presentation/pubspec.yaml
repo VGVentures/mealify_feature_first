@@ -18,11 +18,11 @@ dependencies:
     sdk: flutter
   flutter_bloc:
   mealify_design_system:
-    path: ../../mealify_design_system
+    path: ../../../shared/mealify_design_system
   mealify_localizations:
-    path: ../../mealify_localizations
+    path: ../../../shared/mealify_localizations
   meals_domain:
-    path: ../../meals/meals_domain
+    path: ../../../features/meals/meals_domain
 
 
 dev_dependencies:

@@ -13,11 +13,11 @@ dependencies:
     sdk: flutter
   flutter_bloc:
   ingredients_domain:
-    path: ../../ingredients/ingredients_domain
+    path: ../../../features/ingredients/ingredients_domain
   mealify_design_system:
-    path: ../../mealify_design_system
+    path: ../../../shared/mealify_design_system
   meals_domain:
-    path: ../meals_domain
+    path: ../../../features/meals/meals_domain
   provider:
 
 dev_dependencies:
