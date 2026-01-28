@@ -13,16 +13,16 @@ import 'package:meals_domain/meals_domain.dart';
 import 'package:provider/provider.dart';
 import 'package:query_executor_factory/query_executor_factory.dart';
 
-class App extends StatefulWidget {
-  const App({required this.navigatorKey, super.key});
+class MealifyApp extends StatefulWidget {
+  const MealifyApp({required this.navigatorKey, super.key});
 
   final GlobalKey<NavigatorState> navigatorKey;
 
   @override
-  State<App> createState() => _AppState();
+  State<MealifyApp> createState() => _MealifyAppState();
 }
 
-class _AppState extends State<App> {
+class _MealifyAppState extends State<MealifyApp> {
   late final GoRouter _router;
 
   @override

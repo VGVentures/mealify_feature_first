@@ -36,17 +36,14 @@ jobs:
       matrix:
         package:
           - apps/mealify_app
-          - features/drinks/cocktaildb_api_client
-          - features/drinks/drinks_database
+          - features/drinks/drinks_data
           - features/drinks/drinks_presentation
-          - features/drinks/drinks_repository
-          - features/favorites/favorites_database
+          - features/favorites/favorites_data
           - features/favorites/favorites_presentation
-          - features/favorites/favorites_repository
           - features/ideas/ideas_presentation
-          - features/meals/mealdb_api_client
-          - features/meals/meals_database
-          - features/meals/meals_repository
+          - features/ingredients/ingredients_domain
+          - features/meals/meals_data
+          - features/meals/meals_presentation
 
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
     with:
