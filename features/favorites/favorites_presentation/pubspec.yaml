@@ -10,6 +10,8 @@ environment:
 
 dependencies:
   bloc:
+  drinks_domain:
+    path: ../../drinks/drinks_domain
   favorites_data:
     path: ../favorites_data
   favorites_domain:
@@ -22,6 +24,8 @@ dependencies:
     path: ../../../shared/mealify_design_system
   mealify_localizations:
     path: ../../../shared/mealify_localizations
+  meals_domain:
+    path: ../../meals/meals_domain
   provider:
 
 dev_dependencies:

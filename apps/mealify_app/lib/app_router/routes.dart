@@ -11,6 +11,7 @@ import 'package:mealify_app/app_router/deferred_loader.dart';
 import 'package:mealify_app/app_router/responsive_scaffold.dart';
 import 'package:meals_presentation/meals_presentation.dart'
     deferred as meal_details;
+import 'package:provider/provider.dart';
 
 part 'routes.g.dart';
 
@@ -70,6 +71,9 @@ class IdeasRoute extends GoRouteData with $IdeasRoute {
         loader: ideas.loadLibrary,
         builder: (context) {
           return ideas.IdeasModule(
+            drinksRepository: context.read(),
+            mealsRepository: context.read(),
+            favoritesRepository: context.read(),
             onDrinkTapped: (drink) {
               DrinkDetailsRoute(id: drink.id).go(context);
             },
@@ -93,7 +97,10 @@ class MealDetailsRoute extends GoRouteData with $MealDetailsRoute {
     return DeferredLoader(
       loader: meal_details.loadLibrary,
       builder: (context) {
-        return meal_details.MealDetailsModule(mealId: id);
+        return meal_details.MealDetailsModule(
+          mealsRepository: context.read(),
+          mealId: id,
+        );
       },
     );
   }
@@ -109,7 +116,10 @@ class DrinkDetailsRoute extends GoRouteData with $DrinkDetailsRoute {
     return DeferredLoader(
       loader: drink_details.loadLibrary,
       builder: (context) {
-        return drink_details.DrinkDetailsModule(drinkId: id);
+        return drink_details.DrinkDetailsModule(
+          drinksRepository: context.read(),
+          drinkId: id,
+        );
       },
     );
   }
@@ -125,6 +135,9 @@ class FavoritesListRoute extends GoRouteData with $FavoritesListRoute {
         loader: favorites_list.loadLibrary,
         builder: (context) {
           return favorites_list.FavoritesListModule(
+            favoritesRepository: context.read(),
+            mealsRepository: context.read(),
+            drinksRepository: context.read(),
             onFavoriteTapped: (favorite) {
               FavoriteDetailsRoute(id: favorite.id).go(context);
             },
@@ -147,6 +160,9 @@ class FavoriteDetailsRoute extends GoRouteData with $FavoriteDetailsRoute {
       builder: (context) {
         return favorite_details.FavoriteDetailsModule(
           id: id,
+          favoritesRepository: context.read(),
+          mealsRepository: context.read(),
+          drinksRepository: context.read(),
         );
       },
     );
