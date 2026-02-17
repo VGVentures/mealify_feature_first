@@ -30,11 +30,6 @@ class FavoritesListCubit extends Cubit<FavoritesListState> {
         );
   }
 
-  /// Remove a favorite from the user's list of favorites
-  Future<void> removeFavorite(String favoriteId) async {
-    await _favoritesRepository.removeFavorite(favoriteId);
-  }
-
   @override
   Future<void> close() async {
     await _allFavoritesSubscription.cancel();

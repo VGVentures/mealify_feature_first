@@ -138,8 +138,8 @@ class FavoritesListRoute extends GoRouteData with $FavoritesListRoute {
             favoritesRepository: context.read(),
             mealsRepository: context.read(),
             drinksRepository: context.read(),
-            onFavoriteTapped: (favorite) {
-              FavoriteDetailsRoute(id: favorite.id).go(context);
+            onFavoriteTapped: (favoriteId) {
+              FavoriteDetailsRoute(id: favoriteId).go(context);
             },
           );
         },

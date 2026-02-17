@@ -27,6 +27,7 @@ dependencies:
   meals_domain:
     path: ../../meals/meals_domain
   provider:
+  skeletonizer:
 
 dev_dependencies:
   flutter_test:
