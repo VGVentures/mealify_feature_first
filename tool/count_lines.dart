@@ -1,8 +1,24 @@
 import 'dart:io';
 
-/// Counts lines of code (excluding comments and blank lines) in Dart files.
+/// Counts lines of code (excluding comments and blank lines).
+///
+/// Usage:
+///   dart run tools/count_lines.dart [directory] [--ext=.dart,.yaml,...]
 void main(List<String> args) {
-  final directory = Directory(args.isEmpty ? '.' : args.first);
+  var dirPath = '.';
+  var extensions = <String>{'.dart'};
+
+  for (final arg in args) {
+    if (arg.startsWith('--ext=')) {
+      extensions = arg.substring('--ext='.length).split(',').map((e) {
+        return e.startsWith('.') ? e : '.$e';
+      }).toSet();
+    } else {
+      dirPath = arg;
+    }
+  }
+
+  final directory = Directory(dirPath);
 
   if (!directory.existsSync()) {
     stderr.writeln('Directory not found: ${directory.path}');
@@ -16,7 +32,7 @@ void main(List<String> args) {
   final files = directory
       .listSync(recursive: true)
       .whereType<File>()
-      .where((f) => f.path.endsWith('.dart'));
+      .where((f) => extensions.any((ext) => f.path.endsWith(ext)));
 
   for (final file in files) {
     final lines = file.readAsLinesSync();
@@ -26,7 +42,8 @@ void main(List<String> args) {
     fileCount++;
   }
 
-  print('Files:      $fileCount');
+  print('Extensions:  ${extensions.join(', ')}');
+  print('Files:       $fileCount');
   print('Total lines: $totalLines');
   print('Code lines:  $totalCodeLines');
 }
@@ -47,6 +64,7 @@ int _countCodeLines(List<String> lines) {
 
     if (trimmed.isEmpty) continue;
     if (trimmed.startsWith('//')) continue;
+    if (trimmed.startsWith('#')) continue;
 
     if (trimmed.startsWith('/*')) {
       if (!trimmed.contains('*/')) {
