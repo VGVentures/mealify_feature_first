@@ -49,10 +49,8 @@ dependencies:
 
 dev_dependencies:
   bloc_test: ^10.0.0
-  build_runner:
   flutter_test:
     sdk: flutter
-  go_router_builder:
   mocktail: ^1.0.4
   very_good_analysis: ^10.0.0
 
