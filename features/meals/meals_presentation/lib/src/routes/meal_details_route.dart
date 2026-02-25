@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mealify_design_system/mealify_design_system.dart';
+import 'package:meals_domain/meals_domain.dart';
 import 'package:meals_presentation/src/meal_details/view/meal_details_module.dart'
     deferred as meal_details_module;
 import 'package:provider/provider.dart';
@@ -18,11 +19,11 @@ class MealDetailsRoute extends GoRouteData {
   final String id;
 
   /// The path segment for this route.
-  static const String path = 'meal/:id';
+  static const String path = MealRoutePaths.details;
 
   @override
   String get location =>
-      GoRouteData.$location('/ideas/meal/${Uri.encodeComponent(id)}');
+      GoRouteData.$location(MealRoutePaths.detailsLocation(id));
 
   @override
   void go(BuildContext context) => context.go(location);

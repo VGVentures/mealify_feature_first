@@ -30,9 +30,24 @@ Each feature package now exports its routes via a dedicated barrel file (e.g. `i
 
 The app's `routes.dart` no longer contains any route data classes. It only imports feature routes and assembles the `StatefulShellRoute` tree (~45 lines).
 
-### Cross-feature navigation uses string-based routing
+### Route path constants defined in domain packages
 
-To avoid coupling presentation packages to each other, cross-feature navigation (e.g. Ideas screen navigating to Drink/Meal details) uses `context.go('/ideas/drink/${drink.id}')` instead of importing route classes from other features. Within the same feature (e.g. Favorites list navigating to Favorite details), type-safe navigation is preserved.
+Each feature's domain package now exports a route paths class (`DrinkRoutePaths`, `MealRoutePaths`, `FavoriteRoutePaths`) containing path segments and location builder functions. Ideas route paths live in `ideas_presentation` since there is no `ideas_domain` package.
+
+| Feature | Route paths location |
+|---|---|
+| Drinks | `drinks_domain/lib/src/drink_route_paths.dart` |
+| Meals | `meals_domain/lib/src/meal_route_paths.dart` |
+| Favorites | `favorites_domain/lib/src/favorite_route_paths.dart` |
+| Ideas | `ideas_presentation/lib/src/routes/ideas_route_paths.dart` |
+
+**Why domain packages?** Cross-feature navigation (e.g. the Ideas screen navigating to Drink or Meal details) requires access to route paths from other features. Three constraints shaped this decision:
+
+1. **No cross-presentation dependencies.** Importing `drinks_presentation` from `ideas_presentation` would couple feature presentation layers, making them harder to develop and test independently.
+2. **No shared routing constants file.** A centralized file would require every feature team to edit the same file, creating merge conflicts and unclear ownership.
+3. **No new packages.** Creating per-feature route path packages (e.g. `drinks_route_paths`) would add 4+ packages for a handful of constants each.
+
+Domain packages satisfy all three: each team owns their own domain package, `ideas_presentation` already depends on `drinks_domain` and `meals_domain` (for repository interfaces and models), and the route path classes are pure Dart strings with zero framework imports. Within the same feature (e.g. Favorites list navigating to Favorite details), type-safe navigation via the route class is preserved.
 
 ### Deferred loading preserved
 

@@ -1,8 +1,11 @@
+import 'package:drinks_domain/drinks_domain.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ideas_presentation/src/ideas_screen/view/ideas_module.dart'
     deferred as ideas_module;
+import 'package:ideas_presentation/src/routes/ideas_route_paths.dart';
 import 'package:mealify_design_system/mealify_design_system.dart';
+import 'package:meals_domain/meals_domain.dart';
 import 'package:provider/provider.dart';
 
 /// Route data for the Ideas screen.
@@ -15,7 +18,7 @@ class IdeasRoute extends GoRouteData {
   factory IdeasRoute.fromState(GoRouterState state) => const IdeasRoute();
 
   /// The path for this route.
-  static const String path = '/ideas';
+  static const String path = IdeasRoutePaths.ideas;
 
   @override
   String get location => GoRouteData.$location(path);
@@ -44,10 +47,10 @@ class IdeasRoute extends GoRouteData {
             mealsRepository: context.read(),
             favoritesRepository: context.read(),
             onDrinkTapped: (drink) {
-              context.go('/ideas/drink/${drink.id}');
+              context.go(DrinkRoutePaths.detailsLocation(drink.id));
             },
             onMealTapped: (meal) {
-              context.go('/ideas/meal/${meal.id}');
+              context.go(MealRoutePaths.detailsLocation(meal.id));
             },
           );
         },

@@ -1,3 +1,4 @@
+import 'package:favorites_domain/favorites_domain.dart';
 import 'package:favorites_presentation/src/favorite_details/view/favorite_details_module.dart'
     deferred as favorite_details_module;
 import 'package:flutter/widgets.dart';
@@ -18,11 +19,11 @@ class FavoriteDetailsRoute extends GoRouteData {
   final String id;
 
   /// The path segment for this route.
-  static const String path = ':id';
+  static const String path = FavoriteRoutePaths.details;
 
   @override
   String get location =>
-      GoRouteData.$location('/favorites/${Uri.encodeComponent(id)}');
+      GoRouteData.$location(FavoriteRoutePaths.detailsLocation(id));
 
   @override
   void go(BuildContext context) => context.go(location);

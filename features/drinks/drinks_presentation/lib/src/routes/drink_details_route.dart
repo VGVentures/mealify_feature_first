@@ -1,3 +1,4 @@
+import 'package:drinks_domain/drinks_domain.dart';
 import 'package:drinks_presentation/src/drink_details/view/drink_details_module.dart'
     deferred as drink_details_module;
 import 'package:flutter/widgets.dart';
@@ -18,11 +19,11 @@ class DrinkDetailsRoute extends GoRouteData {
   final String id;
 
   /// The path segment for this route.
-  static const String path = 'drink/:id';
+  static const String path = DrinkRoutePaths.details;
 
   @override
   String get location =>
-      GoRouteData.$location('/ideas/drink/${Uri.encodeComponent(id)}');
+      GoRouteData.$location(DrinkRoutePaths.detailsLocation(id));
 
   @override
   void go(BuildContext context) => context.go(location);

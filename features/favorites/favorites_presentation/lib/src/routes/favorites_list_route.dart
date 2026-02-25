@@ -1,3 +1,4 @@
+import 'package:favorites_domain/favorites_domain.dart';
 import 'package:favorites_presentation/src/favorites_list/view/favorites_list_module.dart'
     deferred as favorites_list_module;
 import 'package:favorites_presentation/src/routes/favorite_details_route.dart';
@@ -17,7 +18,7 @@ class FavoritesListRoute extends GoRouteData {
       const FavoritesListRoute();
 
   /// The path for this route.
-  static const String path = '/favorites';
+  static const String path = FavoriteRoutePaths.list;
 
   @override
   String get location => GoRouteData.$location(path);
