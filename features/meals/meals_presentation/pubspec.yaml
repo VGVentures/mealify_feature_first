@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc:
+  go_router:
   ingredients_domain:
     path: ../../../features/ingredients/ingredients_domain
   mealify_design_system:

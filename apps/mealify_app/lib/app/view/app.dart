@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_client_factory/http_client_factory.dart';
+import 'package:ideas_presentation/ideas_routes.dart';
 import 'package:mealify_app/app_router/routes.dart';
 import 'package:mealify_localizations/mealify_localizations.dart';
 import 'package:meals_data/meals_data.dart';
@@ -31,7 +32,7 @@ class _MealifyAppState extends State<MealifyApp> {
     _router = GoRouter(
       navigatorKey: widget.navigatorKey,
       initialLocation: const IdeasRoute().location,
-      routes: $appRoutes,
+      routes: appRoutes,
     );
   }
 

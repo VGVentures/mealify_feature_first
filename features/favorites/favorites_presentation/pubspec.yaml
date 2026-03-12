@@ -19,6 +19,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc:
+  go_router:
   intl:
   mealify_design_system:
     path: ../../../shared/mealify_design_system
