@@ -26,16 +26,16 @@ class IdeasRoute extends GoRouteData with $IdeasRoute {
       child: DeferredLoader(
         loader: ideas.loadLibrary,
         builder: (context) {
-          return ideas.IdeasModule(
-            drinksRepository: context.read(),
-            mealsRepository: context.read(),
-            favoritesRepository: context.read(),
-            onDrinkTapped: (drink) {
-              DrinkDetailsRoute(id: drink.id).go(context);
-            },
-            onMealTapped: (meal) {
-              MealDetailsRoute(id: meal.id).go(context);
-            },
+          return ideas.IdeasBuilder(
+            component: context.read<AppComponent>(),
+            listener: ideas.IdeasListener(
+              onMealTapped: (meal) {
+                MealDetailsRoute(id: meal.id).go(context);
+              },
+              onDrinkTapped: (drink) {
+                DrinkDetailsRoute(id: drink.id).go(context);
+              },
+            ),
           );
         },
       ),
@@ -53,8 +53,8 @@ class MealDetailsRoute extends GoRouteData with $MealDetailsRoute {
     return DeferredLoader(
       loader: meal_details.loadLibrary,
       builder: (context) {
-        return meal_details.MealDetailsModule(
-          mealsRepository: context.read(),
+        return meal_details.MealDetailsBuilder(
+          component: context.read<AppComponent>(),
           mealId: id,
         );
       },
@@ -72,8 +72,8 @@ class DrinkDetailsRoute extends GoRouteData with $DrinkDetailsRoute {
     return DeferredLoader(
       loader: drink_details.loadLibrary,
       builder: (context) {
-        return drink_details.DrinkDetailsModule(
-          drinksRepository: context.read(),
+        return drink_details.DrinkDetailsBuilder(
+          component: context.read<AppComponent>(),
           drinkId: id,
         );
       },

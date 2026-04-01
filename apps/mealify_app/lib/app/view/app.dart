@@ -1,15 +1,12 @@
 import 'package:drinks_data/drinks_data.dart';
-import 'package:drinks_domain/drinks_domain.dart';
 import 'package:favorites_data/favorites_data.dart';
-import 'package:favorites_domain/favorites_domain.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart' as http;
 import 'package:http_client_factory/http_client_factory.dart';
+import 'package:mealify_app/app/app_component.dart';
 import 'package:mealify_app/app_router/routes.dart';
 import 'package:mealify_localizations/mealify_localizations.dart';
 import 'package:meals_data/meals_data.dart';
-import 'package:meals_domain/meals_domain.dart';
 import 'package:provider/provider.dart';
 import 'package:query_executor_factory/query_executor_factory.dart';
 
@@ -37,37 +34,36 @@ class _MealifyAppState extends State<MealifyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        Provider<http.Client>(create: (context) => httpClientFactory()),
-        Provider<IDrinksRepository>(
-          create: (context) => DrinksRepository(
+    return Provider<AppComponent>(
+      create: (context) {
+        final httpClient = httpClientFactory();
+
+        return AppComponent(
+          drinksRepository: DrinksRepository(
             drinksDb: DrinksDatabase(
-              queryExecutor: queryExecutorFactory('mealify_drinks_database'),
+              queryExecutor: queryExecutorFactory(
+                'mealify_drinks_database',
+              ),
             ),
             cocktailDbApiClient: CocktailDbApiClient(
-              httpClient: context.read(),
+              httpClient: httpClient,
             ),
           ),
-        ),
-        Provider<IFavoritesRepository>(
-          create: (context) => FavoritesRepository(
+          favoritesRepository: FavoritesRepository(
             favoritesDb: FavoritesDatabase(
-              queryExecutor: queryExecutorFactory('mealify_favorites_database'),
+              queryExecutor: queryExecutorFactory(
+                'mealify_favorites_database',
+              ),
             ),
           ),
-        ),
-        Provider<IMealsRepository>(
-          create: (context) => MealsRepository(
+          mealsRepository: MealsRepository(
             mealsDb: MealsDatabase(
               queryExecutor: queryExecutorFactory('mealify_meals_database'),
             ),
-            mealDbApiClient: MealDbApiClient(
-              httpClient: context.read<http.Client>(),
-            ),
+            mealDbApiClient: MealDbApiClient(httpClient: httpClient),
           ),
-        ),
-      ],
+        );
+      },
       child: MaterialApp.router(
         routerConfig: _router,
         theme: ThemeData(),

@@ -11,18 +11,20 @@ environment:
 dependencies:
   async:
   bloc:
+  drink_details:
+    path: ../../features/drinks/drink_details
   drinks_data:
     path: ../../features/drinks/drinks_data
   drinks_domain:
     path: ../../features/drinks/drinks_domain
-  drinks_presentation:
-    path: ../../features/drinks/drinks_presentation
+  favorite_details:
+    path: ../../features/favorites/favorite_details
   favorites_data:
     path: ../../features/favorites/favorites_data
   favorites_domain:
     path: ../../features/favorites/favorites_domain
-  favorites_presentation:
-    path: ../../features/favorites/favorites_presentation
+  favorites_list:
+    path: ../../features/favorites/favorites_list
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
@@ -30,9 +32,11 @@ dependencies:
   http:
   http_client_factory:
     path: ../../shared/http_client_factory
-  ideas_presentation:
-    path: ../../features/ideas/ideas_presentation
+  ideas:
+    path: ../../features/ideas/ideas
   intl: ^0.20.2
+  meal_details:
+    path: ../../features/meals/meal_details
   mealify_design_system:
     path: ../../shared/mealify_design_system
   mealify_localizations:
@@ -41,8 +45,6 @@ dependencies:
     path: ../../features/meals/meals_data
   meals_domain:
     path: ../../features/meals/meals_domain
-  meals_presentation:
-    path: ../../features/meals/meals_presentation
   provider:
   query_executor_factory:
     path: ../../shared/query_executor_factory

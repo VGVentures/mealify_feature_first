@@ -1,0 +1,27 @@
+name: drink_details
+description: Drink details RIB — displays information about a drink.
+version: 0.1.0+1
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.9.0
+  flutter: ^3.35.0
+
+dependencies:
+  drinks_domain:
+    path: ../drinks_domain
+  flutter:
+    sdk: flutter
+  flutter_bloc:
+  ingredients_domain:
+    path: ../../../features/ingredients/ingredients_domain
+  mealify_design_system:
+    path: ../../../shared/mealify_design_system
+  provider:
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  mocktail: ^1.0.4
+  very_good_analysis: ^10.0.0

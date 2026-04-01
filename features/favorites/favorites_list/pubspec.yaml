@@ -1,0 +1,34 @@
+name: favorites_list
+description: Favorites list RIB — displays the user's list of favorites.
+version: 0.1.0+1
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.9.0
+  flutter: ^3.35.0
+
+dependencies:
+  bloc:
+  drinks_domain:
+    path: ../../drinks/drinks_domain
+  favorites_domain:
+    path: ../favorites_domain
+  favorites_list_item:
+    path: ../favorites_list_item
+  flutter:
+    sdk: flutter
+  flutter_bloc:
+  mealify_design_system:
+    path: ../../../shared/mealify_design_system
+  mealify_localizations:
+    path: ../../../shared/mealify_localizations
+  meals_domain:
+    path: ../../meals/meals_domain
+  provider:
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  mocktail: ^1.0.4
+  very_good_analysis: ^10.0.0

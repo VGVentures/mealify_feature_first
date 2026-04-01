@@ -24,13 +24,13 @@ class FavoritesListRoute extends GoRouteData with $FavoritesListRoute {
       child: DeferredLoader(
         loader: favorites_list.loadLibrary,
         builder: (context) {
-          return favorites_list.FavoritesListModule(
-            favoritesRepository: context.read(),
-            mealsRepository: context.read(),
-            drinksRepository: context.read(),
-            onFavoriteTapped: (favoriteId) {
-              FavoriteDetailsRoute(id: favoriteId).go(context);
-            },
+          return favorites_list.FavoritesListBuilder(
+            component: context.read<AppComponent>(),
+            listener: favorites_list.FavoritesListItemListener(
+              onFavoriteTapped: (id) {
+                FavoriteDetailsRoute(id: id).go(context);
+              },
+            ),
           );
         },
       ),
@@ -48,11 +48,9 @@ class FavoriteDetailsRoute extends GoRouteData with $FavoriteDetailsRoute {
     return DeferredLoader(
       loader: favorite_details.loadLibrary,
       builder: (context) {
-        return favorite_details.FavoriteDetailsModule(
+        return favorite_details.FavoriteDetailsBuilder(
+          component: context.read<AppComponent>(),
           id: id,
-          favoritesRepository: context.read(),
-          mealsRepository: context.read(),
-          drinksRepository: context.read(),
         );
       },
     );

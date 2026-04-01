@@ -6,15 +6,17 @@ workspace:
   - apps/mealify_app
   - features/drinks/drinks_data
   - features/drinks/drinks_domain
-  - features/drinks/drinks_presentation
+  - features/drinks/drink_details
   - features/favorites/favorites_data
   - features/favorites/favorites_domain
-  - features/favorites/favorites_presentation
-  - features/ideas/ideas_presentation
+  - features/favorites/favorite_details
+  - features/favorites/favorites_list
+  - features/favorites/favorites_list_item
+  - features/ideas/ideas
   - features/ingredients/ingredients_domain
   - features/meals/meals_data
   - features/meals/meals_domain
-  - features/meals/meals_presentation
+  - features/meals/meal_details
   - shared/http_client_factory
   - shared/mealify_design_system
   - shared/mealify_localizations
