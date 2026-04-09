@@ -28,6 +28,22 @@ jobs:
           VERSION=$(jq -r .flutter .fvmrc)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
+  check_licenses:
+    name: Check Licenses
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          cache: true
+          flutter-version: ${{ needs.setup.outputs.flutter_version }}
+      - run: flutter pub get --no-example
+      - name: Install very_good_cli (workspace-aware fork)
+        run: dart pub global activate --source git https://github.com/realmeylisdev/very_good_cli.git --git-ref feat/workspace-license-support
+      - name: Check licenses
+        run: dart pub global run very_good_cli:very_good packages check licenses --dependency-type=direct-main,transitive --allowed=MIT,BSD-3-Clause,BSD-2-Clause,Apache-2.0
+
   verify_and_test:
     name: Verify and Test
     needs: setup
