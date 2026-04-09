@@ -1,9 +1,9 @@
-import 'package:favorites_domain/src/raw_favorite.dart';
+import 'package:favorites_domain/src/favorite.dart';
 
 /// An object that handles CRUD operations for Favorite objects
 abstract interface class IFavoritesRepository {
   /// Get a favorite by id
-  Future<RawFavorite?> getFavoriteById(String favoriteId);
+  Future<Favorite?> getFavoriteById(String favoriteId);
 
   /// Watch a list of all favorites
   Stream<List<String>> watchAllFavoriteIds();

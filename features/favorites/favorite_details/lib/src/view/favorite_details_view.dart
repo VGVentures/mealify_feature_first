@@ -1,62 +1,71 @@
-import 'dart:async';
-
-import 'package:favorite_details/src/interactor/favorite_details_interactor.dart';
-import 'package:favorite_details/src/interactor/favorite_details_state.dart';
-import 'package:favorites_domain/favorites_domain.dart';
+import 'package:drink/drink.dart';
+import 'package:drinks_domain/drinks_domain.dart';
+import 'package:favorite/favorite.dart';
+import 'package:favorite_details/src/favorite_details_component.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:meal/meal.dart';
 import 'package:mealify_design_system/mealify_design_system.dart';
 import 'package:mealify_localizations/mealify_localizations.dart';
+import 'package:meals_domain/meals_domain.dart';
 
 /// A view that displays an individual Favorite.
-class FavoriteDetailsView extends StatefulWidget {
-  /// Construct a [FavoriteDetailsView] with the given [Favorite] id.
-  const FavoriteDetailsView({required this.id, super.key});
+class FavoriteDetailsView extends StatelessWidget {
+  /// Construct a [FavoriteDetailsView] with the given id.
+  const FavoriteDetailsView({
+    required this.component,
+    required this.id,
+    super.key,
+  });
+
+  /// The component that provides dependencies for this RIB.
+  final FavoriteDetailsComponent component;
 
   /// The id of the favorite to display.
   final String id;
 
   @override
-  State<FavoriteDetailsView> createState() => _FavoriteDetailsViewState();
-}
-
-class _FavoriteDetailsViewState extends State<FavoriteDetailsView> {
-  @override
-  void initState() {
-    super.initState();
-    unawaited(
-      context.read<FavoriteDetailsInteractor>().loadFavorite(
-        favoriteId: widget.id,
-      ),
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final state = context.watch<FavoriteDetailsInteractor>().state;
-
     return ColoredBox(
       color: Theme.of(context).scaffoldBackgroundColor,
-      child: switch (state) {
-        FavoritesDetailsLoading() => const LoadingView(),
-        FavoriteNotFoundState() => ErrorView(
-          error: context.l10n.favoriteDetailsNotFound,
-        ),
-        FavoritesDetailsError(:final error) => ErrorView(error: error),
-        FavoritesDetailsSuccess(:final favorite) => _FavoriteDetailsSuccessView(
-          favorite: favorite,
-        ),
-      },
+      child: FavoriteBuilder(
+        component: component,
+        favoriteId: id,
+        builder: (context, favoriteState) => switch (favoriteState) {
+          FavoriteLoading() => const LoadingView(),
+          FavoriteNotFound() => ErrorView(
+            error: context.l10n.favoriteDetailsNotFound,
+          ),
+          FavoriteError(:final error) => ErrorView(error: error),
+          FavoriteSuccess(:final favorite) => MealBuilder(
+            component: component,
+            mealId: favorite.mealId,
+            builder: (context, mealState) => DrinkBuilder(
+              component: component,
+              drinkId: favorite.drinkId,
+              builder: (context, drinkState) =>
+                  switch ((mealState, drinkState)) {
+                    (MealSuccess(:final meal), DrinkSuccess(:final drink)) =>
+                      _FavoriteDetailsSuccessView(meal: meal, drink: drink),
+                    (MealError(:final error), _) => ErrorView(error: error),
+                    (_, DrinkError(:final error)) => ErrorView(error: error),
+                    _ => const LoadingView(),
+                  },
+            ),
+          ),
+        },
+      ),
     );
   }
 }
 
 class _FavoriteDetailsSuccessView extends StatelessWidget {
   const _FavoriteDetailsSuccessView({
-    required this.favorite,
+    required this.meal,
+    required this.drink,
   });
 
-  final Favorite favorite;
+  final Meal meal;
+  final Drink drink;
 
   @override
   Widget build(BuildContext context) {
@@ -73,12 +82,8 @@ class _FavoriteDetailsSuccessView extends StatelessWidget {
                 title: Text(context.l10n.favoriteDetailsTitle),
                 bottom: TabBar(
                   tabs: [
-                    Tab(
-                      text: context.l10n.mealDetailsTitle,
-                    ),
-                    Tab(
-                      text: context.l10n.drinkDetailsTitle,
-                    ),
+                    Tab(text: context.l10n.mealDetailsTitle),
+                    Tab(text: context.l10n.drinkDetailsTitle),
                   ],
                 ),
                 flexibleSpace: FlexibleSpaceBar(
@@ -87,14 +92,8 @@ class _FavoriteDetailsSuccessView extends StatelessWidget {
                     children: [
                       TabBarView(
                         children: [
-                          Image.network(
-                            favorite.meal.thumbnail,
-                            fit: BoxFit.cover,
-                          ),
-                          Image.network(
-                            favorite.drink.thumbnail,
-                            fit: BoxFit.cover,
-                          ),
+                          Image.network(meal.thumbnail, fit: BoxFit.cover),
+                          Image.network(drink.thumbnail, fit: BoxFit.cover),
                         ],
                       ),
                       DecoratedBox(
@@ -127,23 +126,23 @@ class _FavoriteDetailsSuccessView extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 40),
               children: [
                 Text(
-                  favorite.meal.title,
+                  meal.title,
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 const SizedBox(height: 20),
-                Text(favorite.meal.instructions),
+                Text(meal.instructions),
               ],
             ),
             _TabContent(
-              tab: _DetailViewTab.ingredients,
+              tab: _DetailViewTab.instructions,
               padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 40),
               children: [
                 Text(
-                  favorite.drink.title,
+                  drink.title,
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 const SizedBox(height: 20),
-                Text(favorite.drink.instructions),
+                Text(drink.instructions),
               ],
             ),
           ],

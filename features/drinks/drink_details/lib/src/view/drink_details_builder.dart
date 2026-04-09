@@ -1,8 +1,6 @@
 import 'package:drink_details/src/drink_details_component.dart';
-import 'package:drink_details/src/interactor/drink_details_interactor.dart';
 import 'package:drink_details/src/view/drink_details_view.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// The Builder is responsible for wiring the dependencies for the drink details
 /// RIB and rendering the View.
@@ -22,11 +20,6 @@ class DrinkDetailsBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<DrinkDetailsInteractor>(
-      create: (context) => DrinkDetailsInteractor(
-        drinksRepository: component.drinksRepository,
-      ),
-      child: DrinkDetailsView(drinkId: drinkId),
-    );
+    return DrinkDetailsView(component: component, drinkId: drinkId);
   }
 }

@@ -64,7 +64,7 @@ void main() {
 
       expect(
         await repository.getFavoriteById('FAVORITE_ID'),
-        RawFavorite(
+        Favorite(
           id: 'FAVORITE_ID',
           mealId: 'MEAL_ID',
           drinkId: 'DRINK_ID',

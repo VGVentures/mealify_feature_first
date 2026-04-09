@@ -8,10 +8,6 @@ environment:
   sdk: ^3.9.0
 
 dependencies:
-  drinks_domain:
-    path: ../../drinks/drinks_domain
-  meals_domain:
-    path: ../../meals/meals_domain
   meta:
 
 dev_dependencies:

@@ -1,11 +1,7 @@
-import 'dart:async';
-
 import 'package:favorites_list_item/src/favorites_list_item_component.dart';
 import 'package:favorites_list_item/src/favorites_list_item_listener.dart';
-import 'package:favorites_list_item/src/interactor/favorites_list_item_interactor.dart';
 import 'package:favorites_list_item/src/view/favorites_list_item_view.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// The Builder wires the dependencies for a single favorites list item RIB.
 class FavoritesListItemBuilder extends StatelessWidget {
@@ -28,21 +24,10 @@ class FavoritesListItemBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) {
-        final interactor = FavoritesListItemInteractor(
-          favoritesRepository: component.favoritesRepository,
-          getFavoriteQuery: component.getFavoriteQuery,
-        );
-
-        unawaited(interactor.loadFavorite(favoriteId));
-
-        return interactor;
-      },
-      child: FavoritesListItemView(
-        favoriteId: favoriteId,
-        listener: listener,
-      ),
+    return FavoritesListItemView(
+      component: component,
+      listener: listener,
+      favoriteId: favoriteId,
     );
   }
 }

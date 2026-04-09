@@ -16,7 +16,7 @@ class FavoritesRepository implements IFavoritesRepository {
   final DbToDomainFavoriteConverter _dbToDomainFavoriteConverter;
 
   @override
-  Future<RawFavorite?> getFavoriteById(String favoriteId) async {
+  Future<Favorite?> getFavoriteById(String favoriteId) async {
     final dbFavorite = await _favoritesDb.getFavorite(favoriteId);
 
     if (dbFavorite == null) return null;

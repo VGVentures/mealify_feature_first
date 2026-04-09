@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:drink_details/drink_details.dart' deferred as drink_details;
 import 'package:favorite_details/favorite_details.dart'
     deferred as favorite_details;

@@ -3,14 +3,14 @@ import 'dart:convert';
 import 'package:favorites_data/src/data_sources/favorites_database/favorites_database.dart';
 import 'package:favorites_domain/favorites_domain.dart';
 
-/// Converts Api Meals to Domain Meals
-class DbToDomainFavoriteConverter extends Converter<DbFavorite, RawFavorite> {
-  /// Construct an object that converts Api Meals to Domain Meals
+/// Converts database favorites to domain favorites.
+class DbToDomainFavoriteConverter extends Converter<DbFavorite, Favorite> {
+  /// Construct an object that converts database favorites to domain favorites.
   const DbToDomainFavoriteConverter();
 
   @override
-  RawFavorite convert(DbFavorite dbFavorite) {
-    return RawFavorite(
+  Favorite convert(DbFavorite dbFavorite) {
+    return Favorite(
       id: dbFavorite.id,
       mealId: dbFavorite.mealId,
       drinkId: dbFavorite.drinkId,

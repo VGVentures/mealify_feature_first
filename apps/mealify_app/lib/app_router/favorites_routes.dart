@@ -24,11 +24,17 @@ class FavoritesListRoute extends GoRouteData with $FavoritesListRoute {
       child: DeferredLoader(
         loader: favorites_list.loadLibrary,
         builder: (context) {
+          final appComponent = context.read<AppComponent>();
           return favorites_list.FavoritesListBuilder(
-            component: context.read<AppComponent>(),
+            component: appComponent,
             listener: favorites_list.FavoritesListItemListener(
               onFavoriteTapped: (id) {
                 FavoriteDetailsRoute(id: id).go(context);
+              },
+              onFavoriteRemoved: (id) {
+                unawaited(
+                  appComponent.favoritesRepository.removeFavorite(id),
+                );
               },
             ),
           );

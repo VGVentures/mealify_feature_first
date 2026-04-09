@@ -9,19 +9,21 @@ environment:
   flutter: ^3.35.0
 
 dependencies:
+  drink:
+    path: ../drink
   drinks_domain:
     path: ../drinks_domain
   flutter:
     sdk: flutter
-  flutter_bloc:
   ingredients_domain:
     path: ../../../features/ingredients/ingredients_domain
   mealify_design_system:
     path: ../../../shared/mealify_design_system
-  provider:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  mealify_localizations:
+    path: ../../../shared/mealify_localizations
   mocktail: ^1.0.4
   very_good_analysis: ^10.0.0

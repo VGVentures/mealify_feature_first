@@ -1,5 +1,5 @@
 import 'package:drinks_domain/drinks_domain.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:meals_domain/meals_domain.dart';
 
 /// The object that represents the various states of the ideas view.

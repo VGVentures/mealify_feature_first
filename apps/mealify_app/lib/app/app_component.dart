@@ -23,11 +23,7 @@ class AppComponent
     required this.drinksRepository,
     required this.favoritesRepository,
     required this.mealsRepository,
-  }) : getFavoriteQuery = GetFavoriteQuery(
-         mealsRepository: mealsRepository,
-         drinksRepository: drinksRepository,
-         favoritesRepository: favoritesRepository,
-       );
+  });
 
   @override
   final IDrinksRepository drinksRepository;
@@ -37,7 +33,4 @@ class AppComponent
 
   @override
   final IMealsRepository mealsRepository;
-
-  @override
-  final GetFavoriteQuery getFavoriteQuery;
 }

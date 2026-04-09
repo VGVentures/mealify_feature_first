@@ -10,13 +10,19 @@ environment:
 
 dependencies:
   async:
+  drink:
+    path: ../../drinks/drink
   drinks_domain:
     path: ../../drinks/drinks_domain
+  favorite:
+    path: ../../favorites/favorite
   favorites_domain:
     path: ../../favorites/favorites_domain
   flutter:
     sdk: flutter
   flutter_bloc:
+  meal:
+    path: ../../meals/meal
   mealify_design_system:
     path: ../../../shared/mealify_design_system
   mealify_localizations:

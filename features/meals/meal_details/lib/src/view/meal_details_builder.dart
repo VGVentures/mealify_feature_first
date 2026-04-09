@@ -1,6 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meal_details/src/interactor/meal_details_interactor.dart';
 import 'package:meal_details/src/meal_details_component.dart';
 import 'package:meal_details/src/view/meal_details_view.dart';
 
@@ -22,11 +20,6 @@ class MealDetailsBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<MealDetailsInteractor>(
-      create: (context) => MealDetailsInteractor(
-        mealsRepository: component.mealsRepository,
-      ),
-      child: MealDetailsView(mealId: mealId),
-    );
+    return MealDetailsView(component: component, mealId: mealId);
   }
 }

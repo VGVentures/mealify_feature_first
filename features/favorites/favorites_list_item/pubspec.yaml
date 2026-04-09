@@ -9,13 +9,20 @@ environment:
   flutter: ^3.35.0
 
 dependencies:
-  bloc:
+  drink:
+    path: ../../drinks/drink
+  drinks_domain:
+    path: ../../drinks/drinks_domain
+  favorite:
+    path: ../favorite
   favorites_domain:
     path: ../favorites_domain
   flutter:
     sdk: flutter
-  flutter_bloc:
-  provider:
+  meal:
+    path: ../../meals/meal
+  meals_domain:
+    path: ../../meals/meals_domain
   skeletonizer:
 
 dev_dependencies:

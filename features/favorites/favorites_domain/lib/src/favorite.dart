@@ -1,37 +1,29 @@
-import 'package:drinks_domain/drinks_domain.dart';
-import 'package:meals_domain/meals_domain.dart';
 import 'package:meta/meta.dart';
 
-/// A favorite that is hydrated with a complete [Meal] and [Drink] object.
+/// The Favorite in the domain layer. It has no concept of any type of
+/// serialization whether to API nor DB. Those are handled by their respective
+/// layers.
 @immutable
 class Favorite {
-  /// Construct a favorite with an [id], [meal], [drink], and [createdAt]
-  /// timestamp
+  /// Create a favorite
   const Favorite({
     required this.id,
-    required this.meal,
-    required this.drink,
+    required this.mealId,
+    required this.drinkId,
     required this.createdAt,
   });
 
   /// The id of the favorite
   final String id;
 
-  /// The [Meal] contained within the Favorite
-  final Meal meal;
+  /// The meal
+  final String mealId;
 
-  /// The [Drink] contained within the Favorite
-  final Drink drink;
+  /// The drink
+  final String drinkId;
 
-  /// The time the favorite was initially saved.
+  /// The time it the favorite was created
   final DateTime createdAt;
-
-  @override
-  String toString() {
-    // No need to spread this over several lines
-    // ignore: lines_longer_than_80_chars
-    return 'PopulatedFavorite{favoriteId: $id, meal: $meal, drink: $drink, createdAt: $createdAt}';
-  }
 
   @override
   bool operator ==(Object other) =>
@@ -39,10 +31,21 @@ class Favorite {
       other is Favorite &&
           runtimeType == other.runtimeType &&
           id == other.id &&
-          meal == other.meal &&
-          drink == other.drink &&
+          mealId == other.mealId &&
+          drinkId == other.drinkId &&
           createdAt == other.createdAt;
 
   @override
-  int get hashCode => Object.hash(id, meal, drink, createdAt);
+  int get hashCode => Object.hash(id, mealId, drinkId, createdAt);
+
+  @override
+  String toString() {
+    return '''
+Favorite {
+  id: $id,
+  mealId: $mealId,
+  drinkId: $drinkId,
+  createdAt: $createdAt
+}''';
+  }
 }

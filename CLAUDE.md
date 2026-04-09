@@ -31,10 +31,9 @@ To run tests for a single package: `cd features/{feature}/{package_name} && flut
 ### Domain Layer (`{feature}_domain`)
 
 - **Pure Dart only** — no Flutter dependency
-- Contains: entity classes, repository interfaces (`I{Feature}Repository`), query objects, and exceptions
+- Contains: entity classes, repository interfaces (`I{Feature}Repository`), and exceptions
 - Entities are `@immutable` with manual `==`, `hashCode`, and `toString`
 - Repository interfaces use `abstract interface class`
-- Query objects compose multiple repositories to fulfill complex reads (e.g. `GetFavoriteQuery`)
 - Single barrel export: `lib/{feature}_domain.dart`
 - Dependencies: only other domain packages and `meta`
 
@@ -49,28 +48,74 @@ To run tests for a single package: `cd features/{feature}/{package_name} && flut
 
 ### Presentation Layer (RIBs)
 
-Each presentation package is a self-contained **RIB** (Builder/Component/Interactor/Listener/View):
+There are two kinds of RIBs: **full RIBs** (with a View) and **data provider RIBs** (no View, expose state via builder callback).
 
-- **Builder** (`StatelessWidget`) — Wires dependencies from Component, creates Interactor via `BlocProvider`, renders View. Replaces the old Module pattern.
-- **Component** (`abstract interface class` or concrete `class`) — Declares what dependencies a RIB needs from its parent. Dependencies flow **down**. Defined by the child, implemented by the parent.
-- **Interactor** (extends `Cubit<State>`) — Business logic and state management. Same as the old Cubit pattern with RIBs vocabulary.
+#### Full RIBs (Builder/Component/Interactor/Listener/View)
+
+- **Builder** (`StatelessWidget`) — Wires dependencies from Component, renders View. May compose data provider Builders.
+- **Component** (`abstract interface class`) — Declares what dependencies a RIB needs from its parent. Dependencies flow **down**. Defined by the child, implemented by the parent. Uses `implements` to compose data provider Component interfaces.
+- **Interactor** (extends `Cubit<State>`) — Business logic and state management. Only needed when a RIB has complex orchestration logic (e.g. coordinating multiple data sources, managing lock state, reactive streams). Not needed when a RIB simply composes data provider Builders.
 - **Listener** (concrete `class` with `required` callback fields) — Declares what events a RIB can emit upward ("user tapped X"). Events flow **up**. Constructed by the app layer (routes) with navigation lambdas. Leaf RIBs without upward events have no Listener.
-- **View** (`StatefulWidget`) — Renders UI by switching on sealed state, calls Interactor methods. Replaces the old Screen pattern.
-- **State** (`sealed class`) — `Loading`, `Success`, and `Error` implementations (unchanged).
+- **View** (`StatelessWidget` or `StatefulWidget`) — Renders UI by composing data provider Builders and switching on their states.
+- **State** (`sealed class`) — `Loading`, `Success`, and `Error` implementations.
+
+#### Data Provider RIBs (Builder/Component/Interactor/State, no View)
+
+A data provider RIB fetches a single entity by ID and exposes its loading state via a `builder` callback. It has no View — consumers compose it in their own Views.
+
+```dart
+// Data provider Builder — fetches a single drink by ID
+class DrinkBuilder extends StatelessWidget {
+  const DrinkBuilder({
+    required this.component,
+    required this.drinkId,
+    required this.builder,
+    super.key,
+  });
+
+  final DrinkComponent component;
+  final String drinkId;
+  final Widget Function(BuildContext context, DrinkState state) builder;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) {
+        final interactor = DrinkInteractor(
+          drinksRepository: component.drinksRepository,
+        );
+        unawaited(interactor.loadDrink(drinkId));
+        return interactor;
+      },
+      child: BlocBuilder<DrinkInteractor, DrinkState>(builder: builder),
+    );
+  }
+}
+```
+
+**When to use each:**
+- **Data provider Builder**: Simple fetch-by-ID with Loading/Success/Error states. Reusable across features.
+- **Custom Interactor**: Complex business logic — multiple coordinated fetches, reactive streams, cancelable operations, UI state management (e.g. `IdeasInteractor` manages random fetching, lock state, and favorite toggling).
 
 #### Component Interface Pattern (Dependencies Down)
 
-Each child RIB defines a Component interface declaring what dependencies it needs. The parent's Component class implements the child's interface:
+Each child RIB defines a Component interface declaring what dependencies it needs. Components use `implements` to compose data provider Component interfaces, creating a type hierarchy:
 
 ```dart
-// Child defines what it needs
-abstract interface class FavoritesListItemComponent {
-  IFavoritesRepository get favoritesRepository;
-  GetFavoriteQuery get getFavoriteQuery;
+// Data provider defines a single repository need
+abstract interface class DrinkComponent {
+  IDrinksRepository get drinksRepository;
 }
 
-// Parent implements the child's interface
-class FavoritesListComponent implements FavoritesListItemComponent { ... }
+// Child composes data provider interfaces
+abstract interface class FavoriteDetailsComponent
+    implements MealComponent, DrinkComponent, FavoriteComponent {}
+
+// Parent implements the child's interface (and transitively all data providers)
+abstract interface class FavoritesListComponent
+    implements FavoritesListItemComponent {
+  IFavoritesRepository get favoritesRepository;
+}
 ```
 
 #### Listener Pattern (Events Up)
@@ -95,13 +140,13 @@ Features are **navigation-unaware** — they emit events via Listener callbacks 
 
 A single `AppComponent` class provided via `Provider<AppComponent>` implements all child Component interfaces, providing compile-time safety from root to leaf.
 
-#### File Layout Per RIB Package
+#### File Layout Per Full RIB Package
 
 ```
 {package_name}/
   lib/
     src/
-      interactor/
+      interactor/                   # only if the RIB has complex business logic
         {name}_interactor.dart
         {name}_state.dart
       view/
@@ -113,11 +158,32 @@ A single `AppComponent` class provided via `Provider<AppComponent>` implements a
     {name}.dart                     # full barrel export (loaded deferred by routes)
   test/
     src/
-      interactor/
+      interactor/                   # only if Interactor exists
         {name}_interactor_test.dart
       view/
         {name}_builder_test.dart
         {name}_view_test.dart
+  pubspec.yaml
+```
+
+#### File Layout Per Data Provider RIB Package
+
+```
+{package_name}/
+  lib/
+    src/
+      interactor/
+        {name}_interactor.dart
+        {name}_state.dart
+      {name}_builder.dart
+      {name}_component.dart
+    {name}_component.dart           # separate export: Component only (loaded eagerly)
+    {name}.dart                     # full barrel export (loaded deferred)
+  test/
+    src/
+      interactor/
+        {name}_interactor_test.dart
+      {name}_builder_test.dart
   pubspec.yaml
 ```
 
@@ -149,7 +215,6 @@ Presentation and Data both depend on Domain. Presentation NEVER imports Data dir
 - Views: `{Feature}{Scope}View` (e.g. `FavoritesListView`)
 - States: `{Feature}{Scope}State` sealed class (e.g. `FavoritesListState`)
 - Converters: `{Source}ToDomain{Entity}Converter` (e.g. `DbToDomainFavoriteConverter`)
-- Queries: `Get{Entity}Query` (e.g. `GetFavoriteQuery`)
 
 ### pubspec.yaml
 

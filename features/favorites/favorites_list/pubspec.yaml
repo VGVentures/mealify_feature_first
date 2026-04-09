@@ -10,8 +10,6 @@ environment:
 
 dependencies:
   bloc:
-  drinks_domain:
-    path: ../../drinks/drinks_domain
   favorites_domain:
     path: ../favorites_domain
   favorites_list_item:
@@ -23,11 +21,10 @@ dependencies:
     path: ../../../shared/mealify_design_system
   mealify_localizations:
     path: ../../../shared/mealify_localizations
-  meals_domain:
-    path: ../../meals/meals_domain
   provider:
 
 dev_dependencies:
+  bloc_test:
   flutter_test:
     sdk: flutter
   mocktail: ^1.0.4
