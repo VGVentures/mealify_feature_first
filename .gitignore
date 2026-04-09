@@ -1,5 +1,6 @@
 .flutter-plugins-dependencies
 .dart_tool/
+build/
 
 # FVM Version Cache
 .fvm/
