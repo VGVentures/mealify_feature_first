@@ -124,8 +124,11 @@ flowchart TB
   drinks_p --> ing_dom
   ing_dom --> meals_dom & drinks_dom
 
-  feat --> ds & l10n
+  ideas_p & fav_p & meals_p & drinks_p --> ds & l10n
 ```
+
+Only the presentation packages reach into `shared/`. Domain and data packages
+depend on neither the design system nor localizations.
 
 Three rules produce that shape:
 
@@ -277,16 +280,18 @@ no storage, composing the meals, drinks, and favorites domains instead.
 
 These are the decisions you would otherwise have to reverse-engineer.
 
-**Code splitting is per screen, not per package.** Every independently-loadable
-screen gets its own barrel, so the app can defer-import one screen without
-pulling in its siblings:
+**Code splitting is per screen, not per package.** A package with more than one
+screen gives each its own barrel, so the app can defer-import one without pulling
+in its siblings:
 
 ```dart
 import 'package:favorites_presentation/favorite_details.dart'
     deferred as favorite_details;
 ```
 
-A single barrel per package would make deferred loading all-or-nothing.
+A single barrel per package would make deferred loading all-or-nothing. Packages
+with one screen (`drinks_presentation`, `ideas_presentation`) do not need a
+second barrel, because their primary barrel is already the only entry point.
 [`DeferredLoader`](apps/mealify_app/lib/app_router/deferred_loader.dart) wraps the
 load and caches the future, so a rebuild does not restart it.
 

@@ -2,8 +2,8 @@ import 'package:drinks_domain/drinks_domain.dart';
 import 'package:favorites_domain/favorites_domain.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ideas_presentation/src/ideas_screen/bloc/ideas_cubit.dart';
-import 'package:ideas_presentation/src/ideas_screen/views/ideas_screen.dart';
+import 'package:ideas_presentation/src/ideas/bloc/ideas_cubit.dart';
+import 'package:ideas_presentation/src/ideas/views/ideas_screen.dart';
 import 'package:meals_domain/meals_domain.dart';
 
 /// The Module  Idea Screen and its dependencies

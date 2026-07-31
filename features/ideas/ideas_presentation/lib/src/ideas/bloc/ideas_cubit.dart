@@ -4,7 +4,7 @@ import 'package:async/async.dart';
 import 'package:drinks_domain/drinks_domain.dart';
 import 'package:favorites_domain/favorites_domain.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ideas_presentation/src/ideas_screen/bloc/ideas_state.dart';
+import 'package:ideas_presentation/src/ideas/bloc/ideas_state.dart';
 import 'package:meals_domain/meals_domain.dart';
 
 /// The cubit that manages the ideas state. It is responsible for loading ideas,

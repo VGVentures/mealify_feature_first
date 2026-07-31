@@ -14,7 +14,7 @@ feature does not need three packages. It needs the layers it actually has.
 ```
 lib/
   ideas_presentation.dart            primary barrel
-  src/ideas_screen/
+  src/ideas/
     ideas_module.dart                entry point
     bloc/ideas_cubit.dart            IdeasCubit
     bloc/ideas_state.dart            IdeasLoading / IdeasSuccess / IdeasError

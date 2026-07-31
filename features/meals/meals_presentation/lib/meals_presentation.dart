@@ -4,6 +4,3 @@
 library;
 
 export 'meal_details.dart';
-export 'src/meal_details/bloc/meal_details_cubit.dart';
-export 'src/meal_details/bloc/meal_details_state.dart';
-export 'src/meal_details/views/meal_details_screen.dart';

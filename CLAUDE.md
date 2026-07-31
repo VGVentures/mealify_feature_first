@@ -67,7 +67,7 @@ To run tests for a single package: `cd features/{feature}/{feature}_{layer} && f
 - A model stored with ids rather than populated objects is a `{Entity}Summary` (e.g. `FavoriteSummary` holds `mealId` and `drinkId`)
 - Repository interfaces use `abstract interface class`
 - Query objects compose multiple repositories to fulfill complex reads (e.g. `GetFavoriteQuery`)
-- Queries expose `get` (Future) or `watch` (Stream); commands expose `execute`. Never callable classes — they break code navigation
+- Queries expose `get` (Future) or `watch` (Stream). A command, when one is needed, exposes `execute`; this app has only queries so far. Never callable classes — they break code navigation
 - Single barrel export: `lib/{feature}_domain.dart`
 - Dependencies: only other domain packages and `meta`
 
@@ -91,7 +91,7 @@ To run tests for a single package: `cd features/{feature}/{feature}_{layer} && f
 - **State pattern**: Use `sealed class` with `Loading`, `Success`, and `Error` implementations
 - **Screen pattern**: `StatefulWidget` that calls cubit methods in `initState` and uses `switch` on sealed state in `build`
 - Navigation callbacks are typedefs passed down from the module (e.g. `typedef OnFavoriteTapped = void Function(String favoriteId)`)
-- **Subfeature barrels**: every independently-loadable entry point gets its own barrel at `lib/{screen}.dart`, and the primary `lib/{feature}_presentation.dart` re-exports them. A single barrel would make deferred loading all-or-nothing per package
+- **Subfeature barrels**: a package with more than one independently-loadable screen gives each one its own barrel at `lib/{screen}.dart`, and the primary `lib/{feature}_presentation.dart` re-exports those barrels and nothing else. Without them, a deferred import is all-or-nothing per package. A single-screen package (`drinks_presentation`, `ideas_presentation`) needs none: its primary barrel is already the only entry point. Add one when a second screen arrives, so the app does not have to change how it loads the first
 - Dependencies: own domain layer, design system, localizations, `flutter_bloc`, `provider`
 
 ### Dependency Direction
@@ -128,7 +128,8 @@ A feature domain may depend on another feature's domain (e.g. `favorites_domain`
 
 - Use `mocktail` for mocking (not mockito)
 - Mock classes: `class Mock{Dependency} extends Mock implements {Dependency} {}`
-- Test file structure mirrors the `lib/` structure it covers, including the `models/`, `repositories/`, `use_cases/`, `mappers/`, and `views/` subfolders
+- A test file sits at the path its subject sits at, with `lib/` swapped for `test/`. A module at `lib/src/ideas/ideas_module.dart` is tested at `test/src/ideas/ideas_module_test.dart`, not under `test/src/ideas/views/`
+- Coverage is uneven today: several packages have no `test/` directory at all. Mirror the path when you add one; do not take an existing gap as the convention
 - Test all layers independently
 - Widget tests that render `Image.network` must stub it. `NetworkImage` holds one static `HttpClient`, so `HttpOverrides` cannot reach it — set `debugNetworkImageHttpClientProvider` instead (see `shared/mealify_design_system/test/helpers/mock_network_images.dart`)
 
