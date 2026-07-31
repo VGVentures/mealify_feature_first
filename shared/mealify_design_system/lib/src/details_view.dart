@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:ingredients_domain/ingredients_domain.dart';
-import 'package:mealify_localizations/mealify_localizations.dart';
+import 'package:mealify_design_system/src/details_row.dart';
 
-/// A Widget that shows Details for a Meal or Drink
+/// A two-tab detail layout: a list of [rows] beside a block of [description]
+/// prose, under a collapsing image header.
+///
+/// The widget names nothing from any feature. Callers supply both tab labels
+/// and map their own types into [DetailsRow], so the same layout serves a meal,
+/// a drink, or anything else with a list and a description.
 class DetailsView extends StatelessWidget {
   /// Construct a DetailsView with the given dependencies
   const DetailsView({
-    required this.ingredients,
-    required this.instructions,
+    required this.rows,
+    required this.rowsTabLabel,
+    required this.description,
+    required this.descriptionTabLabel,
     required this.thumbnail,
     required this.title,
     super.key,
@@ -19,11 +25,17 @@ class DetailsView extends StatelessWidget {
   /// The thumbnail to be displayed in the flexibleSpace of a SliverAppBar
   final String thumbnail;
 
-  /// The list of ingredients for a Drink or Meal
-  final List<Ingredient> ingredients;
+  /// The rows shown in the list tab.
+  final List<DetailsRow> rows;
 
-  /// The instructions describing how to make a Drink or Meal
-  final String instructions;
+  /// The label on the tab that shows [rows].
+  final String rowsTabLabel;
+
+  /// The prose shown in the description tab.
+  final String description;
+
+  /// The label on the tab that shows [description].
+  final String descriptionTabLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -40,12 +52,8 @@ class DetailsView extends StatelessWidget {
                 title: Text(title),
                 bottom: TabBar(
                   tabs: [
-                    Tab(
-                      text: context.l10n.ingredientsTabText,
-                    ),
-                    Tab(
-                      text: context.l10n.instructionsTabText,
-                    ),
+                    Tab(text: rowsTabLabel),
+                    Tab(text: descriptionTabLabel),
                   ],
                 ),
                 flexibleSpace: FlexibleSpaceBar(
@@ -82,22 +90,20 @@ class DetailsView extends StatelessWidget {
         body: TabBarView(
           children: [
             _TabContent(
-              tab: _DetailViewTab.ingredients,
+              tab: _DetailViewTab.rows,
               padding: const EdgeInsets.all(20),
               children: [
-                for (final ingredient in ingredients)
+                for (final row in rows)
                   ListTile(
-                    title: Text(ingredient.name),
-                    trailing: ingredient.measurement != null
-                        ? Text(ingredient.measurement!)
-                        : null,
+                    title: Text(row.label),
+                    trailing: row.value != null ? Text(row.value!) : null,
                   ),
               ],
             ),
             _TabContent(
-              tab: _DetailViewTab.instructions,
+              tab: _DetailViewTab.description,
               padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 40),
-              children: [Text(instructions)],
+              children: [Text(description)],
             ),
           ],
         ),
@@ -142,4 +148,4 @@ class _TabContent extends StatelessWidget {
   }
 }
 
-enum _DetailViewTab { instructions, ingredients }
+enum _DetailViewTab { description, rows }

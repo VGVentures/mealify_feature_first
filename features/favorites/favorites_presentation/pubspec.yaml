@@ -1,5 +1,5 @@
 name: favorites_presentation
-description: A Very Good Project created by Very Good CLI.
+description: The favorites list and details screens.
 version: 0.1.0+1
 publish_to: none
 resolution: workspace
@@ -12,14 +12,11 @@ dependencies:
   bloc:
   drinks_domain:
     path: ../../drinks/drinks_domain
-  favorites_data:
-    path: ../favorites_data
   favorites_domain:
     path: ../favorites_domain
   flutter:
     sdk: flutter
   flutter_bloc:
-  intl:
   mealify_design_system:
     path: ../../../shared/mealify_design_system
   mealify_localizations:

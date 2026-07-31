@@ -1,5 +1,5 @@
 name: mealify_design_system
-description: A Very Good Project created by Very Good CLI.
+description: Feature-agnostic widgets shared by every Mealify screen.
 version: 0.1.0+1
 publish_to: none
 resolution: workspace
@@ -11,10 +11,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  ingredients_domain:
-    path: ../../features/ingredients/ingredients_domain
-  mealify_localizations:
-    path: ../../shared/mealify_localizations
 
 dev_dependencies:
   flutter_test:

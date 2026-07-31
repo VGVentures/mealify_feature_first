@@ -1,5 +1,5 @@
 name: drinks_presentation
-description: A Very Good Project created by Very Good CLI.
+description: The drink details screen.
 version: 0.1.0+1
 publish_to: none
 resolution: workspace
@@ -18,6 +18,8 @@ dependencies:
     path: ../../../features/ingredients/ingredients_domain
   mealify_design_system:
     path: ../../../shared/mealify_design_system
+  mealify_localizations:
+    path: ../../../shared/mealify_localizations
   provider:
 
 dev_dependencies:

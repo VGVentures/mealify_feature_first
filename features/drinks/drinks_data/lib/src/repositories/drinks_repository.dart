@@ -1,8 +1,8 @@
-import 'package:drinks_data/src/data_sources/cocktaildb_api_client/api_drink.dart';
 import 'package:drinks_data/src/data_sources/cocktaildb_api_client/cocktaildb_api_client.dart';
+import 'package:drinks_data/src/data_sources/cocktaildb_api_client/dtos/api_drink.dart';
 import 'package:drinks_data/src/data_sources/drinks_database/drinks_database.dart';
-import 'package:drinks_data/src/repositories/converters/api_to_domain_drink_converter.dart';
-import 'package:drinks_data/src/repositories/converters/db_to_domain_drink_converter.dart';
+import 'package:drinks_data/src/mappers/api_to_domain_drink_converter.dart';
+import 'package:drinks_data/src/mappers/db_to_domain_drink_converter.dart';
 import 'package:drinks_domain/drinks_domain.dart';
 
 /// A class that coordinates meal objects from the remote MealDb Api and the
