@@ -35,8 +35,8 @@ class DrinkDetailsSuccess implements DrinkDetailsState {
   int get hashCode => drink.hashCode;
 }
 
-/// The state that indicates an error has occurred, generally when loading
-/// the [Drink].
+/// The state that indicates an error has occurred, generally when loading the
+/// [Drink].
 @immutable
 class DrinkDetailsError implements DrinkDetailsState {
   /// Construct the error state with the error that occurred.

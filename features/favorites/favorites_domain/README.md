@@ -1,62 +1,112 @@
-# Favorites Domain
+# favorites_domain
 
-[![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
-[![Powered by Mason](https://img.shields.io/endpoint?url=https%3A%2F%2Ftinyurl.com%2Fmason-badge)](https://github.com/felangel/mason)
-[![License: MIT][license_badge]][license_link]
+The domain layer for favorites. Pure Dart, no Flutter.
 
-A Very Good Project created by Very Good CLI.
+A favorite is a meal paired with a drink, so this is the one domain in the repo
+that depends on two others. It is the best package to read if you want to see how
+FFCA handles a feature built out of other features.
 
-## Installation 💻
+## What lives here
 
-**❗ In order to start using Favorites Domain you must have the [Dart SDK][dart_install_link] installed on your machine.**
+| Path | Contents |
+| --- | --- |
+| `src/models/favorite.dart` | `Favorite`, holding a real `Meal` and `Drink` |
+| `src/models/favorite_summary.dart` | `FavoriteSummary`, holding a `mealId` and `drinkId` |
+| `src/repositories/i_favorites_repository.dart` | `IFavoritesRepository` |
+| `src/use_cases/get_favorite_query.dart` | `GetFavoriteQuery`, `FavoriteNotFoundException` |
 
-Install via `dart pub add`:
+## Two models for one thing
 
-```sh
-dart pub add favorites_domain
+This is the part worth understanding. `Favorite` is what a screen wants:
+
+```dart
+class Favorite {
+  final String id;
+  final Meal meal;      // fully populated
+  final Drink drink;    // fully populated
+  final DateTime createdAt;
+}
 ```
 
----
+`FavoriteSummary` is what storage can actually hold:
 
-## Continuous Integration 🤖
-
-Favorites Domain comes with a built-in [GitHub Actions workflow][github_actions_link] powered by [Very Good Workflows][very_good_workflows_link] but you can also add your preferred CI/CD solution.
-
-Out of the box, on each pull request and push, the CI `formats`, `lints`, and `tests` the code. This ensures the code remains consistent and behaves correctly as you add functionality or make changes. The project uses [Very Good Analysis][very_good_analysis_link] for a strict set of analysis options used by our team. Code coverage is enforced using the [Very Good Workflows][very_good_coverage_link].
-
----
-
-## Running Tests 🧪
-
-To run all unit tests:
-
-```sh
-dart pub global activate coverage 1.15.0
-dart test --coverage=coverage
-dart pub global run coverage:format_coverage --lcov --in=coverage --out=coverage/lcov.info
+```dart
+class FavoriteSummary {
+  final String id;
+  final String mealId;   // just an id
+  final String drinkId;  // just an id
+  final DateTime createdAt;
+}
 ```
 
-To view the generated coverage report you can use [lcov](https://github.com/linux-test-project/lcov).
+The reason for the split is a dependency rule. [`favorites_data`](../favorites_data)
+knows how to store a favorite, but it must not know how to fetch a meal, because
+that would couple the favorites data layer to the meals data layer and make either
+one impossible to migrate alone. So the repository deals only in ids:
 
-```sh
-# Generate Coverage Report
-genhtml coverage/lcov.info -o coverage/
-
-# Open Coverage Report
-open coverage/index.html
+```dart
+abstract interface class IFavoritesRepository {
+  Future<FavoriteSummary?> getFavoriteById(String favoriteId);
+  Stream<List<String>> watchAllFavoriteIds();
+  Future<void> addFavorite({required String mealId, required String drinkId});
+  Future<void> removeFavorite(String favoriteId);
+  Future<void> removeFavoriteByMealAndDrinkId({
+    required String mealId,
+    required String drinkId,
+  });
+  Stream<bool> watchIsFavorite({
+    required String mealId,
+    required String drinkId,
+  });
+}
 ```
 
-[dart_install_link]: https://dart.dev/get-dart
-[github_actions_link]: https://docs.github.com/en/actions/learn-github-actions
-[license_badge]: https://img.shields.io/badge/license-MIT-blue.svg
-[license_link]: https://opensource.org/licenses/MIT
-[logo_black]: https://raw.githubusercontent.com/VGVentures/very_good_brand/main/styles/README/vgv_logo_black.png#gh-light-mode-only
-[logo_white]: https://raw.githubusercontent.com/VGVentures/very_good_brand/main/styles/README/vgv_logo_white.png#gh-dark-mode-only
-[mason_link]: https://github.com/felangel/mason
-[very_good_analysis_badge]: https://img.shields.io/badge/style-very_good_analysis-B22C89.svg
-[very_good_analysis_link]: https://pub.dev/packages/very_good_analysis
-[very_good_coverage_link]: https://github.com/marketplace/actions/very-good-coverage
-[very_good_ventures_link]: https://verygood.ventures
-[very_good_ventures_link_light]: https://verygood.ventures#gh-light-mode-only
-[very_good_ventures_link_dark]: https://verygood.ventures#gh-dark-mode-only
-[very_good_workflows_link]: https://github.com/VeryGoodOpenSource/very_good_workflows
+## The query bridges the gap
+
+`GetFavoriteQuery` turns a summary into a `Favorite` by calling three repositories
+and assembling the result:
+
+```dart
+Future<Favorite> get(String favoriteId) async {
+  final favoriteSummary = await _favoritesRepository.getFavoriteById(favoriteId);
+
+  if (favoriteSummary == null) {
+    throw FavoriteNotFoundException(favoriteId);
+  }
+
+  return Favorite(
+    id: favoriteId,
+    meal: await _mealsRepository.getMealById(favoriteSummary.mealId),
+    drink: await _drinksRepository.getDrinkById(favoriteSummary.drinkId),
+    createdAt: favoriteSummary.createdAt,
+  );
+}
+```
+
+Cross-feature reads live in the domain layer, in a use case, working against
+repository *interfaces*. No data layer learns about another feature.
+
+A use case earns its place when it combines several repositories, or when the same
+work would otherwise repeat across cubits. A class that only forwards one call to
+one repository should not exist.
+
+## Who depends on this
+
+- [`favorites_data`](../favorites_data) implements `IFavoritesRepository`
+- [`favorites_presentation`](../favorites_presentation) consumes both models
+- [`ideas_presentation`](../../ideas/ideas_presentation) uses
+  `IFavoritesRepository` to toggle and watch favorite state
+
+This package depends on [`meals_domain`](../../meals/meals_domain),
+[`drinks_domain`](../../drinks/drinks_domain), and `meta`.
+
+## Conventions
+
+Queries expose `get` for a `Future` and `watch` for a `Stream`; commands expose
+`execute`. None are callable classes, because a `call` method breaks "find all
+usages" and jump-to-definition when every callable class shares the same method
+name.
+
+## Testing
+
+`make test` from the repo root, or `fvm flutter test` here.

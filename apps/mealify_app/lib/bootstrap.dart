@@ -4,7 +4,12 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/widgets.dart';
 
+/// Logs every cubit transition and error in the app.
+///
+/// Installed once by [bootstrap], so it covers every feature's cubits without
+/// any feature knowing it exists.
 class AppBlocObserver extends BlocObserver {
+  /// Construct the observer.
   const AppBlocObserver();
 
   @override
@@ -20,6 +25,13 @@ class AppBlocObserver extends BlocObserver {
   }
 }
 
+/// Installs cross-flavor setup, then runs the widget [builder] returns.
+///
+/// Every flavor entry point (`main_development.dart`, `main_staging.dart`,
+/// `main_production.dart`) goes through here, so error handling and the
+/// [AppBlocObserver] are identical across all three and a flavor file stays a
+/// couple of lines. Configuration that differs per flavor belongs in that
+/// flavor's entry point instead.
 Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
   FlutterError.onError = (details) {
     log(details.exceptionAsString(), stackTrace: details.stack);

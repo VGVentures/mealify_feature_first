@@ -1,5 +1,5 @@
 name: mealify_localizations
-description: A Very Good Project created by Very Good CLI.
+description: Every user-facing string in the app.
 version: 0.1.0+1
 publish_to: none
 resolution: workspace

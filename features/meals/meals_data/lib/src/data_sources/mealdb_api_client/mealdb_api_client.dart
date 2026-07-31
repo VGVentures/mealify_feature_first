@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:http_status/http_status.dart';
-import 'package:meals_data/src/data_sources/mealdb_api_client/api_meal.dart';
-import 'package:meals_data/src/data_sources/mealdb_api_client/single_api_meal_response.dart';
+import 'package:meals_data/src/data_sources/mealdb_api_client/dtos/api_meal.dart';
+import 'package:meals_data/src/data_sources/mealdb_api_client/dtos/single_api_meal_response.dart';
 import 'package:meta/meta.dart';
 
 /// A client that interacts with the MealDB api

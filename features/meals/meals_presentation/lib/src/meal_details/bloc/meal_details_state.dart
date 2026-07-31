@@ -35,8 +35,8 @@ class MealDetailsSuccess implements MealDetailsState {
   int get hashCode => meal.hashCode;
 }
 
-/// The state that indicates an error has occurred, generally when loading
-/// the [Meal].
+/// The state that indicates an error has occurred, generally when loading the
+/// [Meal].
 @immutable
 class MealDetailsError implements MealDetailsState {
   /// Construct the error state with the error that occurred.

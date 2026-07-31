@@ -1,5 +1,5 @@
 import 'package:favorites_data/src/data_sources/favorites_database/favorites_database.dart';
-import 'package:favorites_data/src/repositories/db_to_domain_favorite_converter.dart';
+import 'package:favorites_data/src/mappers/db_to_domain_favorite_converter.dart';
 import 'package:favorites_domain/favorites_domain.dart';
 
 /// A class that provides access to a user's favorites
@@ -16,7 +16,7 @@ class FavoritesRepository implements IFavoritesRepository {
   final DbToDomainFavoriteConverter _dbToDomainFavoriteConverter;
 
   @override
-  Future<RawFavorite?> getFavoriteById(String favoriteId) async {
+  Future<FavoriteSummary?> getFavoriteById(String favoriteId) async {
     final dbFavorite = await _favoritesDb.getFavorite(favoriteId);
 
     if (dbFavorite == null) return null;

@@ -1,5 +1,6 @@
-/// A Very Good Project created by Very Good CLI.
+/// The meals domain: the `Meal` model and the `IMealsRepository` contract for
+/// reading them. Pure Dart, with no idea where a meal comes from.
 library;
 
-export 'src/i_meals_repository.dart';
-export 'src/meal.dart';
+export 'src/models/meal.dart';
+export 'src/repositories/i_meals_repository.dart';

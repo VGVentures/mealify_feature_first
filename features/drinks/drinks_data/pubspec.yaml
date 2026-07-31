@@ -1,5 +1,5 @@
 name: drinks_data
-description: A Very Good Project created by Very Good CLI.
+description: Drinks from TheCocktailDB, cached in a local Drift database.
 version: 0.1.0+1
 publish_to: none
 resolution: workspace

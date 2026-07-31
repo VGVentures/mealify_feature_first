@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:drinks_data/src/data_sources/cocktaildb_api_client/api_drink.dart';
-import 'package:drinks_data/src/data_sources/cocktaildb_api_client/single_api_drink_response.dart';
+import 'package:drinks_data/src/data_sources/cocktaildb_api_client/dtos/api_drink.dart';
+import 'package:drinks_data/src/data_sources/cocktaildb_api_client/dtos/single_api_drink_response.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_status/http_status.dart';
 import 'package:meta/meta.dart';

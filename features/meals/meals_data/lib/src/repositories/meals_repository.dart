@@ -1,8 +1,8 @@
-import 'package:meals_data/src/data_sources/mealdb_api_client/api_meal.dart';
+import 'package:meals_data/src/data_sources/mealdb_api_client/dtos/api_meal.dart';
 import 'package:meals_data/src/data_sources/mealdb_api_client/mealdb_api_client.dart';
 import 'package:meals_data/src/data_sources/meals_database/meals_database.dart';
-import 'package:meals_data/src/repositories/api_to_domain_meal_converter.dart';
-import 'package:meals_data/src/repositories/db_to_domain_meal_converter.dart';
+import 'package:meals_data/src/mappers/api_to_domain_meal_converter.dart';
+import 'package:meals_data/src/mappers/db_to_domain_meal_converter.dart';
 import 'package:meals_domain/meals_domain.dart';
 
 /// A class that coordinates meal objects from the remote MealDb Api and the

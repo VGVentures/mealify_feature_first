@@ -1,67 +1,86 @@
-# Meals Presentation
+# meals_presentation
 
-[![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
-[![Powered by Mason](https://img.shields.io/endpoint?url=https%3A%2F%2Ftinyurl.com%2Fmason-badge)](https://github.com/felangel/mason)
-[![License: MIT][license_badge]][license_link]
+The presentation layer for meals. One screen: meal details.
 
-A Very Good Project created by Very Good CLI.
+Depends on [`meals_domain`](../meals_domain) for its types and on the app to hand
+it an `IMealsRepository`. It has no dependency on
+[`meals_data`](../meals_data), which is what lets it be tested without a database
+or a network.
 
-## Installation 💻
+## What lives here
 
-**❗ In order to start using Meals Presentation you must have the [Flutter SDK][flutter_install_link] installed on your machine.**
-
-Install via `flutter pub add`:
-
-```sh
-dart pub add meals_presentation
+```
+lib/
+  meal_details.dart                  subfeature barrel
+  meals_presentation.dart            primary barrel, re-exports the above
+  src/meal_details/
+    meal_details_module.dart         entry point
+    bloc/meal_details_cubit.dart     MealDetailsCubit
+    bloc/meal_details_state.dart     MealDetailsLoading / Success / Error
+    views/meal_details_screen.dart   MealDetailsScreen
 ```
 
----
+## The module is the entry point
 
-## Continuous Integration 🤖
+`MealDetailsModule` states everything the screen needs in its constructor,
+provides the cubit, and renders the screen. Nothing outside this package
+constructs the cubit or the screen directly:
 
-Meals Presentation comes with a built-in [GitHub Actions workflow][github_actions_link] powered by [Very Good Workflows][very_good_workflows_link] but you can also add your preferred CI/CD solution.
-
-Out of the box, on each pull request and push, the CI `formats`, `lints`, and `tests` the code. This ensures the code remains consistent and behaves correctly as you add functionality or make changes. The project uses [Very Good Analysis][very_good_analysis_link] for a strict set of analysis options used by our team. Code coverage is enforced using the [Very Good Workflows][very_good_coverage_link].
-
----
-
-## Running Tests 🧪
-
-For first time users, install the [very_good_cli][very_good_cli_link]:
-
-```sh
-dart pub global activate very_good_cli
+```dart
+MealDetailsModule(
+  mealsRepository: context.read(),
+  mealId: id,
+)
 ```
 
-To run all unit tests:
+Because dependencies arrive as arguments rather than being looked up, the same
+module works from a `go_router` route, from a test, or as the root widget of a
+`FlutterEngine` in an add-to-app host.
 
-```sh
-very_good test --coverage
+## Two barrels, one screen
+
+`meal_details.dart` exists so the app can defer-load this screen on its own:
+
+```dart
+import 'package:meals_presentation/meal_details.dart' deferred as meal_details;
 ```
 
-To view the generated coverage report you can use [lcov](https://github.com/linux-test-project/lcov).
+With only the primary barrel, a deferred import would pull in everything the
+package will ever contain. One screen does not need the split today; the barrel is
+there so adding a second screen does not force the app to change how it loads the
+first.
 
-```sh
-# Generate Coverage Report
-genhtml coverage/lcov.info -o coverage/
+## State is sealed
 
-# Open Coverage Report
-open coverage/index.html
+`MealDetailsState` is a `sealed class`, so the screen's `switch` is exhaustive and
+a new variant becomes a compile error instead of a blank screen:
+
+```dart
+switch (state) {
+  MealDetailsLoading() => const LoadingView(),
+  MealDetailsError(:final error) => ErrorView(error: error),
+  final MealDetailsSuccess s => DetailsView(...),
+}
 ```
 
-[flutter_install_link]: https://docs.flutter.dev/get-started/install
-[github_actions_link]: https://docs.github.com/en/actions/learn-github-actions
-[license_badge]: https://img.shields.io/badge/license-MIT-blue.svg
-[license_link]: https://opensource.org/licenses/MIT
-[logo_black]: https://raw.githubusercontent.com/VGVentures/very_good_brand/main/styles/README/vgv_logo_black.png#gh-light-mode-only
-[logo_white]: https://raw.githubusercontent.com/VGVentures/very_good_brand/main/styles/README/vgv_logo_white.png#gh-dark-mode-only
-[mason_link]: https://github.com/felangel/mason
-[very_good_analysis_badge]: https://img.shields.io/badge/style-very_good_analysis-B22C89.svg
-[very_good_analysis_link]: https://pub.dev/packages/very_good_analysis
-[very_good_cli_link]: https://pub.dev/packages/very_good_cli
-[very_good_coverage_link]: https://github.com/marketplace/actions/very-good-coverage
-[very_good_ventures_link]: https://verygood.ventures
-[very_good_ventures_link_light]: https://verygood.ventures#gh-light-mode-only
-[very_good_ventures_link_dark]: https://verygood.ventures#gh-dark-mode-only
-[very_good_workflows_link]: https://github.com/VeryGoodOpenSource/very_good_workflows
+## Mapping into the design system
+
+`DetailsView` from [`mealify_design_system`](../../../shared/mealify_design_system)
+knows nothing about meals. The screen converts ingredients into the widget's own
+`DetailsRow` type and supplies the tab labels from
+[`mealify_localizations`](../../../shared/mealify_localizations):
+
+```dart
+rows: [
+  for (final ingredient in s.meal.ingredients)
+    (label: ingredient.name, value: ingredient.measurement),
+],
+rowsTabLabel: context.l10n.ingredientsTabText,
+```
+
+The `ingredients` getter is an extension from
+[`ingredients_domain`](../../ingredients/ingredients_domain).
+
+## Testing
+
+`make test` from the repo root, or `fvm flutter test` here.

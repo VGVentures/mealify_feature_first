@@ -1,67 +1,55 @@
-# Mealify Design System
+# mealify_design_system
 
-[![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
-[![Powered by Mason](https://img.shields.io/endpoint?url=https%3A%2F%2Ftinyurl.com%2Fmason-badge)](https://github.com/felangel/mason)
-[![License: MIT][license_badge]][license_link]
+Widgets shared across features. Its defining property is what it does *not* know:
+this package names nothing from any feature, and its only dependency is Flutter.
 
-A Very Good Project created by Very Good CLI.
+## What lives here
 
-## Installation 💻
+| Export | What it is |
+| --- | --- |
+| `DetailsView` | Two-tab detail layout: a list of rows, a block of prose, a collapsing image header |
+| `DetailsRow` | `({String label, String? value})`, the row shape `DetailsView` renders |
+| `ErrorView` | Error state for a screen body |
+| `LoadingView` | Loading state for a screen body |
+| `LoadingScreen` | Full-screen loading, used while a deferred module loads |
 
-**❗ In order to start using Mealify Design System you must have the [Flutter SDK][flutter_install_link] installed on your machine.**
+## Why DetailsRow exists
 
-Install via `flutter pub add`:
+`DetailsView` shows a meal's or a drink's ingredients, so the obvious signature
+would take a `List<Ingredient>` from `ingredients_domain`. It used to, and that was
+a bug: a package under `shared/` importing a package under `features/` breaks the
+rule that shared code has zero knowledge of the app's features. The FFCA guidance
+puts a `LoginButton` in the not-shared column for the same reason.
 
-```sh
-dart pub add mealify_design_system
+The fix was to give the widget a vocabulary of its own:
+
+```dart
+typedef DetailsRow = ({String label, String? value});
 ```
 
----
+Callers map into it, which takes one line at each call site:
 
-## Continuous Integration 🤖
-
-Mealify Design System comes with a built-in [GitHub Actions workflow][github_actions_link] powered by [Very Good Workflows][very_good_workflows_link] but you can also add your preferred CI/CD solution.
-
-Out of the box, on each pull request and push, the CI `formats`, `lints`, and `tests` the code. This ensures the code remains consistent and behaves correctly as you add functionality or make changes. The project uses [Very Good Analysis][very_good_analysis_link] for a strict set of analysis options used by our team. Code coverage is enforced using the [Very Good Workflows][very_good_coverage_link].
-
----
-
-## Running Tests 🧪
-
-For first time users, install the [very_good_cli][very_good_cli_link]:
-
-```sh
-dart pub global activate very_good_cli
+```dart
+rows: [
+  for (final ingredient in meal.ingredients)
+    (label: ingredient.name, value: ingredient.measurement),
+],
 ```
 
-To run all unit tests:
+Tab labels are parameters too, rather than being read from localizations here, so
+this package does not depend on `mealify_localizations` either. The result is a
+widget that would work unchanged in an app that has never heard of a meal.
 
-```sh
-very_good test --coverage
-```
+## Testing
 
-To view the generated coverage report you can use [lcov](https://github.com/linux-test-project/lcov).
+`make test` from the repo root, or `fvm flutter test` here.
 
-```sh
-# Generate Coverage Report
-genhtml coverage/lcov.info -o coverage/
+`DetailsView` renders `Image.network`, which widget tests cannot reach. The tests
+use `test/helpers/mock_network_images.dart`, which sets
+`debugNetworkImageHttpClientProvider` to serve a 1x1 PNG. `HttpOverrides` does not
+work for this: `NetworkImage` holds a single static `HttpClient`, so an override
+installed in a zone never reaches it.
 
-# Open Coverage Report
-open coverage/index.html
-```
-
-[flutter_install_link]: https://docs.flutter.dev/get-started/install
-[github_actions_link]: https://docs.github.com/en/actions/learn-github-actions
-[license_badge]: https://img.shields.io/badge/license-MIT-blue.svg
-[license_link]: https://opensource.org/licenses/MIT
-[logo_black]: https://raw.githubusercontent.com/VGVentures/very_good_brand/main/styles/README/vgv_logo_black.png#gh-light-mode-only
-[logo_white]: https://raw.githubusercontent.com/VGVentures/very_good_brand/main/styles/README/vgv_logo_white.png#gh-dark-mode-only
-[mason_link]: https://github.com/felangel/mason
-[very_good_analysis_badge]: https://img.shields.io/badge/style-very_good_analysis-B22C89.svg
-[very_good_analysis_link]: https://pub.dev/packages/very_good_analysis
-[very_good_cli_link]: https://pub.dev/packages/very_good_cli
-[very_good_coverage_link]: https://github.com/marketplace/actions/very-good-coverage
-[very_good_ventures_link]: https://verygood.ventures
-[very_good_ventures_link_light]: https://verygood.ventures#gh-light-mode-only
-[very_good_ventures_link_dark]: https://verygood.ventures#gh-dark-mode-only
-[very_good_workflows_link]: https://github.com/VeryGoodOpenSource/very_good_workflows
+The tests deliberately pass tab labels that are not the app's real copy. A test
+that asserted on "Ingredients" while also passing "Ingredients" could not tell a
+parameter from a hardcoded string.

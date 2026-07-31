@@ -1,5 +1,5 @@
 name: http_client_factory
-description: A Very Good Project created by Very Good CLI.
+description: Builds an http.Client backed by the platform networking stack.
 version: 0.1.0+1
 publish_to: none
 resolution: workspace

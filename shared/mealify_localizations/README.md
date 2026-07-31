@@ -1,67 +1,53 @@
-# Mealify Localizations
+# mealify_localizations
 
-[![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
-[![Powered by Mason](https://img.shields.io/endpoint?url=https%3A%2F%2Ftinyurl.com%2Fmason-badge)](https://github.com/felangel/mason)
-[![License: MIT][license_badge]][license_link]
+Every user-facing string in the app, for all features, in one package.
 
-A Very Good Project created by Very Good CLI.
+## Why one shared package
 
-## Installation 💻
+FFCA allows localizations per feature or shared, and recommends starting shared.
+Per-feature localizations mean a delegate per feature and a translation pipeline
+per feature; that cost is worth paying at a scale this app has not reached. If it
+ever splits, features already depend on this package explicitly, so the change is
+contained.
 
-**❗ In order to start using Mealify Localizations you must have the [Flutter SDK][flutter_install_link] installed on your machine.**
+## Layout
 
-Install via `flutter pub add`:
-
-```sh
-dart pub add mealify_localizations
+```
+lib/
+  mealify_localizations.dart          barrel
+  src/l10n/arb/app_en.arb             the source of truth, hand-edited
+  src/l10n/gen/                       generated delegates, do not edit
+  src/l10n/l10n.dart                  MealifyLocalizationsX extension
 ```
 
----
+## Usage
 
-## Continuous Integration 🤖
+The package exposes a `BuildContext` extension so widgets do not have to name the
+delegate:
 
-Mealify Localizations comes with a built-in [GitHub Actions workflow][github_actions_link] powered by [Very Good Workflows][very_good_workflows_link] but you can also add your preferred CI/CD solution.
-
-Out of the box, on each pull request and push, the CI `formats`, `lints`, and `tests` the code. This ensures the code remains consistent and behaves correctly as you add functionality or make changes. The project uses [Very Good Analysis][very_good_analysis_link] for a strict set of analysis options used by our team. Code coverage is enforced using the [Very Good Workflows][very_good_coverage_link].
-
----
-
-## Running Tests 🧪
-
-For first time users, install the [very_good_cli][very_good_cli_link]:
-
-```sh
-dart pub global activate very_good_cli
+```dart
+extension MealifyLocalizationsX on BuildContext {
+  MealifyLocalizations get l10n => MealifyLocalizations.of(this);
+}
 ```
 
-To run all unit tests:
+Which reads at the call site as:
 
-```sh
-very_good test --coverage
+```dart
+Text(context.l10n.addToFavoritesButtonText)
 ```
 
-To view the generated coverage report you can use [lcov](https://github.com/linux-test-project/lcov).
+## Adding a string
 
-```sh
-# Generate Coverage Report
-genhtml coverage/lcov.info -o coverage/
+Add the key and its `@key` description block to `src/l10n/arb/app_en.arb`, then
+regenerate. Every entry carries a description, because a translator sees the string
+without the screen around it.
 
-# Open Coverage Report
-open coverage/index.html
-```
+Note that [`mealify_design_system`](../mealify_design_system) does not depend on
+this package. Its widgets take their text as parameters, which keeps them usable
+outside this app.
 
-[flutter_install_link]: https://docs.flutter.dev/get-started/install
-[github_actions_link]: https://docs.github.com/en/actions/learn-github-actions
-[license_badge]: https://img.shields.io/badge/license-MIT-blue.svg
-[license_link]: https://opensource.org/licenses/MIT
-[logo_black]: https://raw.githubusercontent.com/VGVentures/very_good_brand/main/styles/README/vgv_logo_black.png#gh-light-mode-only
-[logo_white]: https://raw.githubusercontent.com/VGVentures/very_good_brand/main/styles/README/vgv_logo_white.png#gh-dark-mode-only
-[mason_link]: https://github.com/felangel/mason
-[very_good_analysis_badge]: https://img.shields.io/badge/style-very_good_analysis-B22C89.svg
-[very_good_analysis_link]: https://pub.dev/packages/very_good_analysis
-[very_good_cli_link]: https://pub.dev/packages/very_good_cli
-[very_good_coverage_link]: https://github.com/marketplace/actions/very-good-coverage
-[very_good_ventures_link]: https://verygood.ventures
-[very_good_ventures_link_light]: https://verygood.ventures#gh-light-mode-only
-[very_good_ventures_link_dark]: https://verygood.ventures#gh-dark-mode-only
-[very_good_workflows_link]: https://github.com/VeryGoodOpenSource/very_good_workflows
+## Testing
+
+`make test` from the repo root. There is nothing here to test beyond the generated
+delegates.
