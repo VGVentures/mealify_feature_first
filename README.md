@@ -127,8 +127,11 @@ flowchart TB
   ideas_p & fav_p & meals_p & drinks_p --> ds & l10n
 ```
 
-Only the presentation packages reach into `shared/`. Domain and data packages
-depend on neither the design system nor localizations.
+Only the presentation packages depend on the design system and localizations;
+domain and data packages depend on neither. The two factory packages are used
+elsewhere: the app depends on both to build the HTTP client and the database
+executors, and the meals and drinks data packages take `http_client_factory` as a
+dev dependency for their API client tests.
 
 Three rules produce that shape:
 
