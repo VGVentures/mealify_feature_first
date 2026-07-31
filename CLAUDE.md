@@ -38,8 +38,9 @@ nested inside `lib/src/` so the barrel file stays the package's public surface:
   src/{screen}/bloc/                # Cubit + state
   src/{screen}/views/               # Screen and widgets
   src/{screen}/{screen}_module.dart # Module wiring the screen's dependencies
-  {screen}.dart                     # subfeature barrel (one per entry point)
-  {feature}_presentation.dart       # primary barrel, re-exports subfeatures
+  {screen}.dart                     # subfeature barrel, only when the package
+                                    # has more than one screen (see below)
+  {feature}_presentation.dart       # primary barrel
 ```
 
 Drift generates its DTOs into `{database}.g.dart` beside the database, not into
