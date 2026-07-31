@@ -1,62 +1,61 @@
-# Ingredients Domain
+# ingredients_domain
 
-[![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
-[![Powered by Mason](https://img.shields.io/endpoint?url=https%3A%2F%2Ftinyurl.com%2Fmason-badge)](https://github.com/felangel/mason)
-[![License: MIT][license_badge]][license_link]
+A **domain-only** feature. No data layer, no presentation layer, no storage.
 
-A Very Good Project created by Very Good CLI.
+TheMealDB and TheCocktailDB both return ingredients as flat numbered columns:
+`ingredient1` through `ingredient20` alongside `measure1` through `measure20`,
+mostly null. This package turns that into a list, and that is all it does.
 
-## Installation 💻
+It exists as its own package to answer a question that comes up in every FFCA
+codebase: where does logic go when it belongs to no single feature but is not
+generic enough for `shared/`? Both meals and drinks need this conversion; neither
+owns it; and it is specific to this app's data, so `shared/` is the wrong home.
+A domain-only feature is the answer.
 
-**❗ In order to start using Ingredients Domain you must have the [Dart SDK][dart_install_link] installed on your machine.**
+## What lives here
 
-Install via `dart pub add`:
+| Path | Contents |
+| --- | --- |
+| `src/models/ingredient.dart` | `Ingredient`, `IngredientName`, `IngredientMeasurement` |
+| `src/extensions/meal_ingredients.dart` | `MealIngredients` extension on `Meal` |
+| `src/extensions/drink_ingredients.dart` | `DrinkIngredients` extension on `Drink` |
 
-```sh
-dart pub add ingredients_domain
+`Ingredient` is a record typedef rather than a class, because it is a pair of
+strings with no behavior and no identity:
+
+```dart
+typedef IngredientName = String;
+typedef IngredientMeasurement = String?;
+typedef Ingredient = ({IngredientName name, IngredientMeasurement measurement});
 ```
 
----
+The extensions read the numbered fields, drop the ones that are null or blank, and
+return what is left:
 
-## Continuous Integration 🤖
-
-Ingredients Domain comes with a built-in [GitHub Actions workflow][github_actions_link] powered by [Very Good Workflows][very_good_workflows_link] but you can also add your preferred CI/CD solution.
-
-Out of the box, on each pull request and push, the CI `formats`, `lints`, and `tests` the code. This ensures the code remains consistent and behaves correctly as you add functionality or make changes. The project uses [Very Good Analysis][very_good_analysis_link] for a strict set of analysis options used by our team. Code coverage is enforced using the [Very Good Workflows][very_good_coverage_link].
-
----
-
-## Running Tests 🧪
-
-To run all unit tests:
-
-```sh
-dart pub global activate coverage 1.15.0
-dart test --coverage=coverage
-dart pub global run coverage:format_coverage --lcov --in=coverage --out=coverage/lcov.info
+```dart
+final ingredients = meal.ingredients; // List<Ingredient>
 ```
 
-To view the generated coverage report you can use [lcov](https://github.com/linux-test-project/lcov).
+## The extensions/ folder
 
-```sh
-# Generate Coverage Report
-genhtml coverage/lcov.info -o coverage/
+FFCA names `models/`, `repositories/`, and `use_cases/` as the domain layer's
+subfolders. Extensions that derive one model from another are none of those, so
+this repo adds `extensions/` rather than filing them somewhere misleading.
 
-# Open Coverage Report
-open coverage/index.html
-```
+## Who depends on this
 
-[dart_install_link]: https://dart.dev/get-dart
-[github_actions_link]: https://docs.github.com/en/actions/learn-github-actions
-[license_badge]: https://img.shields.io/badge/license-MIT-blue.svg
-[license_link]: https://opensource.org/licenses/MIT
-[logo_black]: https://raw.githubusercontent.com/VGVentures/very_good_brand/main/styles/README/vgv_logo_black.png#gh-light-mode-only
-[logo_white]: https://raw.githubusercontent.com/VGVentures/very_good_brand/main/styles/README/vgv_logo_white.png#gh-dark-mode-only
-[mason_link]: https://github.com/felangel/mason
-[very_good_analysis_badge]: https://img.shields.io/badge/style-very_good_analysis-B22C89.svg
-[very_good_analysis_link]: https://pub.dev/packages/very_good_analysis
-[very_good_coverage_link]: https://github.com/marketplace/actions/very-good-coverage
-[very_good_ventures_link]: https://verygood.ventures
-[very_good_ventures_link_light]: https://verygood.ventures#gh-light-mode-only
-[very_good_ventures_link_dark]: https://verygood.ventures#gh-dark-mode-only
-[very_good_workflows_link]: https://github.com/VeryGoodOpenSource/very_good_workflows
+- [`meals_presentation`](../../meals/meals_presentation) and
+  [`drinks_presentation`](../../drinks/drinks_presentation) call the extensions,
+  then map the result into the design system's `DetailsRow`
+
+Nothing in `shared/` depends on this. The design system used to, which broke the
+rule that shared code knows nothing about features; it now declares its own
+`DetailsRow` type and the screens map into it.
+
+This package depends on [`meals_domain`](../../meals/meals_domain) and
+[`drinks_domain`](../../drinks/drinks_domain).
+
+## Testing
+
+`make test` from the repo root, or `fvm flutter test` here. The tests cover both
+extensions, including the filtering of null and empty entries.

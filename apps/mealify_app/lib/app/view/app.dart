@@ -13,9 +13,19 @@ import 'package:meals_domain/meals_domain.dart';
 import 'package:provider/provider.dart';
 import 'package:query_executor_factory/query_executor_factory.dart';
 
+/// The root widget: builds the router and provides every repository the
+/// features need.
+///
+/// This is the composition root, and the only place in the repo that imports a
+/// `_data` package. Each repository is created here and provided **as its
+/// interface**, so a feature reading `context.read<IMealsRepository>()` cannot
+/// reach the concrete `MealsRepository` even by accident. Swapping a data layer
+/// means editing this file and nothing else.
 class MealifyApp extends StatefulWidget {
+  /// Construct the app with the navigator key go_router should use.
   const MealifyApp({required this.navigatorKey, super.key});
 
+  /// The key for the router's root navigator.
   final GlobalKey<NavigatorState> navigatorKey;
 
   @override
@@ -39,6 +49,9 @@ class _MealifyAppState extends State<MealifyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        // One client, shared by both API clients below, so the native cache and
+        // connection pool are shared too. Declared first because the
+        // repositories read it.
         Provider<http.Client>(create: (context) => httpClientFactory()),
         Provider<IDrinksRepository>(
           create: (context) => DrinksRepository(

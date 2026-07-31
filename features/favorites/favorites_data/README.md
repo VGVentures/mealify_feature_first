@@ -1,67 +1,65 @@
-# Favorites Data
+# favorites_data
 
-[![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
-[![Powered by Mason](https://img.shields.io/endpoint?url=https%3A%2F%2Ftinyurl.com%2Fmason-badge)](https://github.com/felangel/mason)
-[![License: MIT][license_badge]][license_link]
+The data layer for favorites. Implements `IFavoritesRepository` from
+[`favorites_domain`](../favorites_domain).
 
-A Very Good Project created by Very Good CLI.
+One data source, a local Drift database. Favorites are the user's own data, so
+there is no API behind this and nothing to sync.
 
-## Installation 💻
+## What lives here
 
-**❗ In order to start using Favorites Data you must have the [Flutter SDK][flutter_install_link] installed on your machine.**
+| Path | Contents |
+| --- | --- |
+| `src/data_sources/favorites_database/` | `FavoritesDatabase`, `favorites.drift`, generated Drift code |
+| `src/mappers/db_to_domain_favorite_converter.dart` | `DbToDomainFavoriteConverter` |
+| `src/repositories/favorites_repository.dart` | `FavoritesRepository` |
 
-Install via `flutter pub add`:
+## What this package deliberately cannot do
 
-```sh
-dart pub add favorites_data
+It cannot fetch a meal or a drink. It stores and returns `FavoriteSummary`, which
+holds a `mealId` and a `drinkId`:
+
+```dart
+@override
+Future<FavoriteSummary?> getFavoriteById(String favoriteId) async {
+  final dbFavorite = await _favoritesDb.getFavorite(favoriteId);
+
+  if (dbFavorite == null) return null;
+
+  return _dbToDomainFavoriteConverter.convert(dbFavorite);
+}
 ```
 
----
+Turning those ids into a full `Favorite` happens in `GetFavoriteQuery`, in the
+domain layer, which calls the meals and drinks repositories. The point is that
+this package has no dependency on `meals_data` or `drinks_data`, so favorites
+storage can be migrated without touching either, and the reverse holds too.
 
-## Continuous Integration 🤖
+Several repository methods take a meal and drink id pair rather than a favorite
+id, because the ideas screen knows the pairing it is showing but not whether a
+favorite row exists for it yet:
 
-Favorites Data comes with a built-in [GitHub Actions workflow][github_actions_link] powered by [Very Good Workflows][very_good_workflows_link] but you can also add your preferred CI/CD solution.
-
-Out of the box, on each pull request and push, the CI `formats`, `lints`, and `tests` the code. This ensures the code remains consistent and behaves correctly as you add functionality or make changes. The project uses [Very Good Analysis][very_good_analysis_link] for a strict set of analysis options used by our team. Code coverage is enforced using the [Very Good Workflows][very_good_coverage_link].
-
----
-
-## Running Tests 🧪
-
-For first time users, install the [very_good_cli][very_good_cli_link]:
-
-```sh
-dart pub global activate very_good_cli
+```dart
+Stream<bool> watchIsFavorite({required String mealId, required String drinkId});
+Future<void> removeFavoriteByMealAndDrinkId({
+  required String mealId,
+  required String drinkId,
+});
 ```
 
-To run all unit tests:
+## Public API
 
-```sh
-very_good test --coverage
-```
+The barrel exports `FavoritesDatabase` and `FavoritesRepository`. The converter
+stays internal.
 
-To view the generated coverage report you can use [lcov](https://github.com/linux-test-project/lcov).
+## Who depends on this
 
-```sh
-# Generate Coverage Report
-genhtml coverage/lcov.info -o coverage/
+Only [`mealify_app`](../../../apps/mealify_app), which constructs
+`FavoritesRepository` and provides it as an `IFavoritesRepository`.
+[`favorites_presentation`](../favorites_presentation) does not depend on this
+package.
 
-# Open Coverage Report
-open coverage/index.html
-```
+## Testing
 
-[flutter_install_link]: https://docs.flutter.dev/get-started/install
-[github_actions_link]: https://docs.github.com/en/actions/learn-github-actions
-[license_badge]: https://img.shields.io/badge/license-MIT-blue.svg
-[license_link]: https://opensource.org/licenses/MIT
-[logo_black]: https://raw.githubusercontent.com/VGVentures/very_good_brand/main/styles/README/vgv_logo_black.png#gh-light-mode-only
-[logo_white]: https://raw.githubusercontent.com/VGVentures/very_good_brand/main/styles/README/vgv_logo_white.png#gh-dark-mode-only
-[mason_link]: https://github.com/felangel/mason
-[very_good_analysis_badge]: https://img.shields.io/badge/style-very_good_analysis-B22C89.svg
-[very_good_analysis_link]: https://pub.dev/packages/very_good_analysis
-[very_good_cli_link]: https://pub.dev/packages/very_good_cli
-[very_good_coverage_link]: https://github.com/marketplace/actions/very-good-coverage
-[very_good_ventures_link]: https://verygood.ventures
-[very_good_ventures_link_light]: https://verygood.ventures#gh-light-mode-only
-[very_good_ventures_link_dark]: https://verygood.ventures#gh-dark-mode-only
-[very_good_workflows_link]: https://github.com/VeryGoodOpenSource/very_good_workflows
+`make test` from the repo root, or `fvm flutter test` here. The database tests run
+against `NativeDatabase.memory()`, so they need no files and no network.

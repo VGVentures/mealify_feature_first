@@ -1,62 +1,45 @@
-# Drinks Domain
+# drinks_domain
 
-[![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
-[![Powered by Mason](https://img.shields.io/endpoint?url=https%3A%2F%2Ftinyurl.com%2Fmason-badge)](https://github.com/felangel/mason)
-[![License: MIT][license_badge]][license_link]
+The domain layer for drinks. Pure Dart, no Flutter.
 
-A Very Good Project created by Very Good CLI.
+Defines what a drink *is* and what can be asked about one, with no knowledge of
+where drinks come from. [`drinks_data`](../drinks_data) answers that.
 
-## Installation 💻
+## What lives here
 
-**❗ In order to start using Drinks Domain you must have the [Dart SDK][dart_install_link] installed on your machine.**
+| Path | Contents |
+| --- | --- |
+| `src/models/drink.dart` | `Drink`, an immutable model with value equality |
+| `src/repositories/i_drinks_repository.dart` | `IDrinksRepository`, the read contract |
 
-Install via `dart pub add`:
-
-```sh
-dart pub add drinks_domain
+```dart
+abstract interface class IDrinksRepository {
+  Future<Drink> getDrinkById(String id);
+  Future<Drink> getRandomDrink();
+}
 ```
 
----
+`Drink` mirrors what TheCocktailDB returns, including 15 flat `ingredient1..15`
+and `measure1..15` pairs. [`ingredients_domain`](../../ingredients/ingredients_domain)
+turns those into a list, so this model can stay faithful to the source rather
+than convenient.
 
-## Continuous Integration 🤖
+Note the deliberate symmetry with [`meals_domain`](../../meals/meals_domain):
+two separate features with near-identical shapes, not one generalized
+"consumable" feature. They come from different APIs and can change
+independently, and sharing a model would couple them for no gain.
 
-Drinks Domain comes with a built-in [GitHub Actions workflow][github_actions_link] powered by [Very Good Workflows][very_good_workflows_link] but you can also add your preferred CI/CD solution.
+## Who depends on this
 
-Out of the box, on each pull request and push, the CI `formats`, `lints`, and `tests` the code. This ensures the code remains consistent and behaves correctly as you add functionality or make changes. The project uses [Very Good Analysis][very_good_analysis_link] for a strict set of analysis options used by our team. Code coverage is enforced using the [Very Good Workflows][very_good_coverage_link].
+- [`drinks_data`](../drinks_data) implements `IDrinksRepository`
+- [`drinks_presentation`](../drinks_presentation) consumes it
+- [`favorites_domain`](../../favorites/favorites_domain) uses `IDrinksRepository`
+  to hydrate a `Favorite`
+- [`ideas_presentation`](../../ideas/ideas_presentation) and
+  [`ingredients_domain`](../../ingredients/ingredients_domain) use `Drink`
 
----
+This package depends on `meta` and nothing else.
 
-## Running Tests 🧪
+## Testing
 
-To run all unit tests:
-
-```sh
-dart pub global activate coverage 1.15.0
-dart test --coverage=coverage
-dart pub global run coverage:format_coverage --lcov --in=coverage --out=coverage/lcov.info
-```
-
-To view the generated coverage report you can use [lcov](https://github.com/linux-test-project/lcov).
-
-```sh
-# Generate Coverage Report
-genhtml coverage/lcov.info -o coverage/
-
-# Open Coverage Report
-open coverage/index.html
-```
-
-[dart_install_link]: https://dart.dev/get-dart
-[github_actions_link]: https://docs.github.com/en/actions/learn-github-actions
-[license_badge]: https://img.shields.io/badge/license-MIT-blue.svg
-[license_link]: https://opensource.org/licenses/MIT
-[logo_black]: https://raw.githubusercontent.com/VGVentures/very_good_brand/main/styles/README/vgv_logo_black.png#gh-light-mode-only
-[logo_white]: https://raw.githubusercontent.com/VGVentures/very_good_brand/main/styles/README/vgv_logo_white.png#gh-dark-mode-only
-[mason_link]: https://github.com/felangel/mason
-[very_good_analysis_badge]: https://img.shields.io/badge/style-very_good_analysis-B22C89.svg
-[very_good_analysis_link]: https://pub.dev/packages/very_good_analysis
-[very_good_coverage_link]: https://github.com/marketplace/actions/very-good-coverage
-[very_good_ventures_link]: https://verygood.ventures
-[very_good_ventures_link_light]: https://verygood.ventures#gh-light-mode-only
-[very_good_ventures_link_dark]: https://verygood.ventures#gh-dark-mode-only
-[very_good_workflows_link]: https://github.com/VeryGoodOpenSource/very_good_workflows
+`make test` from the repo root, or `fvm flutter test` here.

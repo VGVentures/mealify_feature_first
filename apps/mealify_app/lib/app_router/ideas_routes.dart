@@ -1,6 +1,7 @@
 part of 'routes.dart';
 
-/// The branch for the ideas route
+/// The ideas tab: the pairing screen at `/ideas`, with meal and drink details
+/// nested beneath it so tapping either one stays inside this branch.
 const ideasBranch = TypedStatefulShellBranch<IdeasBranch>(
   routes: [
     TypedGoRoute<IdeasRoute>(
@@ -13,11 +14,18 @@ const ideasBranch = TypedStatefulShellBranch<IdeasBranch>(
   ],
 );
 
+/// The navigation branch backing the ideas tab.
 class IdeasBranch extends StatefulShellBranchData {
+  /// Construct the ideas branch.
   const IdeasBranch();
 }
 
+/// The pairing screen at `/ideas`, and the app's initial location.
+///
+/// Uses `NoTransitionPage` because this is a tab root: an animation would play
+/// every time the user switches tabs.
 class IdeasRoute extends GoRouteData with $IdeasRoute {
+  /// Construct the ideas route.
   const IdeasRoute();
 
   @override
@@ -30,6 +38,10 @@ class IdeasRoute extends GoRouteData with $IdeasRoute {
             drinksRepository: context.read(),
             mealsRepository: context.read(),
             favoritesRepository: context.read(),
+            // ideas_presentation reports what was tapped and knows nothing
+            // about routes. The app translates that into navigation, which is
+            // why the ideas feature has no dependency on the meals or drinks
+            // presentation packages.
             onDrinkTapped: (drink) {
               DrinkDetailsRoute(id: drink.id).go(context);
             },
@@ -43,9 +55,12 @@ class IdeasRoute extends GoRouteData with $IdeasRoute {
   }
 }
 
+/// A meal at `/ideas/meal/:id`. Rebuildable from [id] alone.
 class MealDetailsRoute extends GoRouteData with $MealDetailsRoute {
+  /// Construct the route for the meal with [id].
   const MealDetailsRoute({required this.id});
 
+  /// The id of the meal to display.
   final String id;
 
   @override
@@ -62,9 +77,12 @@ class MealDetailsRoute extends GoRouteData with $MealDetailsRoute {
   }
 }
 
+/// A drink at `/ideas/drink/:id`. Rebuildable from [id] alone.
 class DrinkDetailsRoute extends GoRouteData with $DrinkDetailsRoute {
+  /// Construct the route for the drink with [id].
   const DrinkDetailsRoute({required this.id});
 
+  /// The id of the drink to display.
   final String id;
 
   @override

@@ -1,67 +1,80 @@
-# Ideas Presentation
+# ideas_presentation
 
-[![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
-[![Powered by Mason](https://img.shields.io/endpoint?url=https%3A%2F%2Ftinyurl.com%2Fmason-badge)](https://github.com/felangel/mason)
-[![License: MIT][license_badge]][license_link]
+A **presentation-only** feature. No domain layer, no data layer.
 
-A Very Good Project created by Very Good CLI.
+This is the app's home screen: it suggests a random meal with a random drink, lets
+you lock either one and re-roll the other, and lets you favorite the pair. It owns
+no models and no storage, because everything it shows belongs to another feature.
 
-## Installation 💻
+It is worth reading as the answer to "what if a screen is the whole feature?" A
+feature does not need three packages. It needs the layers it actually has.
 
-**❗ In order to start using Ideas Presentation you must have the [Flutter SDK][flutter_install_link] installed on your machine.**
+## What lives here
 
-Install via `flutter pub add`:
-
-```sh
-dart pub add ideas_presentation
+```
+lib/
+  ideas_presentation.dart            primary barrel
+  src/ideas_screen/
+    ideas_module.dart                entry point
+    bloc/ideas_cubit.dart            IdeasCubit
+    bloc/ideas_state.dart            IdeasLoading / IdeasSuccess / IdeasError
+    views/ideas_screen.dart          IdeasScreen
 ```
 
----
+## It composes three domains
 
-## Continuous Integration 🤖
+`IdeasModule` takes three repository interfaces and two navigation callbacks:
 
-Ideas Presentation comes with a built-in [GitHub Actions workflow][github_actions_link] powered by [Very Good Workflows][very_good_workflows_link] but you can also add your preferred CI/CD solution.
-
-Out of the box, on each pull request and push, the CI `formats`, `lints`, and `tests` the code. This ensures the code remains consistent and behaves correctly as you add functionality or make changes. The project uses [Very Good Analysis][very_good_analysis_link] for a strict set of analysis options used by our team. Code coverage is enforced using the [Very Good Workflows][very_good_coverage_link].
-
----
-
-## Running Tests 🧪
-
-For first time users, install the [very_good_cli][very_good_cli_link]:
-
-```sh
-dart pub global activate very_good_cli
+```dart
+IdeasModule(
+  drinksRepository: context.read(),
+  mealsRepository: context.read(),
+  favoritesRepository: context.read(),
+  onDrinkTapped: (drink) => DrinkDetailsRoute(id: drink.id).go(context),
+  onMealTapped: (meal) => MealDetailsRoute(id: meal.id).go(context),
+)
 ```
 
-To run all unit tests:
+Three features' worth of data, assembled in a cubit, with no coupling between them.
+The composition happens here in the presentation layer rather than in a domain use
+case, because it is a screen concern: nothing else in the app needs "a random meal
+and a random drink together".
 
-```sh
-very_good test --coverage
+Compare with [`favorites_domain`](../../favorites/favorites_domain), where the
+combination *is* a domain concept and so lives in `GetFavoriteQuery`. Which layer
+composes depends on whether the combination is part of the model or part of the
+screen.
+
+## The state carries the lock flags
+
+`IdeasSuccess` holds the meal, the drink, whether the pair is favorited, and
+whether each side is locked:
+
+```dart
+class IdeasSuccess implements IdeasState {
+  final Meal meal;
+  final Drink drink;
+  final bool isFavorite;
+  final bool mealLocked;
+  final bool drinkLocked;
+}
 ```
 
-To view the generated coverage report you can use [lcov](https://github.com/linux-test-project/lcov).
+`generateNewIdea` re-rolls only the unlocked sides. `isFavorite` is not fetched
+once but watched: the cubit subscribes to
+`IFavoritesRepository.watchIsFavorite(mealId:, drinkId:)`, so the heart icon stays
+right even if the same pair is un-favorited from the favorites list. The
+subscription is cancelled in `close()`.
 
-```sh
-# Generate Coverage Report
-genhtml coverage/lcov.info -o coverage/
+## Dependencies
 
-# Open Coverage Report
-open coverage/index.html
-```
+[`meals_domain`](../../meals/meals_domain),
+[`drinks_domain`](../../drinks/drinks_domain), and
+[`favorites_domain`](../../favorites/favorites_domain), plus the design system and
+localizations. No data packages, and no other presentation packages: it navigates
+to the meal and drink screens through callbacks rather than by importing them.
 
-[flutter_install_link]: https://docs.flutter.dev/get-started/install
-[github_actions_link]: https://docs.github.com/en/actions/learn-github-actions
-[license_badge]: https://img.shields.io/badge/license-MIT-blue.svg
-[license_link]: https://opensource.org/licenses/MIT
-[logo_black]: https://raw.githubusercontent.com/VGVentures/very_good_brand/main/styles/README/vgv_logo_black.png#gh-light-mode-only
-[logo_white]: https://raw.githubusercontent.com/VGVentures/very_good_brand/main/styles/README/vgv_logo_white.png#gh-dark-mode-only
-[mason_link]: https://github.com/felangel/mason
-[very_good_analysis_badge]: https://img.shields.io/badge/style-very_good_analysis-B22C89.svg
-[very_good_analysis_link]: https://pub.dev/packages/very_good_analysis
-[very_good_cli_link]: https://pub.dev/packages/very_good_cli
-[very_good_coverage_link]: https://github.com/marketplace/actions/very-good-coverage
-[very_good_ventures_link]: https://verygood.ventures
-[very_good_ventures_link_light]: https://verygood.ventures#gh-light-mode-only
-[very_good_ventures_link_dark]: https://verygood.ventures#gh-dark-mode-only
-[very_good_workflows_link]: https://github.com/VeryGoodOpenSource/very_good_workflows
+## Testing
+
+`make test` from the repo root, or `fvm flutter test` here. The cubit tests cover
+the lock behavior, the favorite toggle, and the error path for each repository.

@@ -8,13 +8,42 @@ This is a Flutter monorepo using Dart workspaces with a **feature-first architec
 apps/              # Flutter application(s)
 features/          # Feature modules (vertical slices)
   {feature}/
-    {feature}_domain/        # Entities, interfaces, queries (pure Dart)
-    {feature}_data/          # Repository implementations, data sources, converters
+    {feature}_domain/        # Models, repository interfaces, use cases (pure Dart)
+    {feature}_data/          # Repository implementations, data sources, mappers
     {feature}_presentation/  # UI, Cubits, states, modules
 shared/            # Cross-feature utilities (design system, localizations, etc.)
 ```
 
 Not all features require all three layers. A feature may be domain-only (e.g. reference data), presentation-only (e.g. composing other features), or any combination.
+
+Layer folder layout follows the Feature-First Clean Architecture conventions,
+nested inside `lib/src/` so the barrel file stays the package's public surface:
+
+```
+{feature}_domain/lib/
+  src/models/           # Domain models
+  src/repositories/     # Repository interfaces (abstract interface class)
+  src/use_cases/        # Query and Command classes
+  src/extensions/       # Extensions deriving one model from another
+  {feature}_domain.dart # barrel
+
+{feature}_data/lib/
+  src/data_sources/{source}/        # A data source
+  src/data_sources/{source}/dtos/   # Hand-written DTOs for that source
+  src/mappers/                      # DTO -> domain converters
+  src/repositories/                 # Repository implementations
+  {feature}_data.dart               # barrel
+
+{feature}_presentation/lib/
+  src/{screen}/bloc/                # Cubit + state
+  src/{screen}/views/               # Screen and widgets
+  src/{screen}/{screen}_module.dart # Module wiring the screen's dependencies
+  {screen}.dart                     # subfeature barrel (one per entry point)
+  {feature}_presentation.dart       # primary barrel, re-exports subfeatures
+```
+
+Drift generates its DTOs into `{database}.g.dart` beside the database, not into
+a `dtos/` folder.
 
 ## Build & Test Commands
 
@@ -31,31 +60,38 @@ To run tests for a single package: `cd features/{feature}/{feature}_{layer} && f
 ### Domain Layer (`{feature}_domain`)
 
 - **Pure Dart only** — no Flutter dependency
-- Contains: entity classes, repository interfaces (`I{Feature}Repository`), query objects, and exceptions
-- Entities are `@immutable` with manual `==`, `hashCode`, and `toString`
+- Contains: models, repository interfaces (`I{Feature}Repository`), use cases, and exceptions
+- Models live in `src/models/`, interfaces in `src/repositories/`, queries and commands in `src/use_cases/`
+- Models are `@immutable` with manual `==`, `hashCode`, and `toString`
+- Do NOT suffix models with `Model` or `Entity` — the model is the domain
+- A model stored with ids rather than populated objects is a `{Entity}Summary` (e.g. `FavoriteSummary` holds `mealId` and `drinkId`)
 - Repository interfaces use `abstract interface class`
 - Query objects compose multiple repositories to fulfill complex reads (e.g. `GetFavoriteQuery`)
+- Queries expose `get` (Future) or `watch` (Stream); commands expose `execute`. Never callable classes — they break code navigation
 - Single barrel export: `lib/{feature}_domain.dart`
 - Dependencies: only other domain packages and `meta`
 
 ### Data Layer (`{feature}_data`)
 
 - Implements domain repository interfaces
-- Contains: concrete repositories, data sources (local DB via Drift, remote API), converters
+- Contains: concrete repositories, data sources (local DB via Drift, remote API), mappers
+- Repositories in `src/repositories/`, data sources in `src/data_sources/{source}/`, hand-written DTOs in that source's `dtos/`, converters in `src/mappers/`
 - **Converter pattern**: `DbToDomain{Entity}Converter` and `ApiToDomain{Entity}Converter` extend `Converter<Input, Output>` from `dart:convert`
 - Repositories accept data sources and converters via constructor injection
+- Mappers are internal. The barrel exports the repository and data sources, never the converters
 - Single barrel export: `lib/{feature}_data.dart`
 - Dependencies: own domain layer + infrastructure libs (drift, http, etc.)
 
 ### Presentation Layer (`{feature}_presentation`)
 
 - Contains: modules, screens, cubits, states, widgets, callback typedefs
+- Each screen owns a folder: `bloc/` for its cubit and state, `views/` for its screen and widgets, and `{screen}_module.dart` at the folder root
 - **Module pattern**: A `{Feature}{Screen}Module` StatelessWidget wires dependencies using `Provider` and `BlocProvider`, then renders the screen
 - **Cubit pattern**: One `{Feature}{Screen}Cubit` per screen, extends `Cubit<{State}>`
 - **State pattern**: Use `sealed class` with `Loading`, `Success`, and `Error` implementations
 - **Screen pattern**: `StatefulWidget` that calls cubit methods in `initState` and uses `switch` on sealed state in `build`
 - Navigation callbacks are typedefs passed down from the module (e.g. `typedef OnFavoriteTapped = void Function(String favoriteId)`)
-- Multiple barrel exports allowed per feature section: `lib/{section}.dart`
+- **Subfeature barrels**: every independently-loadable entry point gets its own barrel at `lib/{screen}.dart`, and the primary `lib/{feature}_presentation.dart` re-exports them. A single barrel would make deferred loading all-or-nothing per package
 - Dependencies: own domain layer, design system, localizations, `flutter_bloc`, `provider`
 
 ### Dependency Direction
@@ -65,6 +101,8 @@ presentation → domain ← data
 ```
 
 Presentation and Data both depend on Domain. Presentation NEVER imports Data directly for repository implementations — it receives repository interfaces via constructor injection from the Module.
+
+A feature domain may depend on another feature's domain (e.g. `favorites_domain` depends on `meals_domain` and `drinks_domain`). Packages under `shared/` may not depend on anything in `features/` — shared code has zero knowledge of the app's features. If a shared widget needs a feature's type, give it a type of its own and let the caller map into it, as `DetailsView` does with `DetailsRow`.
 
 ## Conventions
 
@@ -78,6 +116,7 @@ Presentation and Data both depend on Domain. Presentation NEVER imports Data dir
 - Modules: `{Feature}{Screen}Module` (e.g. `FavoritesListModule`)
 - Converters: `{Source}ToDomain{Entity}Converter` (e.g. `DbToDomainFavoriteConverter`)
 - Queries: `Get{Entity}Query` (e.g. `GetFavoriteQuery`)
+- Summary models: `{Entity}Summary` (e.g. `FavoriteSummary`)
 
 ### pubspec.yaml
 
@@ -89,8 +128,9 @@ Presentation and Data both depend on Domain. Presentation NEVER imports Data dir
 
 - Use `mocktail` for mocking (not mockito)
 - Mock classes: `class Mock{Dependency} extends Mock implements {Dependency} {}`
-- Test file structure mirrors `lib/src/` structure
+- Test file structure mirrors the `lib/` structure it covers, including the `models/`, `repositories/`, `use_cases/`, `mappers/`, and `views/` subfolders
 - Test all layers independently
+- Widget tests that render `Image.network` must stub it. `NetworkImage` holds one static `HttpClient`, so `HttpOverrides` cannot reach it — set `debugNetworkImageHttpClientProvider` instead (see `shared/mealify_design_system/test/helpers/mock_network_images.dart`)
 
 ### Routing (App Layer)
 

@@ -9,9 +9,9 @@ part 'meals_database.g.dart';
   },
 )
 class MealsDatabase extends _$MealsDatabase {
-  /// Create an instance of the MealsDatabase. For testing, you can pass
-  /// through a test executor. The application should pass along the correct
-  /// executor depending on the environment (web vs native).
+  /// Create an instance of the MealsDatabase. For testing, you can pass through
+  /// a test executor. The application should pass along the correct executor
+  /// depending on the environment (web vs native).
   MealsDatabase({required QueryExecutor queryExecutor}) : super(queryExecutor);
 
   /// Get a meal by [id]

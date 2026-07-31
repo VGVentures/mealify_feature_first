@@ -1,62 +1,47 @@
-# Meals Domain
+# meals_domain
 
-[![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
-[![Powered by Mason](https://img.shields.io/endpoint?url=https%3A%2F%2Ftinyurl.com%2Fmason-badge)](https://github.com/felangel/mason)
-[![License: MIT][license_badge]][license_link]
+The domain layer for meals. Pure Dart, no Flutter.
 
-A Very Good Project created by Very Good CLI.
+This package defines what a meal *is* and what can be asked about one. It does not
+know where meals come from. [`meals_data`](../meals_data) answers that.
 
-## Installation 💻
+## What lives here
 
-**❗ In order to start using Meals Domain you must have the [Dart SDK][dart_install_link] installed on your machine.**
+| Path | Contents |
+| --- | --- |
+| `src/models/meal.dart` | `Meal`, an immutable model with value equality |
+| `src/repositories/i_meals_repository.dart` | `IMealsRepository`, the read contract |
 
-Install via `dart pub add`:
-
-```sh
-dart pub add meals_domain
+```dart
+abstract interface class IMealsRepository {
+  Future<Meal> getMealById(String id);
+  Future<Meal> getRandomMeal();
+}
 ```
 
----
+`Meal` carries the fields TheMealDB returns, including 20 flat
+`ingredient1..20` and `measure1..20` pairs. Turning those into a usable list is
+not this package's job. [`ingredients_domain`](../../ingredients/ingredients_domain)
+does it with an extension, which lets `Meal` stay a faithful model of the source
+data instead of a convenient one.
 
-## Continuous Integration 🤖
+## Who depends on this
 
-Meals Domain comes with a built-in [GitHub Actions workflow][github_actions_link] powered by [Very Good Workflows][very_good_workflows_link] but you can also add your preferred CI/CD solution.
+- [`meals_data`](../meals_data) implements `IMealsRepository`
+- [`meals_presentation`](../meals_presentation) consumes it
+- [`favorites_domain`](../../favorites/favorites_domain) uses `IMealsRepository`
+  to hydrate a `Favorite`
+- [`ideas_presentation`](../../ideas/ideas_presentation) and
+  [`ingredients_domain`](../../ingredients/ingredients_domain) use `Meal`
 
-Out of the box, on each pull request and push, the CI `formats`, `lints`, and `tests` the code. This ensures the code remains consistent and behaves correctly as you add functionality or make changes. The project uses [Very Good Analysis][very_good_analysis_link] for a strict set of analysis options used by our team. Code coverage is enforced using the [Very Good Workflows][very_good_coverage_link].
+This package depends on `meta` and nothing else.
 
----
+## Conventions
 
-## Running Tests 🧪
+The model is `Meal`, not `MealModel` or `MealEntity`. Equality, `hashCode`, and
+`toString` are hand-written rather than generated, so there is no build step
+between cloning the repo and reading the code.
 
-To run all unit tests:
+## Testing
 
-```sh
-dart pub global activate coverage 1.15.0
-dart test --coverage=coverage
-dart pub global run coverage:format_coverage --lcov --in=coverage --out=coverage/lcov.info
-```
-
-To view the generated coverage report you can use [lcov](https://github.com/linux-test-project/lcov).
-
-```sh
-# Generate Coverage Report
-genhtml coverage/lcov.info -o coverage/
-
-# Open Coverage Report
-open coverage/index.html
-```
-
-[dart_install_link]: https://dart.dev/get-dart
-[github_actions_link]: https://docs.github.com/en/actions/learn-github-actions
-[license_badge]: https://img.shields.io/badge/license-MIT-blue.svg
-[license_link]: https://opensource.org/licenses/MIT
-[logo_black]: https://raw.githubusercontent.com/VGVentures/very_good_brand/main/styles/README/vgv_logo_black.png#gh-light-mode-only
-[logo_white]: https://raw.githubusercontent.com/VGVentures/very_good_brand/main/styles/README/vgv_logo_white.png#gh-dark-mode-only
-[mason_link]: https://github.com/felangel/mason
-[very_good_analysis_badge]: https://img.shields.io/badge/style-very_good_analysis-B22C89.svg
-[very_good_analysis_link]: https://pub.dev/packages/very_good_analysis
-[very_good_coverage_link]: https://github.com/marketplace/actions/very-good-coverage
-[very_good_ventures_link]: https://verygood.ventures
-[very_good_ventures_link_light]: https://verygood.ventures#gh-light-mode-only
-[very_good_ventures_link_dark]: https://verygood.ventures#gh-dark-mode-only
-[very_good_workflows_link]: https://github.com/VeryGoodOpenSource/very_good_workflows
+`make test` from the repo root, or `fvm flutter test` here.

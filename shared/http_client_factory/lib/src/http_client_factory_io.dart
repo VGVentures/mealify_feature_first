@@ -12,8 +12,8 @@ const int _maxCacheSize = 2 * 1024 * 1024;
 
 /// A function that generates an httpClient for native platforms, such as iOS
 /// and Android. These clients use the native http clients from the platforms
-/// rather than Dart's built-in http clients. This allows far better support
-/// for standard technologies, such as proxies and vpns.
+/// rather than Dart's built-in http clients. This allows far better support for
+/// standard technologies, such as proxies and vpns.
 http.Client httpClientFactory() {
   try {
     if (Platform.isIOS || Platform.isMacOS) {
