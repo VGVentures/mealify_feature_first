@@ -175,12 +175,9 @@ to copy.
 - `json_serializable` for api DTO parsing (`api_meal.dart` → `api_meal.g.dart`)
 - `gen-l10n` for localizations, into `lib/src/l10n/gen/` so the barrel stays the
   package's only public surface
-- Run: `dart run melos generate`. It orders the packages, which matters because
-  `apps/mealify_app/lib/app/view/app.dart` imports all three data packages to
-  construct the repositories. `build_runner` resolves a package's whole `lib/`
-  before running any builder, so until those packages' Drift output exists,
-  nothing in the app resolves and the build dies on the missing asset. Running
-  `build_runner` in parallel across the workspace hits exactly that
+- Run: `dart run melos generate`. Its `--order-dependents` is load-bearing:
+  without it the app's build fails with `AssetNotFoundException` on a data
+  package's Drift `.g.dart` that has not been written yet
 - Output is committed and gated in CI, so a stale generated file fails the build
   rather than silently serving old code
 
@@ -189,10 +186,10 @@ to copy.
 - `package:sqlite3` 3.x ships its native library through a Dart build hook, not
   a Flutter plugin. `sqlite3_flutter_libs` is end-of-life and must not come back
 - `query_executor_factory` floors `drift` at 2.34 to hold `sqlite3` on 3.x.
-  Dropping below that silently removes the native library on Android and Windows:
-  it compiles, analyzes, and tests clean, then throws on first database open
-- Nothing local catches that. CI builds Android and Windows and asserts the
-  binary is in the build output. Assert on the artifact, never on the exit code,
-  because `flutter build` can exit 0 without building
+  Below that, `sqlite3` resolves to 2.x, the version that needed the plugin
+- The hook builds one binary per target, so a local build or test only exercises
+  the host. CI builds Android and Windows and asserts the library is in each
+  artifact. Assert on the artifact, never on the exit code: `flutter build` has
+  been seen exiting 0 without building
 - The committed `sqlite3.wasm` and `drift_worker.js` under `apps/mealify_app/web/`
   must match the resolved drift version. See `query_executor_factory/README.md`

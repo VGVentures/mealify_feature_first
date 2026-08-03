@@ -33,10 +33,11 @@ replaced the `sqlite3_flutter_libs` plugin, which is end-of-life and no longer a
 dependency of this repo.
 
 That is why this package floors `drift` at 2.34: below it, `sqlite3` resolves to
-2.x, which expects the plugin. On Android and Windows the result is an app that
-compiles, analyzes, and tests clean, then throws the first time it opens a
-database. CI builds both platforms and asserts the binary is present in the
-output, because nothing a developer runs on a mac can catch this.
+2.x, which is the version that needed the plugin.
+
+The hook produces one binary per target, so a local build or test only ever
+exercises the host. CI builds Android and Windows and asserts the library is
+present in each artifact.
 
 ## Web builds need two extra files
 
