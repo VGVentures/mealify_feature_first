@@ -136,4 +136,4 @@ document.
 
 ## Testing
 
-`make test` from the repo root, or `fvm flutter test` here.
+`dart run melos test` from the repo root, or `fvm flutter test` here.

@@ -57,7 +57,7 @@ database.
 
 ## Testing
 
-`make test` from the repo root, or `fvm flutter test` here.
+`dart run melos test` from the repo root, or `fvm flutter test` here.
 
 The API client tests include integration tests that hit TheMealDB over the
 network, so they can fail when it is unreachable.

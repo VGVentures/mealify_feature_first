@@ -57,5 +57,5 @@ This package depends on [`meals_domain`](../../meals/meals_domain) and
 
 ## Testing
 
-`make test` from the repo root, or `fvm flutter test` here. The tests cover both
+`dart run melos test` from the repo root, or `fvm flutter test` here. The tests cover both
 extensions, including the filtering of null and empty entries.
