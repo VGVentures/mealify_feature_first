@@ -72,6 +72,12 @@ jobs:
       # it is not, a source changed without its output being refreshed, and the
       # stale copy would otherwise pass review looking correct. `--intent-to-add`
       # makes `git diff` see brand-new generated files, not only changed ones.
+      #
+      # Verified able to fail before being trusted: adding a string to
+      # `app_en.arb` without regenerating makes this step red on the rewritten
+      # `lib/src/l10n/gen/`. Re-do that if you ever change how this works, since
+      # a generated-file check and a check pointing at nothing look identical
+      # while everything happens to be in sync.
       - name: Check generated files are up to date
         run: |
           dart run melos generate
@@ -88,10 +94,11 @@ jobs:
 
   # `package:sqlite3` 3.x bundles its native library through Dart build hooks
   # rather than the old `sqlite3_flutter_libs` plugin. Android and Windows are
-  # the platforms that actually need that binary, and neither is buildable from
-  # a mac, so nothing a developer runs locally can tell you it arrived. This job
+  # the platforms that actually need that binary. macOS and iOS have a system
+  # SQLite, so the whole local test suite passes whether or not the hook
+  # delivered anything, and Windows cannot be built from a mac at all. This job
   # is the only thing standing between a dependency bump and a release that
-  # crashes the first time it opens a database.
+  # throws the first time it opens a database.
   #
   # It asserts on the produced artifact, never on the exit status: `flutter
   # build` has been observed exiting 0 while refusing to build (wrong target,
@@ -155,7 +162,10 @@ jobs:
               found=$(unzip -Z1 "$apk" 'lib/*' | grep -i sqlite3 || true)
               ;;
             windows)
-              echo "Inspecting the runner output directory"
+              # Deliberately the whole tree, not just the runner output dir:
+              # the exact output path is a toolchain detail, and narrowing it
+              # would make this fail for reasons other than a missing library.
+              echo "Searching build/windows for a SQLite DLL"
               found=$(find build/windows -iname "*sqlite3*.dll" || true)
               ;;
           esac
