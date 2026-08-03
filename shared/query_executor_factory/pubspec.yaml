@@ -5,25 +5,21 @@ publish_to: none
 resolution: workspace
 
 environment:
-  sdk: ^3.9.0
+  sdk: ^3.10.0
   flutter: ^3.35.0
 
 dependencies:
-  drift:
+  # Floored at 2.34 for `sqlite3` 3.x, and that floor is load-bearing rather
+  # than housekeeping. 3.x bundles a prebuilt SQLite through Dart build hooks;
+  # 2.x got it from the `sqlite3_flutter_libs` plugin, which is end-of-life and
+  # no longer in this repo. Drop back below 2.34 and `NativeDatabase` loses its
+  # native library on Android and Windows, with nothing in analyze or test to
+  # say so. This package picks the platform executor, so it owns the floor.
+  drift: ^2.34.0
   flutter:
     sdk: flutter
   path:
   path_provider:
-  # Ships the native SQLite binary that `NativeDatabase` opens on Android and
-  # Windows. It used to arrive transitively through `drift_flutter` in the data
-  # packages; those are pure Dart now, so the package that picks the platform
-  # executor owns the platform's native library too.
-  #
-  # Pinned to 0.5.x on purpose. 0.6.0 is an end-of-life stub that registers no
-  # plugin and ships no library; it is only correct once `package:sqlite3`
-  # reaches 3.x, and drift still resolves that to 2.x. Leaving this unbounded
-  # silently drops the native library from the Android and Windows builds.
-  sqlite3_flutter_libs: ^0.5.41
 
 dev_dependencies:
   flutter_test:

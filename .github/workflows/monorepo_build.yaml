@@ -85,3 +85,63 @@ jobs:
         run: dart run melos analyze
       - name: Test
         run: dart run melos test
+
+  # `package:sqlite3` 3.x bundles its native library through Dart build hooks
+  # rather than the old `sqlite3_flutter_libs` plugin. Android and Windows are
+  # the platforms that actually need that binary, and neither is buildable from
+  # a mac, so nothing a developer runs locally can tell you it arrived. This job
+  # is the only thing standing between a dependency bump and a release that
+  # crashes the first time it opens a database.
+  #
+  # It asserts on the produced artifact, never on the exit status: `flutter
+  # build` has been observed exiting 0 while refusing to build (wrong target,
+  # missing flavor configuration), so a green step proves nothing on its own.
+  native_sqlite:
+    name: Native SQLite (${{ matrix.platform }})
+    needs: setup
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: android
+            runs-on: ubuntu-latest
+            # Android has product flavors; Windows does not support them at all,
+            # so the build arguments cannot be shared between the two.
+            build: apk --flavor development -t lib/main_development.dart
+            # `.so` for every ABI the app ships.
+            library_glob: "**/lib/*/libsqlite3.so"
+          - platform: windows
+            runs-on: windows-latest
+            build: windows -t lib/main_development.dart
+            library_glob: "**/sqlite3.dll"
+    runs-on: ${{ matrix.runs-on }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        if: matrix.platform == 'android'
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: subosito/flutter-action@v2
+        with:
+          cache: true
+          flutter-version: ${{ needs.setup.outputs.flutter_version }}
+      - name: Install dependencies
+        run: flutter pub get --no-example
+      - name: Build ${{ matrix.platform }}
+        working-directory: apps/mealify_app
+        run: flutter build ${{ matrix.build }}
+      # The build above is not the check. This is.
+      - name: Assert the SQLite binary was bundled
+        shell: bash
+        working-directory: apps/mealify_app
+        run: |
+          found=$(find build -path "${{ matrix.library_glob }}" -print -quit)
+          if [ -z "$found" ]; then
+            echo "::error::No SQLite native library in the ${{ matrix.platform }} build output."
+            echo "Expected something matching ${{ matrix.library_glob }} under apps/mealify_app/build."
+            echo "The hook in package:sqlite3 did not deliver it, so the app would"
+            echo "crash the first time it opens a database on this platform."
+            exit 1
+          fi
+          echo "Found $found"

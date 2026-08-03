@@ -25,11 +25,35 @@ queries run off the UI isolate.
 
 **Web** returns a delayed `DatabaseConnection` backed by `WasmDatabase`.
 
+## Where the native SQLite comes from
+
+`package:sqlite3` 3.x downloads a prebuilt SQLite through a [Dart build
+hook](https://dart.dev/tools/hooks) and the platform build embeds it. This
+replaced the `sqlite3_flutter_libs` plugin, which is end-of-life and no longer a
+dependency of this repo.
+
+That is why this package floors `drift` at 2.34: below it, `sqlite3` resolves to
+2.x, which expects the plugin. On Android and Windows the result is an app that
+compiles, analyzes, and tests clean, then throws the first time it opens a
+database. CI builds both platforms and asserts the binary is present in the
+output, because nothing a developer runs on a mac can catch this.
+
 ## Web builds need two extra files
 
 The web path loads `sqlite3.wasm` and `drift_worker.js` at runtime, and they must
 match the Drift version resolved in the root `pubspec.lock`. A web build without
 them fails when a database is first opened, not at compile time.
+
+Both are committed under `apps/mealify_app/web/`. Take them from the drift
+release matching the resolved version, which publishes the pair together:
+
+```sh
+V=$(grep -A3 '^  drift:' ../../pubspec.lock | grep version | tr -d ' version:"')
+for f in sqlite3.wasm drift_worker.js; do
+  curl -L -o "../../apps/mealify_app/web/$f" \
+    "https://github.com/simolus3/drift/releases/download/drift-$V/$f"
+done
+```
 
 ## One database per feature
 

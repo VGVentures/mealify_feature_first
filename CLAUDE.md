@@ -143,7 +143,7 @@ to copy.
 ### pubspec.yaml
 
 - All packages use `publish_to: none` and `resolution: workspace`
-- **Version constraints**: Read `.fvmrc` for the project's Flutter version. Match SDK and Flutter constraints from the root `pubspec.yaml` and existing packages — do NOT hardcode versions
+- **Version constraints**: Read `.fvmrc` for the project's Flutter version. Match SDK and Flutter constraints from the root `pubspec.yaml` and existing packages — do NOT hardcode versions. The exception is a constraint that carries a correctness requirement rather than a preference, like `query_executor_factory`'s `drift` floor; those are pinned deliberately and commented with why
 - Dev dependencies always include `very_good_analysis` and `mocktail`
 
 ### Testing
@@ -180,3 +180,16 @@ to copy.
   `build_runner` in parallel across the workspace fails on the missing asset
 - Output is committed and gated in CI, so a stale generated file fails the build
   rather than silently serving old code
+
+### Native dependencies
+
+- `package:sqlite3` 3.x ships its native library through a Dart build hook, not
+  a Flutter plugin. `sqlite3_flutter_libs` is end-of-life and must not come back
+- `query_executor_factory` floors `drift` at 2.34 to hold `sqlite3` on 3.x.
+  Dropping below that silently removes the native library on Android and Windows:
+  it compiles, analyzes, and tests clean, then throws on first database open
+- Nothing local catches that. CI builds Android and Windows and asserts the
+  binary is in the build output. Assert on the artifact, never on the exit code,
+  because `flutter build` can exit 0 without building
+- The committed `sqlite3.wasm` and `drift_worker.js` under `apps/mealify_app/web/`
+  must match the resolved drift version. See `query_executor_factory/README.md`
