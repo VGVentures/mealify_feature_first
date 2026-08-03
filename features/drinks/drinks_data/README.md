@@ -38,8 +38,12 @@ repository.
 
 The barrel exports the repository and the data sources. The app needs both to
 construct the repository. `ApiDrink` is not exported either: it is
-TheCocktailDB's wire shape, and a consumer that could name it could bind to the
-api instead of to `Drink`.
+TheCocktailDB's wire shape rather than the domain model.
+
+Un-exporting it is a speed bump, not a wall. `CocktailDbApiClient` is exported
+and its methods return `ApiDrink`, so a consumer can hold one without importing
+anything under `src/`. That is the standing cost of exporting data sources, and
+it applies to the Drift row types too.
 
 ## Who depends on this
 

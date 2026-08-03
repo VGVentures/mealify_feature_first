@@ -47,8 +47,12 @@ implementation detail of the repository, not part of this package's API.
 
 The barrel exports the repository and the data sources. The app needs both to
 construct the repository; nothing outside needs the converters. `ApiMeal` is not
-exported either: it is TheMealDB's wire shape, and a consumer that could name it
-could bind to the api instead of to `Meal`.
+exported either: it is TheMealDB's wire shape rather than the domain model.
+
+Un-exporting it is a speed bump, not a wall. `MealDbApiClient` is exported and
+its methods return `ApiMeal`, so a consumer can hold one without importing
+anything under `src/`. That is the standing cost of exporting data sources, and
+it applies to the Drift row types too.
 
 ## Who depends on this
 

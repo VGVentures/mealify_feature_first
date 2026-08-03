@@ -1,7 +1,7 @@
 import 'package:favorites_domain/favorites_domain.dart';
 import 'package:flutter/cupertino.dart';
 
-/// Represents the different states of the FavoritesDetailScreen
+/// Represents the different states of the favorite details screen
 sealed class FavoriteDetailsState {}
 
 /// The state when the favorite is loading

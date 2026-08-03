@@ -93,12 +93,17 @@ jobs:
         run: dart run melos test
 
   # `package:sqlite3` 3.x bundles its native library through Dart build hooks
-  # rather than the old `sqlite3_flutter_libs` plugin. Android and Windows are
-  # the platforms that actually need that binary. macOS and iOS have a system
-  # SQLite, so the whole local test suite passes whether or not the hook
-  # delivered anything, and Windows cannot be built from a mac at all. This job
-  # is the only thing standing between a dependency bump and a release that
-  # throws the first time it opens a database.
+  # rather than the old `sqlite3_flutter_libs` plugin. The hook produces one
+  # binary per target, so building and testing locally only ever exercises the
+  # host: a hook that fails for Android or Windows specifically leaves every
+  # local check green. Windows cannot be built from a mac at all. This job is the
+  # only thing standing between a dependency bump and a release that throws the
+  # first time it opens a database.
+  #
+  # (Under the old plugin the gap was wider still: `sqlite3` 2.x fell back to the
+  # system SQLite that macOS and iOS ship, so a missing library was invisible
+  # locally on every platform a developer could test. That is the near-miss this
+  # branch already hit once.)
   #
   # It asserts on the produced artifact, never on the exit status: `flutter
   # build` has been observed exiting 0 while refusing to build (wrong target,
