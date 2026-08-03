@@ -48,12 +48,18 @@ Both are committed under `apps/mealify_app/web/`. Take them from the drift
 release matching the resolved version, which publishes the pair together:
 
 ```sh
-V=$(grep -A3 '^  drift:' ../../pubspec.lock | grep version | tr -d ' version:"')
+# Run from the repo root.
+V=$(awk '/^  drift:$/{f=1} f && /^    version:/{gsub(/[" ]/,"",$2); print $2; exit}' pubspec.lock)
+[ -n "$V" ] || { echo "could not read drift's version from pubspec.lock"; exit 1; }
 for f in sqlite3.wasm drift_worker.js; do
-  curl -L -o "../../apps/mealify_app/web/$f" \
+  curl -fL -o "apps/mealify_app/web/$f" \
     "https://github.com/simolus3/drift/releases/download/drift-$V/$f"
 done
 ```
+
+The `[ -n "$V" ]` guard and `curl -f` are both deliberate. Without them a
+mis-parsed version builds a URL like `.../drift-/sqlite3.wasm`, and curl happily
+writes the 404 body over a working binary.
 
 ## One database per feature
 

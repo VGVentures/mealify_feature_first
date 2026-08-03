@@ -107,13 +107,19 @@ jobs:
             runs-on: ubuntu-latest
             # Android has product flavors; Windows does not support them at all,
             # so the build arguments cannot be shared between the two.
-            build: apk --flavor development -t lib/main_development.dart
-            # `.so` for every ABI the app ships.
-            library_glob: "**/lib/*/libsqlite3.so"
+            #
+            # `--debug` is required, not a shortcut. A release build resolves the
+            # `release` signingConfig, which reads a keystore from
+            # ANDROID_KEYSTORE_PATH or a gitignored `key.properties`. CI has
+            # neither, so a release build dies at signing before this job's
+            # assertion ever runs, and the check silently stops checking SQLite.
+            # Debug signs with the auto-generated debug key, and bundles the same
+            # native libraries.
+            build: apk --debug --flavor development -t lib/main_development.dart
           - platform: windows
             runs-on: windows-latest
-            build: windows -t lib/main_development.dart
-            library_glob: "**/sqlite3.dll"
+            # Windows needs no signing, but debug keeps it symmetrical and quick.
+            build: windows --debug -t lib/main_development.dart
     runs-on: ${{ matrix.runs-on }}
     steps:
       - uses: actions/checkout@v4
@@ -131,17 +137,38 @@ jobs:
       - name: Build ${{ matrix.platform }}
         working-directory: apps/mealify_app
         run: flutter build ${{ matrix.build }}
-      # The build above is not the check. This is.
+      # The build above is not the check. This is. It looks inside the artifact
+      # that actually ships rather than at an intermediate build directory,
+      # because an intermediate path is a guess about the toolchain's internals
+      # and would start passing or failing for reasons unrelated to SQLite.
       - name: Assert the SQLite binary was bundled
         shell: bash
         working-directory: apps/mealify_app
         run: |
-          found=$(find build -path "${{ matrix.library_glob }}" -print -quit)
+          set -euo pipefail
+          case "${{ matrix.platform }}" in
+            android)
+              apk=$(find build -name "*.apk" -print -quit)
+              [ -n "$apk" ] || { echo "::error::No APK was produced."; exit 1; }
+              echo "Inspecting $apk"
+              # Native libraries live under lib/<abi>/ inside the APK.
+              found=$(unzip -Z1 "$apk" 'lib/*' | grep -i sqlite3 || true)
+              ;;
+            windows)
+              echo "Inspecting the runner output directory"
+              found=$(find build/windows -iname "*sqlite3*.dll" || true)
+              ;;
+          esac
           if [ -z "$found" ]; then
-            echo "::error::No SQLite native library in the ${{ matrix.platform }} build output."
-            echo "Expected something matching ${{ matrix.library_glob }} under apps/mealify_app/build."
-            echo "The hook in package:sqlite3 did not deliver it, so the app would"
-            echo "crash the first time it opens a database on this platform."
+            echo "::error::No SQLite native library in the ${{ matrix.platform }} artifact."
+            echo "The build hook in package:sqlite3 did not deliver it, so the app"
+            echo "would throw the first time it opens a database on this platform."
+            echo "--- what the artifact does contain ---"
+            case "${{ matrix.platform }}" in
+              android) unzip -Z1 "$apk" 'lib/*' || true ;;
+              windows) find build/windows -iname "*.dll" || true ;;
+            esac
             exit 1
           fi
-          echo "Found $found"
+          echo "Found:"
+          echo "$found"
