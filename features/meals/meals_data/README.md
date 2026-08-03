@@ -45,8 +45,10 @@ implementation detail of the repository, not part of this package's API.
 
 ## Public API
 
-The barrel exports the repository, the data sources, and `ApiMeal`. The app needs
-the first two to construct the repository; nothing outside needs the converters.
+The barrel exports the repository and the data sources. The app needs both to
+construct the repository; nothing outside needs the converters. `ApiMeal` is not
+exported either: it is TheMealDB's wire shape, and a consumer that could name it
+could bind to the api instead of to `Meal`.
 
 ## Who depends on this
 
@@ -57,7 +59,8 @@ database.
 
 ## Testing
 
-`dart run melos test` from the repo root, or `fvm flutter test` here.
+`dart run melos test` from the repo root, or `fvm dart test` here. This is a pure
+Dart package, so its tests use `package:test`.
 
 The API client tests include integration tests that hit TheMealDB over the
 network, so they can fail when it is unreachable.

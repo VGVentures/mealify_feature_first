@@ -61,5 +61,6 @@ package.
 
 ## Testing
 
-`dart run melos test` from the repo root, or `fvm flutter test` here. The database tests run
+`dart run melos test` from the repo root, or `fvm dart test` here. This is a pure
+Dart package, so its tests use `package:test`. The database tests run
 against `NativeDatabase.memory()`, so they need no files and no network.

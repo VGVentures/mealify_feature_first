@@ -215,7 +215,7 @@ Every layer keeps its implementation under `lib/src/` and exposes barrel files a
 
 {feature}_data/lib/
   src/data_sources/{source}/       one data source (database, api client)
-  src/data_sources/{source}/dtos/  hand-written DTOs for that source
+  src/data_sources/{source}/dtos/  DTOs for that source, parsing generated
   src/mappers/                     DTO -> domain converters
   src/repositories/                repository implementations
   {feature}_data.dart

@@ -36,8 +36,10 @@ repository.
 
 ## Public API
 
-The barrel exports the repository, the data sources, and `ApiDrink`. The app needs
-the first two to construct the repository.
+The barrel exports the repository and the data sources. The app needs both to
+construct the repository. `ApiDrink` is not exported either: it is
+TheCocktailDB's wire shape, and a consumer that could name it could bind to the
+api instead of to `Drink`.
 
 ## Who depends on this
 
@@ -47,7 +49,8 @@ Only [`mealify_app`](../../../apps/mealify_app), which constructs
 
 ## Testing
 
-`dart run melos test` from the repo root, or `fvm flutter test` here.
+`dart run melos test` from the repo root, or `fvm dart test` here. This is a pure
+Dart package, so its tests use `package:test`.
 
 The API client tests include integration tests that hit TheCocktailDB over the
 network, so they can fail when it is unreachable.
