@@ -49,5 +49,5 @@ outside this app.
 
 ## Testing
 
-`make test` from the repo root. There is nothing here to test beyond the generated
+`dart run melos test` from the repo root. There is nothing here to test beyond the generated
 delegates.

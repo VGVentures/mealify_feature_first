@@ -13,6 +13,8 @@ on:
       - "apps/**"
       - "features/**"
       - "shared/**"
+      # The Melos scripts live here, so a change to them has to trigger a run.
+      - "pubspec.yaml"
       - ".github/workflows/monorepo_build.yaml"
 
 jobs:
@@ -51,24 +53,26 @@ jobs:
   verify_and_test:
     name: Verify and Test
     needs: setup
-    strategy:
-      fail-fast: false
-      matrix:
-        package:
-          - apps/mealify_app
-          - features/drinks/drinks_data
-          - features/drinks/drinks_presentation
-          - features/favorites/favorites_data
-          - features/favorites/favorites_presentation
-          - features/ideas/ideas_presentation
-          - features/ingredients/ingredients_domain
-          - features/meals/meals_data
-          - features/meals/meals_presentation
-
-    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
-    with:
-      flutter_version: ${{ needs.setup.outputs.flutter_version }}
-      working_directory: ${{ matrix.package }}
-      coverage_excludes: "**/*.g.dart"
-      # I know I'm naughty, but 100% coverage wasn't helpful to this learning exercise 🙈
-      min_coverage: 0
+    runs-on: ubuntu-latest
+    env:
+      # Melos config sets `sdkPath: .fvm/flutter_sdk` for local runs, but `.fvm/`
+      # is gitignored and never exists on a runner. `auto` points Melos at the SDK
+      # flutter-action installs instead.
+      MELOS_SDK_PATH: auto
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          cache: true
+          flutter-version: ${{ needs.setup.outputs.flutter_version }}
+      # Resolves the whole workspace, which is also what installs Melos.
+      - name: Install dependencies
+        run: flutter pub get --no-example
+      # Melos derives the package list from the `workspace` key in the root
+      # pubspec, so a new package is covered here without touching this file.
+      - name: Check formatting
+        run: dart run melos format --set-exit-if-changed
+      - name: Analyze
+        run: dart run melos analyze
+      - name: Test
+        run: dart run melos test

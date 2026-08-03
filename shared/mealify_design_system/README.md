@@ -42,7 +42,7 @@ widget that would work unchanged in an app that has never heard of a meal.
 
 ## Testing
 
-`make test` from the repo root, or `fvm flutter test` here.
+`dart run melos test` from the repo root, or `fvm flutter test` here.
 
 `DetailsView` renders `Image.network`, which widget tests cannot reach. The tests
 use `test/helpers/mock_network_images.dart`, which sets

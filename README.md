@@ -38,15 +38,21 @@ fvm flutter run \
   --target apps/mealify_app/lib/main_development.dart
 ```
 
-Repo-wide commands live in the [`Makefile`](Makefile) and run in every package:
+Repo-wide commands run through [Melos][melos_link], configured under the `melos:`
+key in the root [`pubspec.yaml`](pubspec.yaml). It reads the package list from the
+same `workspace:` key pub uses, so there is one place to add a package:
 
 | Command | What it does |
 | --- | --- |
-| `make test` | Runs every package's tests |
-| `make analyze` | `dart analyze --fatal-infos` on every package |
-| `make format` | Formats every package |
-| `make check_formatting` | Checks formatting without writing |
-| `make clean` | Cleans every package |
+| `dart run melos test` | Runs the tests of every package that has any |
+| `dart run melos analyze` | `dart analyze --fatal-infos` on every package |
+| `dart run melos format` | Formats every package |
+| `dart run melos format --set-exit-if-changed` | Checks formatting without writing |
+| `dart run melos clean` | Clears pub and IDE temp files in every package |
+
+Melos is a dev dependency rather than a global install, so `fvm flutter pub get`
+is all the setup there is. Every command uses the `.fvmrc` Flutter version,
+because the Melos config points `sdkPath` at `.fvm/flutter_sdk`.
 
 One package on its own:
 `cd features/favorites/favorites_domain && fvm flutter test`.
@@ -319,8 +325,17 @@ are not exported.
 package for the whole app, which is where FFCA suggests starting. Splitting per
 feature is a scale decision this app has not needed.
 
-**A Makefile instead of Melos.** A `Makefile` plus a `tool/` directory covers
-what this repo needs. Melos is the more common choice and would work too.
+**Melos instead of a Makefile.** This repo used to drive its repo-wide commands
+from a `Makefile` that found packages with `find`. Melos reads the same
+`workspace:` list pub already resolves, so the package list stopped being a second
+thing to maintain. That mattered more than it sounds: the old CI matrix listed its
+packages by hand and had drifted, so one package's tests were never running.
+
+Melos is held at 7.8.1 rather than the current 8.x. A pub workspace resolves every
+package together, so a dev dependency inherits the whole repo's constraints, and
+`drift_dev` and `flutter_test` disagree about `analyzer` in a way that keeps
+`cli_util` below what Melos 8 needs. Installing Melos globally would dodge this,
+at the cost of a setup step and an unpinned version.
 
 **Cubits, not full Blocs.** With a `sealed` state class, a `switch` in a screen is
 exhaustive, so adding a state variant becomes a compile error rather than a blank
@@ -328,10 +343,12 @@ screen.
 
 ## Contributing
 
-`make analyze` and `make test` both need to be green. [`CLAUDE.md`](CLAUDE.md)
+`dart run melos analyze` and `dart run melos test` both need to be green.
+[`CLAUDE.md`](CLAUDE.md)
 carries the same conventions in a form aimed at coding agents. If you change a
 convention, change it in both places.
 
 [ffca_link]: https://verygood.ventures/blog/feature-first-clean-architecture
 [vge_link]: https://verygood.ventures/engineering
 [fvm_link]: https://fvm.app
+[melos_link]: https://melos.invertase.dev

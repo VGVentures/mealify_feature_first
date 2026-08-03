@@ -19,3 +19,30 @@ workspace:
   - shared/mealify_design_system
   - shared/mealify_localizations
   - shared/query_executor_factory
+
+# Held at 7.8.1 deliberately. Melos 7.8.2 and every 8.x needs `cli_util ^0.5.0`,
+# which cannot resolve here: `flutter_test` pins `test_api`, which caps `analyzer`
+# below 13, which caps `drift_dev` to versions needing `cli_util <0.5.0`. A pub
+# workspace has one shared resolution, so a dev tool in it inherits every
+# application constraint. Raise this only once drift_dev and flutter_test agree
+# on an analyzer version.
+dev_dependencies:
+  melos: ">=7.8.1 <7.8.2"
+
+# Repo-wide commands. Melos derives the package list from the `workspace` key
+# above, so there is one place to add a package. `sdkPath` pins every script to
+# the Flutter version in `.fvmrc`. CI has no `.fvm/` directory, so it overrides
+# that with `MELOS_SDK_PATH: auto`.
+melos:
+  sdkPath: .fvm/flutter_sdk
+  scripts:
+    # These spell out `dart run melos exec` rather than using the shorter
+    # `exec:` script key. An `exec:` script is dispatched through `/bin/sh` as
+    # bare `melos`, which only exists on PATH after a global activate. Melos is a
+    # dev dependency here, so it is reached through `dart run`.
+    analyze:
+      description: Analyze every package, treating infos as failures.
+      run: dart run melos exec -- dart analyze . --fatal-infos
+    test:
+      description: Run the tests of every package that has any.
+      run: dart run melos exec --dir-exists=test -- flutter test --no-pub

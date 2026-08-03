@@ -76,5 +76,5 @@ to the meal and drink screens through callbacks rather than by importing them.
 
 ## Testing
 
-`make test` from the repo root, or `fvm flutter test` here. The cubit tests cover
+`dart run melos test` from the repo root, or `fvm flutter test` here. The cubit tests cover
 the lock behavior, the favorite toggle, and the error path for each repository.

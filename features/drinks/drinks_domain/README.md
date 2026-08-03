@@ -42,4 +42,4 @@ This package depends on `meta` and nothing else.
 
 ## Testing
 
-`make test` from the repo root, or `fvm flutter test` here.
+`dart run melos test` from the repo root, or `fvm flutter test` here.

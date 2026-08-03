@@ -52,11 +52,7 @@ dev_dependencies:
   build_runner:
   flutter_test:
     sdk: flutter
-  go_router_builder:
-    git:
-      url: https://github.com/brianegan/packages.git
-      path: packages/go_router_builder
-      ref: 9f77d60918e6f7b532e515db09d84f2da8bc6555
+  go_router_builder: 4.2.0
   mocktail: ^1.0.4
   very_good_analysis: ^10.0.0
 

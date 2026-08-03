@@ -48,11 +48,18 @@ a `dtos/` folder.
 
 ## Build & Test Commands
 
-- `make test` — Run all tests across every package
-- `make analyze` — Run `dart analyze --fatal-infos` on all packages
-- `make format` — Format all packages
-- `make check_formatting` — Check formatting without modifying files
-- `make clean` — Clean all packages
+Repo-wide commands run through Melos, configured under the `melos:` key in the
+root `pubspec.yaml`. Melos is a dev dependency, so reach it with `dart run`:
+
+- `dart run melos test` — Run the tests of every package that has any
+- `dart run melos analyze` — Run `dart analyze --fatal-infos` on all packages
+- `dart run melos format` — Format all packages
+- `dart run melos format --set-exit-if-changed` — Check formatting without modifying files
+- `dart run melos clean` — Clear pub and IDE temp files in all packages
+
+Melos reads the package list from the `workspace:` key in the root `pubspec.yaml`.
+A new package needs adding there and nowhere else. Do not add a `melos.yaml`, and
+do not list packages under the `melos:` key.
 
 To run tests for a single package: `cd features/{feature}/{feature}_{layer} && flutter test`
 
