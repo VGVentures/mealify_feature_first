@@ -61,7 +61,7 @@ class _SuccessView extends StatelessWidget {
       itemCount: favoriteIds.length,
       itemBuilder: (context, index) {
         final favoriteId = favoriteIds[index];
-        return FavoriteListItem(
+        return FavoritesListItem(
           key: Key('favorite_list_tile_$favoriteId'),
           favoriteId: favoriteId,
           onFavoriteTapped: onFavoriteTapped,

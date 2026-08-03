@@ -2,7 +2,7 @@ arb-dir: lib/src/l10n/arb
 template-arb-file: app_en.arb
 output-localization-file: mealify_localizations.dart
 output-class: MealifyLocalizations
-output-dir: lib/l10n/gen
+output-dir: lib/src/l10n/gen
 nullable-getter: false
 
 # Needed to ensure the formatter does not run on the generated files.

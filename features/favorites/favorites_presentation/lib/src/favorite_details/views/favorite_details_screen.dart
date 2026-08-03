@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:favorites_domain/favorites_domain.dart';
-import 'package:favorites_presentation/src/favorite_details/bloc/favorites_details_cubit.dart';
-import 'package:favorites_presentation/src/favorite_details/bloc/favorites_details_state.dart';
+import 'package:favorites_presentation/src/favorite_details/bloc/favorite_details_cubit.dart';
+import 'package:favorites_presentation/src/favorite_details/bloc/favorite_details_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mealify_design_system/mealify_design_system.dart';
@@ -24,24 +24,24 @@ class _FavoriteDetailsScreenState extends State<FavoriteDetailsScreen> {
   @override
   void initState() {
     unawaited(
-      context.read<FavoritesDetailsCubit>().loadFavorite(favoriteId: widget.id),
+      context.read<FavoriteDetailsCubit>().loadFavorite(favoriteId: widget.id),
     );
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<FavoritesDetailsCubit>().state;
+    final state = context.watch<FavoriteDetailsCubit>().state;
 
     return ColoredBox(
       color: Theme.of(context).scaffoldBackgroundColor,
       child: switch (state) {
-        FavoritesDetailsLoading() => const LoadingView(),
-        FavoriteNotFoundState() => ErrorView(
+        FavoriteDetailsLoading() => const LoadingView(),
+        FavoriteDetailsNotFound() => ErrorView(
           error: context.l10n.favoriteDetailsNotFound,
         ),
-        FavoritesDetailsError(:final error) => ErrorView(error: error),
-        FavoritesDetailsSuccess(:final favorite) => _FavoriteDetailsSuccessView(
+        FavoriteDetailsError(:final error) => ErrorView(error: error),
+        FavoriteDetailsSuccess(:final favorite) => _FavoriteDetailsSuccessView(
           favorite: favorite,
         ),
       },

@@ -2,15 +2,15 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:favorites_domain/favorites_domain.dart';
-import 'package:favorites_presentation/src/favorite_details/bloc/favorites_details_state.dart';
+import 'package:favorites_presentation/src/favorite_details/bloc/favorite_details_state.dart';
 
 /// A cubit that manages the Favorite Details Screen
-class FavoritesDetailsCubit extends Cubit<FavoritesDetailsState> {
-  /// Construct a [FavoritesDetailsCubit]
-  FavoritesDetailsCubit({
+class FavoriteDetailsCubit extends Cubit<FavoriteDetailsState> {
+  /// Construct a [FavoriteDetailsCubit]
+  FavoriteDetailsCubit({
     required IFavoritesRepository favoritesRepository,
     required GetFavoriteQuery getFavoriteQuery,
-    FavoritesDetailsState initialState = const FavoritesDetailsLoading(),
+    FavoriteDetailsState initialState = const FavoriteDetailsLoading(),
   }) : _favoritesRepository = favoritesRepository,
        _getFavoriteQuery = getFavoriteQuery,
        super(initialState);
@@ -20,18 +20,18 @@ class FavoritesDetailsCubit extends Cubit<FavoritesDetailsState> {
 
   /// Loads and displays a given favorite
   Future<void> loadFavorite({required String favoriteId}) async {
-    emit(const FavoritesDetailsLoading());
+    emit(const FavoriteDetailsLoading());
 
     try {
       emit(
-        FavoritesDetailsSuccess(
+        FavoriteDetailsSuccess(
           favorite: await _getFavoriteQuery.get(favoriteId),
         ),
       );
     } on FavoriteNotFoundException catch (_) {
-      emit(const FavoriteNotFoundState());
+      emit(const FavoriteDetailsNotFound());
     } on Object catch (e) {
-      emit(FavoritesDetailsError(e));
+      emit(FavoriteDetailsError(e));
     }
   }
 

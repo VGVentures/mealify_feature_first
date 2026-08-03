@@ -29,6 +29,5 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  intl_utils:
   mocktail: ^1.0.4
   very_good_analysis: ^10.0.0

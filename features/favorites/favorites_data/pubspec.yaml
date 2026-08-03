@@ -6,23 +6,17 @@ resolution: workspace
 
 environment:
   sdk: ^3.9.0
-  flutter: ^3.35.0
 
 dependencies:
   clock:
   drift:
-  drift_flutter:
   favorites_domain:
     path: ../favorites_domain
-  flutter:
-    sdk: flutter
-  meta:
   uuid:
 
 dev_dependencies:
   build_runner: ^2.4.8
   drift_dev: ^2.16.0
-  flutter_test:
-    sdk: flutter
   mocktail: ^1.0.4
+  test: ^1.26.3
   very_good_analysis: ^10.0.0

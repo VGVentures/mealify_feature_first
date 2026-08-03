@@ -2,7 +2,7 @@ import 'package:clock/clock.dart';
 import 'package:drift/drift.dart' hide isNull;
 import 'package:drift/native.dart';
 import 'package:favorites_data/favorites_data.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 
 void main() {
   group('$FavoritesDatabase', () {

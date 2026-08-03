@@ -29,7 +29,7 @@ nested inside `lib/src/` so the barrel file stays the package's public surface:
 
 {feature}_data/lib/
   src/data_sources/{source}/        # A data source
-  src/data_sources/{source}/dtos/   # Hand-written DTOs for that source
+  src/data_sources/{source}/dtos/   # DTOs for that source, parsing generated
   src/mappers/                      # DTO -> domain converters
   src/repositories/                 # Repository implementations
   {feature}_data.dart               # barrel
@@ -51,11 +51,16 @@ a `dtos/` folder.
 Repo-wide commands run through Melos, configured under the `melos:` key in the
 root `pubspec.yaml`. Melos is a dev dependency, so reach it with `dart run`:
 
+- `dart run melos generate` — Regenerate every checked-in generated file
 - `dart run melos test` — Run the tests of every package that has any
 - `dart run melos analyze` — Run `dart analyze --fatal-infos` on all packages
 - `dart run melos format` — Format all packages
 - `dart run melos format --set-exit-if-changed` — Check formatting without modifying files
 - `dart run melos clean` — Clear pub and IDE temp files in all packages
+
+Generated code is committed, and CI fails a PR whose committed copy does not
+match what `dart run melos generate` produces. Change an `.arb` file, a `.drift`
+schema, a route, or a DTO, and rerun that command before pushing.
 
 Melos reads the package list from the `workspace:` key in the root `pubspec.yaml`.
 A new package needs adding there and nowhere else. Do not add a `melos.yaml`, and
@@ -83,12 +88,14 @@ To run tests for a single package: `cd features/{feature}/{feature}_{layer} && f
 
 - Implements domain repository interfaces
 - Contains: concrete repositories, data sources (local DB via Drift, remote API), mappers
-- Repositories in `src/repositories/`, data sources in `src/data_sources/{source}/`, hand-written DTOs in that source's `dtos/`, converters in `src/mappers/`
+- Repositories in `src/repositories/`, data sources in `src/data_sources/{source}/`, DTOs in that source's `dtos/`, converters in `src/mappers/`
 - **Converter pattern**: `DbToDomain{Entity}Converter` and `ApiToDomain{Entity}Converter` extend `Converter<Input, Output>` from `dart:convert`
 - Repositories accept data sources and converters via constructor injection
-- Mappers are internal. The barrel exports the repository and data sources, never the converters
+- **DTO pattern**: API DTOs are `@JsonSerializable(createToJson: false)` with the field list written by hand and `fromJson` generated. Name each field after the wire key; when the key is not a legal Dart name (`strIBA`, `strInstructionsZH-HANS`), give the field a Dart name and pin the key with `@JsonKey(name: ...)`. Test a DTO field-by-field against its wire key — a generated parser fails silently otherwise
+- Mappers are internal. The barrel exports the repository and data sources, never the converters. DTOs stay unexported too, so a consumer cannot bind to the api's wire shape
 - Single barrel export: `lib/{feature}_data.dart`
-- Dependencies: own domain layer + infrastructure libs (drift, http, etc.)
+- **Pure Dart, no Flutter.** The platform `QueryExecutor` is injected by the app from `query_executor_factory`, so nothing here needs the Flutter SDK. Tests use `package:test`, not `flutter_test`
+- Dependencies: own domain layer + infrastructure libs (drift, http, json_annotation, etc.)
 
 ### Presentation Layer (`{feature}_presentation`)
 
@@ -126,6 +133,13 @@ A feature domain may depend on another feature's domain (e.g. `favorites_domain`
 - Queries: `Get{Entity}Query` (e.g. `GetFavoriteQuery`)
 - Summary models: `{Entity}Summary` (e.g. `FavoriteSummary`)
 
+The `{Screen}` half decides singular or plural, and the whole screen folder
+agrees with it: `favorites_list` is plural down to `FavoritesListCubit` because
+it shows many, and `favorite_details` is singular down to `FavoriteDetailsCubit`
+because it shows one, matching `DrinkDetailsCubit` and `MealDetailsCubit`. A
+folder whose cubit disagrees with its module is the drift to fix, not a variant
+to copy.
+
 ### pubspec.yaml
 
 - All packages use `publish_to: none` and `resolution: workspace`
@@ -156,6 +170,13 @@ A feature domain may depend on another feature's domain (e.g. `favorites_domain`
 
 ### Code Generation
 
-- Drift for database layer (`.drift` files + `@DriftDatabase`)
+- Drift for the database layer (`.drift` files + `@DriftDatabase`)
 - GoRouter for routes (`routes.dart` → `routes.g.dart`)
-- Run: `dart run build_runner build --delete-conflicting-outputs`
+- `json_serializable` for api DTO parsing (`api_meal.dart` → `api_meal.g.dart`)
+- `gen-l10n` for localizations, into `lib/src/l10n/gen/` so the barrel stays the
+  package's only public surface
+- Run: `dart run melos generate`. It orders the packages, which matters because
+  the app's route builder reads the data packages' Drift output; running
+  `build_runner` in parallel across the workspace fails on the missing asset
+- Output is committed and gated in CI, so a stale generated file fails the build
+  rather than silently serving old code

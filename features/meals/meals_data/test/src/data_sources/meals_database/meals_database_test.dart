@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart' hide isNull;
 import 'package:drift/native.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:meals_data/meals_data.dart';
+import 'package:test/test.dart';
 
 void main() {
   group('$MealsDatabase', () {

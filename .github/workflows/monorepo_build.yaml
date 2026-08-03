@@ -68,6 +68,15 @@ jobs:
       # Resolves the whole workspace, which is also what installs Melos.
       - name: Install dependencies
         run: flutter pub get --no-example
+      # Generated code is committed, so regenerating it has to be a no-op. When
+      # it is not, a source changed without its output being refreshed, and the
+      # stale copy would otherwise pass review looking correct. `--intent-to-add`
+      # makes `git diff` see brand-new generated files, not only changed ones.
+      - name: Check generated files are up to date
+        run: |
+          dart run melos generate
+          git add --intent-to-add .
+          git diff --exit-code
       # Melos derives the package list from the `workspace` key in the root
       # pubspec, so a new package is covered here without touching this file.
       - name: Check formatting

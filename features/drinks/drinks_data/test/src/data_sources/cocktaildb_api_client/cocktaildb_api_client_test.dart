@@ -1,8 +1,8 @@
 import 'package:drinks_data/drinks_data.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_client_factory/http_client_factory.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:test/test.dart';
 
 class MockHttpClient extends Mock implements http.Client {}
 
