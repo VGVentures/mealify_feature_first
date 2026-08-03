@@ -129,9 +129,11 @@ dart run melos generate
 
 Regenerates `routes.g.dart` from the `@TypedGoRoute` and
 `@TypedStatefulShellRoute` annotations, along with every other generated file in
-the repo. Run it from the repo root rather than `build_runner` here: the route
-builder reads the data packages' Drift output, so this package cannot be built
-in isolation before they are.
+the repo. Run it from the repo root rather than `build_runner` here: `build_runner`
+resolves this package's whole `lib/` before running a builder, and
+`lib/app/view/app.dart` imports all three data packages. Until their Drift output
+exists, the resolution fails and so does the build, whichever builder happens to
+report it.
 
 Note that `analysis_options.yaml` here disables `public_member_api_docs`. The app
 composes rather than exporting an API, so its members have no external consumers to

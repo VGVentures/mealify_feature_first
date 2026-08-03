@@ -92,7 +92,7 @@ To run tests for a single package: `cd features/{feature}/{feature}_{layer} && f
 - **Converter pattern**: `DbToDomain{Entity}Converter` and `ApiToDomain{Entity}Converter` extend `Converter<Input, Output>` from `dart:convert`
 - Repositories accept data sources and converters via constructor injection
 - **DTO pattern**: API DTOs are `@JsonSerializable(createToJson: false)` with the field list written by hand and `fromJson` generated. Name each field after the wire key. When the field's Dart name cannot match the key, pin the key with `@JsonKey(name: ...)`: `strInstructionsZH-HANS` is not a legal identifier at all, and `strIBA` is legal and raises no lint, but Effective Dart styles an acronym that long as `strIba`. Test a DTO field-by-field against its wire key — a generated parser fails silently otherwise
-- Mappers are internal. The barrel exports the repository and data sources, never the converters. DTOs stay unexported too, so a consumer cannot bind to the api's wire shape
+- Mappers are internal. The barrel exports the repository and data sources, never the converters. DTOs stay unexported too, so nothing outside can name one by importing the barrel. That is a speed bump, not a wall: the exported api clients return the DTO types, so a consumer can still hold one, exactly as they can hold a Drift row. Both are the accepted cost of exporting data sources
 - Single barrel export: `lib/{feature}_data.dart`
 - **Pure Dart, no Flutter.** The platform `QueryExecutor` is injected by the app from `query_executor_factory`, so nothing here needs the Flutter SDK. Tests use `package:test`, not `flutter_test`
 - Dependencies: own domain layer + infrastructure libs (drift, http, json_annotation, etc.)
@@ -176,8 +176,11 @@ to copy.
 - `gen-l10n` for localizations, into `lib/src/l10n/gen/` so the barrel stays the
   package's only public surface
 - Run: `dart run melos generate`. It orders the packages, which matters because
-  the app's route builder reads the data packages' Drift output; running
-  `build_runner` in parallel across the workspace fails on the missing asset
+  `apps/mealify_app/lib/app/view/app.dart` imports all three data packages to
+  construct the repositories. `build_runner` resolves a package's whole `lib/`
+  before running any builder, so until those packages' Drift output exists,
+  nothing in the app resolves and the build dies on the missing asset. Running
+  `build_runner` in parallel across the workspace hits exactly that
 - Output is committed and gated in CI, so a stale generated file fails the build
   rather than silently serving old code
 

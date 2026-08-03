@@ -60,9 +60,11 @@ melos:
       # Generated code is committed, so this is the one command that refreshes
       # it. CI runs it and fails on a dirty tree, which is what keeps a stale
       # `.g.dart` or localization from passing review.
-      # `--order-dependents` is load-bearing: go_router_builder in the app reads
-      # the Drift output of the data packages, so building them concurrently
-      # fails with AssetNotFoundException.
+      # `--order-dependents` is load-bearing. The app imports all three data
+      # packages in `lib/app/view/app.dart`, and `build_runner` resolves a
+      # package's whole `lib/` before running any builder, so building the
+      # workspace concurrently fails with AssetNotFoundException on a Drift
+      # `.g.dart` that has not been written yet.
       run: |
         dart run melos exec --file-exists=l10n.yaml -- flutter gen-l10n
         dart run melos exec --depends-on=build_runner --order-dependents -- dart run build_runner build --delete-conflicting-outputs
