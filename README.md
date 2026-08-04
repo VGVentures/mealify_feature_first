@@ -245,6 +245,12 @@ something lives:
 | Cubit | `{Feature}{Screen}Cubit` | `FavoritesListCubit` |
 | Module | `{Feature}{Screen}Module` | `FavoritesListModule` |
 
+Whether the `{Screen}` half is singular or plural is decided by what the screen
+shows, and everything in that screen's folder agrees with it: `favorites_list`
+is plural through to `FavoritesListCubit`, `favorite_details` is singular through
+to `FavoriteDetailsCubit`. A folder whose cubit disagrees with its module is
+drift to fix, not a variant to copy.
+
 ## The packages
 
 ### Application
@@ -320,6 +326,34 @@ extends `Converter<DbMeal, Meal>` from `dart:convert`. FFCA also allows extensio
 methods or generated mappers; explicit classes were chosen because they are
 injectable and directly testable. They stay internal to their data package and
 are not exported.
+
+**The data layer is pure Dart.** `meals_data`, `drinks_data`, and
+`favorites_data` have no Flutter dependency: the app injects the platform
+`QueryExecutor` from `query_executor_factory`, so nothing in a data package needs
+the SDK. Their tests use `package:test`. This is what the layer diagram has
+always claimed, and it is what makes the data layer reusable from a CLI or a
+server.
+
+**API DTOs are generated, domain models are not.** `ApiMeal` and `ApiDrink` are
+`@JsonSerializable(createToJson: false)`: the field list is written by hand to
+mirror the wire format, and `fromJson` is generated. Where the wire key cannot be
+the Dart field name, `@JsonKey(name:)` pins it. Domain models stay hand-written,
+because the reason for generating here is 50-odd fields of parsing no reader
+could check against the api, which domain models do not have. Neither the DTOs
+nor the converters are exported.
+
+**The native SQLite binary arrives through a build hook.** `package:sqlite3` 3.x
+downloads and bundles it per target. There is no `sqlite3_flutter_libs` plugin
+any more, and `query_executor_factory` floors `drift` accordingly. Because the
+hook builds one binary per platform, a local build only exercises the host, so CI
+builds Android and Windows and asserts the library is in each artifact.
+
+**Generated code is committed, and CI proves it is fresh.** One command,
+`dart run melos generate`, refreshes the localizations, the routes, the Drift
+output, and the DTO parsers. CI reruns it and fails on a dirty tree. This exists
+because a generator and a barrel once pointed at two different directories that
+happened to hold identical files, so nothing looked wrong until someone
+regenerated.
 
 **Localizations are shared, not per-feature.** One `mealify_localizations`
 package for the whole app, which is where FFCA suggests starting. Splitting per
