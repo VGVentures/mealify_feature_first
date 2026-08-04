@@ -7,3 +7,6 @@ build/
 
 # FVM Version Cache
 .fvm/
+
+# Local Dart & Flutter DevTools settings, regenerated on demand.
+devtools_options.yaml
