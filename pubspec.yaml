@@ -22,19 +22,30 @@ workspace:
 
 # Held at 7.8.1 deliberately. Melos 7.8.2 and every 8.x needs `cli_util ^0.5.0`,
 # and a pub workspace has one shared resolution, so a dev tool in it inherits
-# every application constraint. The chain, as pub reports it:
+# every application constraint. The chain, as pub reports it on Flutter 3.44.8:
 #
-#   Flutter SDK 3.41.6 pins `meta 1.17.0`
-#     -> `analyzer >=10.0.2` needs `meta ^1.18.0`, so analyzer is capped below that
-#     -> `drift_dev >2.34.0` needs `analyzer ^13`, so drift_dev is capped at 2.34.0
+#   `flutter_test` from the SDK pins `test_api 0.7.11`
+#     -> `test >=1.31.1` needs `test_api 0.7.12` or later, so test is capped
+#        below 1.31.1
+#     -> `test <1.31.1` needs `analyzer <13.0.0`
+#     -> `drift_dev >=2.34.1+1` needs `analyzer ^13`, so drift_dev is capped at
+#        2.34.0
 #     -> `drift_dev 2.34.0` needs `cli_util ^0.4.0`
 #     -> melos 8 needs `cli_util ^0.5.0`. No solution.
 #
-# So the ceiling is the Flutter version in `.fvmrc`, not any package here.
-# Raising `.fvmrc` past a Flutter that pins `meta ^1.18.0` should clear the whole
-# chain in one go; nothing short of that will. Re-derive this before editing it
-# rather than trusting the comment: an earlier version of it blamed `flutter_test`
-# and `test_api`, which was not what pub was actually reporting.
+# So the ceiling is the Flutter version in `.fvmrc`, not any package here, and
+# `analyzer` at 12.1.0 and `build_runner` at 2.15.1 are capped by the same chain.
+# `package:test` is what carries the analyzer cap into the resolution, and it
+# cannot be dropped: the pure Dart packages test with it because they must not
+# depend on Flutter, so `flutter_test` is not an option for them. The hold lifts
+# when an SDK ships a newer `test_api` pin, not before.
+#
+# Re-derive this before editing it rather than trusting the comment. It has been
+# wrong twice: it once blamed `flutter_test` and `test_api` when pub was not
+# reporting that, and the version that replaced it blamed `meta 1.17.0` and
+# predicted a newer Flutter would clear everything. Raising the pin to 3.44.8 did
+# clear the `meta` link and did not clear the hold, because `test_api` was waiting
+# underneath. Ask pub, and paste what it says.
 dev_dependencies:
   melos: ">=7.8.1 <7.8.2"
 
@@ -63,6 +74,9 @@ melos:
       # `--order-dependents` is load-bearing: without it the workspace builds
       # concurrently and the app fails with AssetNotFoundException on a data
       # package's Drift `.g.dart` that has not been written yet.
+      # No `--delete-conflicting-outputs`: build_runner removed the option and
+      # deletes conflicting outputs by default, so passing it only earned a
+      # "these options have been removed and were ignored" warning per package.
       run: |
         dart run melos exec --file-exists=l10n.yaml -- flutter gen-l10n
-        dart run melos exec --depends-on=build_runner --order-dependents -- dart run build_runner build --delete-conflicting-outputs
+        dart run melos exec --depends-on=build_runner --order-dependents -- dart run build_runner build

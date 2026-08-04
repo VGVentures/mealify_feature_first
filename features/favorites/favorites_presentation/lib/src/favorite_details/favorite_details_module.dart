@@ -39,7 +39,7 @@ class FavoriteDetailsModule extends StatelessWidget {
         favoritesRepository: favoritesRepository,
       ),
       child: BlocProvider<FavoriteDetailsCubit>(
-        create: (BuildContext context) {
+        create: (context) {
           return FavoriteDetailsCubit(
             getFavoriteQuery: context.read(),
             favoritesRepository: favoritesRepository,

@@ -23,7 +23,7 @@ jobs:
     outputs:
       flutter_version: ${{ steps.read_fvm.outputs.version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - id: read_fvm
         name: Extract Version from .fvmrc
         run: |
@@ -35,7 +35,7 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: subosito/flutter-action@v2
         with:
           cache: true
@@ -60,7 +60,7 @@ jobs:
       # flutter-action installs instead.
       MELOS_SDK_PATH: auto
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: subosito/flutter-action@v2
         with:
           cache: true
@@ -127,8 +127,8 @@ jobs:
             build: windows --debug -t lib/main_development.dart
     runs-on: ${{ matrix.runs-on }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v5
         if: matrix.platform == 'android'
         with:
           distribution: temurin
