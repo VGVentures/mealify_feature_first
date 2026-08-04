@@ -17,7 +17,7 @@ dependencies:
   meta:
 
 dev_dependencies:
-  build_runner: ^2.4.8
+  build_runner:
   drift_dev: ^2.34.0
   http_client_factory:
     path: ../../../shared/http_client_factory

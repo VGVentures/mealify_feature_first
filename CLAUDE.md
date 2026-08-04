@@ -66,7 +66,7 @@ Melos reads the package list from the `workspace:` key in the root `pubspec.yaml
 A new package needs adding there and nowhere else. Do not add a `melos.yaml`, and
 do not list packages under the `melos:` key.
 
-To run tests for a single package: `cd features/{feature}/{feature}_{layer} && flutter test`
+To run tests for a single package: `cd features/{feature}/{feature}_{layer} && fvm flutter test`. `fvm dart test` also works, and is the natural command in the pure Dart packages.
 
 ## Architecture Rules
 
