@@ -2,9 +2,10 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:drinks_data/drinks_data.dart';
+import 'package:drinks_data/src/data_sources/cocktaildb_api_client/dtos/api_drink.dart';
 import 'package:drinks_domain/drinks_domain.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:test/test.dart';
 
 class MockDrinksDatabase extends Mock implements DrinksDatabase {}
 

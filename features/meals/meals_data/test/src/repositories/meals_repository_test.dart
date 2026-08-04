@@ -1,10 +1,11 @@
 // Not required for test files
 // ignore_for_file: prefer_const_constructors
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:meals_data/meals_data.dart';
+import 'package:meals_data/src/data_sources/mealdb_api_client/dtos/api_meal.dart';
 import 'package:meals_domain/meals_domain.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:test/test.dart';
 
 class MockMealsDatabase extends Mock implements MealsDatabase {}
 

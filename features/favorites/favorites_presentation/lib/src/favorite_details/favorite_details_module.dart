@@ -1,6 +1,6 @@
 import 'package:drinks_domain/drinks_domain.dart';
 import 'package:favorites_domain/favorites_domain.dart';
-import 'package:favorites_presentation/src/favorite_details/bloc/favorites_details_cubit.dart';
+import 'package:favorites_presentation/src/favorite_details/bloc/favorite_details_cubit.dart';
 import 'package:favorites_presentation/src/favorite_details/views/favorite_details_screen.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,9 +38,9 @@ class FavoriteDetailsModule extends StatelessWidget {
         drinksRepository: drinksRepository,
         favoritesRepository: favoritesRepository,
       ),
-      child: BlocProvider<FavoritesDetailsCubit>(
+      child: BlocProvider<FavoriteDetailsCubit>(
         create: (BuildContext context) {
-          return FavoritesDetailsCubit(
+          return FavoriteDetailsCubit(
             getFavoriteQuery: context.read(),
             favoritesRepository: favoritesRepository,
           );

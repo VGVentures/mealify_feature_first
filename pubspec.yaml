@@ -1,7 +1,7 @@
 name: mealify_brian_egan
 publish_to: none
 environment:
-  sdk: ^3.9.0
+  sdk: ^3.10.0
 workspace:
   - apps/mealify_app
   - features/drinks/drinks_data
@@ -21,11 +21,20 @@ workspace:
   - shared/query_executor_factory
 
 # Held at 7.8.1 deliberately. Melos 7.8.2 and every 8.x needs `cli_util ^0.5.0`,
-# which cannot resolve here: `flutter_test` pins `test_api`, which caps `analyzer`
-# below 13, which caps `drift_dev` to versions needing `cli_util <0.5.0`. A pub
-# workspace has one shared resolution, so a dev tool in it inherits every
-# application constraint. Raise this only once drift_dev and flutter_test agree
-# on an analyzer version.
+# and a pub workspace has one shared resolution, so a dev tool in it inherits
+# every application constraint. The chain, as pub reports it:
+#
+#   Flutter SDK 3.41.6 pins `meta 1.17.0`
+#     -> `analyzer >=10.0.2` needs `meta ^1.18.0`, so analyzer is capped below that
+#     -> `drift_dev >2.34.0` needs `analyzer ^13`, so drift_dev is capped at 2.34.0
+#     -> `drift_dev 2.34.0` needs `cli_util ^0.4.0`
+#     -> melos 8 needs `cli_util ^0.5.0`. No solution.
+#
+# So the ceiling is the Flutter version in `.fvmrc`, not any package here.
+# Raising `.fvmrc` past a Flutter that pins `meta ^1.18.0` should clear the whole
+# chain in one go; nothing short of that will. Re-derive this before editing it
+# rather than trusting the comment: an earlier version of it blamed `flutter_test`
+# and `test_api`, which was not what pub was actually reporting.
 dev_dependencies:
   melos: ">=7.8.1 <7.8.2"
 
@@ -46,3 +55,14 @@ melos:
     test:
       description: Run the tests of every package that has any.
       run: dart run melos exec --dir-exists=test -- flutter test --no-pub
+    generate:
+      description: Regenerate every checked-in generated file.
+      # Generated code is committed, so this is the one command that refreshes
+      # it. CI runs it and fails on a dirty tree, which is what keeps a stale
+      # `.g.dart` or localization from passing review.
+      # `--order-dependents` is load-bearing: without it the workspace builds
+      # concurrently and the app fails with AssetNotFoundException on a data
+      # package's Drift `.g.dart` that has not been written yet.
+      run: |
+        dart run melos exec --file-exists=l10n.yaml -- flutter gen-l10n
+        dart run melos exec --depends-on=build_runner --order-dependents -- dart run build_runner build --delete-conflicting-outputs

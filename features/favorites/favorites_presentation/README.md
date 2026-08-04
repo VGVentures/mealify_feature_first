@@ -20,11 +20,11 @@ lib/
     views/on_favorite_tapped.dart     OnFavoriteTapped typedef
   src/favorite_details/
     favorite_details_module.dart      entry point
-    bloc/                             FavoritesDetailsCubit + sealed state
+    bloc/                             FavoriteDetailsCubit + sealed state
     views/favorite_details_screen.dart
   src/favorites_list_item/
     bloc/                             FavoritesListItemCubit + sealed state
-    views/favorites_list_item.dart    FavoriteListItem
+    views/favorites_list_item.dart    FavoritesListItem
 ```
 
 ## One barrel per screen
@@ -44,7 +44,7 @@ both for consumers that want everything.
 
 ## A widget with its own cubit
 
-`FavoriteListItem` has a `FavoritesListItemCubit` of its own, because each row
+`FavoritesListItem` has a `FavoritesListItemCubit` of its own, because each row
 resolves its own meal and drink and can still be loading while its siblings are
 done.
 

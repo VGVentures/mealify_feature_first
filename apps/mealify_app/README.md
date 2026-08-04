@@ -124,11 +124,14 @@ and supporting both paths means one of them is rarely exercised.
 ## Code generation
 
 ```sh
-dart run build_runner build --delete-conflicting-outputs
+dart run melos generate
 ```
 
 Regenerates `routes.g.dart` from the `@TypedGoRoute` and
-`@TypedStatefulShellRoute` annotations.
+`@TypedStatefulShellRoute` annotations, along with every other generated file in
+the repo. Run it from the repo root rather than `build_runner` here: this package
+depends on the data packages' Drift output, so building it before them fails with
+`AssetNotFoundException`.
 
 Note that `analysis_options.yaml` here disables `public_member_api_docs`. The app
 composes rather than exporting an API, so its members have no external consumers to

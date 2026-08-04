@@ -44,6 +44,7 @@ same `workspace:` key pub uses, so there is one place to add a package:
 
 | Command | What it does |
 | --- | --- |
+| `dart run melos generate` | Regenerates every checked-in generated file |
 | `dart run melos test` | Runs the tests of every package that has any |
 | `dart run melos analyze` | `dart analyze --fatal-infos` on every package |
 | `dart run melos format` | Formats every package |
@@ -55,7 +56,10 @@ is all the setup there is. Every command uses the `.fvmrc` Flutter version,
 because the Melos config points `sdkPath` at `.fvm/flutter_sdk`.
 
 One package on its own:
-`cd features/favorites/favorites_domain && fvm flutter test`.
+`cd features/ingredients/ingredients_domain && fvm flutter test`. `fvm dart test`
+works too, and is the natural command in the packages with no Flutter dependency.
+Not every package has a `test/` directory yet, and the command errors rather than
+passing in the ones that do not.
 
 CI runs the same analyze and test steps, plus a license check over all direct and
 transitive dependencies.
@@ -215,7 +219,7 @@ Every layer keeps its implementation under `lib/src/` and exposes barrel files a
 
 {feature}_data/lib/
   src/data_sources/{source}/       one data source (database, api client)
-  src/data_sources/{source}/dtos/  hand-written DTOs for that source
+  src/data_sources/{source}/dtos/  DTOs for that source, parsing generated
   src/mappers/                     DTO -> domain converters
   src/repositories/                repository implementations
   {feature}_data.dart
@@ -244,6 +248,12 @@ something lives:
 | Converter | `{Source}ToDomain{Entity}Converter` | `DbToDomainFavoriteConverter` |
 | Cubit | `{Feature}{Screen}Cubit` | `FavoritesListCubit` |
 | Module | `{Feature}{Screen}Module` | `FavoritesListModule` |
+
+Whether the `{Screen}` half is singular or plural is decided by what the screen
+shows, and everything in that screen's folder agrees with it: `favorites_list`
+is plural through to `FavoritesListCubit`, `favorite_details` is singular through
+to `FavoriteDetailsCubit`. A folder whose cubit disagrees with its module is
+drift to fix, not a variant to copy.
 
 ## The packages
 
@@ -321,6 +331,38 @@ methods or generated mappers; explicit classes were chosen because they are
 injectable and directly testable. They stay internal to their data package and
 are not exported.
 
+**The data layer is pure Dart.** `meals_data`, `drinks_data`, and
+`favorites_data` have no Flutter dependency: the app injects the platform
+`QueryExecutor` from `query_executor_factory`, so nothing in a data package needs
+the SDK. Their tests use `package:test`. This is what the layer diagram has
+always claimed, and it is what makes the data layer reusable from a CLI or a
+server.
+
+**API DTOs are generated, domain models are not.** `ApiMeal` and `ApiDrink` are
+`@JsonSerializable(createToJson: false)`: the field list is written by hand to
+mirror the wire format, and `fromJson` is generated. Where the wire key cannot be
+the Dart field name, `@JsonKey(name:)` pins it. Domain models stay hand-written,
+because the reason for generating here is 50-odd fields of parsing no reader
+could check against the api, which domain models do not have. Neither the DTOs
+nor the converters are exported.
+
+**The native SQLite binary arrives through a build hook.** `package:sqlite3` 3.x
+downloads and bundles it per target. There is no `sqlite3_flutter_libs` plugin
+any more, and `query_executor_factory` floors `drift` accordingly. Because the
+hook builds one binary per platform, a local build only exercises the host, so CI
+builds Android and Windows and asserts the library is in each artifact. The web
+build is the exception: `apps/mealify_app/web/sqlite3.wasm` and `drift_worker.js`
+are committed by hand and have to match the resolved drift version.
+[`query_executor_factory`](shared/query_executor_factory/README.md) has the
+command that refreshes them.
+
+**Generated code is committed, and CI proves it is fresh.** One command,
+`dart run melos generate`, refreshes the localizations, the routes, the Drift
+output, and the DTO parsers. CI reruns it and fails on a dirty tree. This exists
+because a generator and a barrel once pointed at two different directories that
+happened to hold identical files, so nothing looked wrong until someone
+regenerated.
+
 **Localizations are shared, not per-feature.** One `mealify_localizations`
 package for the whole app, which is where FFCA suggests starting. Splitting per
 feature is a scale decision this app has not needed.
@@ -332,10 +374,12 @@ thing to maintain. That mattered more than it sounds: the old CI matrix listed i
 packages by hand and had drifted, so one package's tests were never running.
 
 Melos is held at 7.8.1 rather than the current 8.x. A pub workspace resolves every
-package together, so a dev dependency inherits the whole repo's constraints, and
-`drift_dev` and `flutter_test` disagree about `analyzer` in a way that keeps
-`cli_util` below what Melos 8 needs. Installing Melos globally would dodge this,
-at the cost of a setup step and an unpinned version.
+package together, so a dev tool in it inherits the whole repo's constraints, and
+the Flutter SDK's own pinned `meta` is what ultimately keeps `cli_util` below what
+Melos 8 needs. The full chain is in the comment above `dev_dependencies` in the
+root `pubspec.yaml`, kept in one place so the two cannot drift apart. Installing
+Melos globally would dodge this, at the cost of a setup step and an unpinned
+version.
 
 **Cubits, not full Blocs.** With a `sealed` state class, a `switch` in a screen is
 exhaustive, so adding a state variant becomes a compile error rather than a blank

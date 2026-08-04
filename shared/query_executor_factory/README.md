@@ -25,11 +25,42 @@ queries run off the UI isolate.
 
 **Web** returns a delayed `DatabaseConnection` backed by `WasmDatabase`.
 
+## Where the native SQLite comes from
+
+`package:sqlite3` 3.x downloads a prebuilt SQLite through a [Dart build
+hook](https://dart.dev/tools/hooks) and the platform build embeds it. This
+replaced the `sqlite3_flutter_libs` plugin, which is end-of-life and no longer a
+dependency of this repo.
+
+That is why this package floors `drift` at 2.34: below it, `sqlite3` resolves to
+2.x, which is the version that needed the plugin.
+
+The hook produces one binary per target, so a local build or test only ever
+exercises the host. CI builds Android and Windows and asserts the library is
+present in each artifact.
+
 ## Web builds need two extra files
 
 The web path loads `sqlite3.wasm` and `drift_worker.js` at runtime, and they must
 match the Drift version resolved in the root `pubspec.lock`. A web build without
 them fails when a database is first opened, not at compile time.
+
+Both are committed under `apps/mealify_app/web/`. Take them from the drift
+release matching the resolved version, which publishes the pair together:
+
+```sh
+# Run from the repo root.
+V=$(awk '/^  drift:$/{f=1} f && /^    version:/{gsub(/[" ]/,"",$2); print $2; exit}' pubspec.lock)
+[ -n "$V" ] || { echo "could not read drift's version from pubspec.lock"; exit 1; }
+for f in sqlite3.wasm drift_worker.js; do
+  curl -fL -o "apps/mealify_app/web/$f" \
+    "https://github.com/simolus3/drift/releases/download/drift-$V/$f"
+done
+```
+
+The `[ -n "$V" ]` guard and `curl -f` are both deliberate. Without them a
+mis-parsed version builds a URL like `.../drift-/sqlite3.wasm`, and curl happily
+writes the 404 body over a working binary.
 
 ## One database per feature
 

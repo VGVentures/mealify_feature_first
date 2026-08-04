@@ -1,5 +1,9 @@
 .flutter-plugins-dependencies
 .dart_tool/
 
+# Flutter build output. `.last_build_id` was tracked by accident; it changes on
+# every build, which would fail the generated-file check in CI for no reason.
+build/
+
 # FVM Version Cache
 .fvm/

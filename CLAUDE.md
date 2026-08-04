@@ -29,7 +29,7 @@ nested inside `lib/src/` so the barrel file stays the package's public surface:
 
 {feature}_data/lib/
   src/data_sources/{source}/        # A data source
-  src/data_sources/{source}/dtos/   # Hand-written DTOs for that source
+  src/data_sources/{source}/dtos/   # DTOs for that source, parsing generated
   src/mappers/                      # DTO -> domain converters
   src/repositories/                 # Repository implementations
   {feature}_data.dart               # barrel
@@ -51,17 +51,22 @@ a `dtos/` folder.
 Repo-wide commands run through Melos, configured under the `melos:` key in the
 root `pubspec.yaml`. Melos is a dev dependency, so reach it with `dart run`:
 
+- `dart run melos generate` — Regenerate every checked-in generated file
 - `dart run melos test` — Run the tests of every package that has any
 - `dart run melos analyze` — Run `dart analyze --fatal-infos` on all packages
 - `dart run melos format` — Format all packages
 - `dart run melos format --set-exit-if-changed` — Check formatting without modifying files
 - `dart run melos clean` — Clear pub and IDE temp files in all packages
 
+Generated code is committed, and CI fails a PR whose committed copy does not
+match what `dart run melos generate` produces. Change an `.arb` file, a `.drift`
+schema, a route, or a DTO, and rerun that command before pushing.
+
 Melos reads the package list from the `workspace:` key in the root `pubspec.yaml`.
 A new package needs adding there and nowhere else. Do not add a `melos.yaml`, and
 do not list packages under the `melos:` key.
 
-To run tests for a single package: `cd features/{feature}/{feature}_{layer} && flutter test`
+To run tests for a single package: `cd features/{feature}/{feature}_{layer} && fvm flutter test`. `fvm dart test` also works, and is the natural command in the pure Dart packages.
 
 ## Architecture Rules
 
@@ -83,12 +88,14 @@ To run tests for a single package: `cd features/{feature}/{feature}_{layer} && f
 
 - Implements domain repository interfaces
 - Contains: concrete repositories, data sources (local DB via Drift, remote API), mappers
-- Repositories in `src/repositories/`, data sources in `src/data_sources/{source}/`, hand-written DTOs in that source's `dtos/`, converters in `src/mappers/`
+- Repositories in `src/repositories/`, data sources in `src/data_sources/{source}/`, DTOs in that source's `dtos/`, converters in `src/mappers/`
 - **Converter pattern**: `DbToDomain{Entity}Converter` and `ApiToDomain{Entity}Converter` extend `Converter<Input, Output>` from `dart:convert`
 - Repositories accept data sources and converters via constructor injection
-- Mappers are internal. The barrel exports the repository and data sources, never the converters
+- **DTO pattern**: API DTOs are `@JsonSerializable(createToJson: false)` with the field list written by hand and `fromJson` generated. Name each field after the wire key. When the field's Dart name cannot match the key, pin the key with `@JsonKey(name: ...)`: `strInstructionsZH-HANS` is not a legal identifier at all, and `strIBA` is legal and raises no lint, but Effective Dart styles an acronym that long as `strIba`. Test a DTO field-by-field against its wire key — a generated parser fails silently otherwise
+- Mappers are internal. The barrel exports the repository and data sources, never the converters. DTOs stay unexported too, so nothing outside can name one by importing the barrel. That is a speed bump, not a wall: the exported api clients return the DTO types, so a consumer can still hold one, exactly as they can hold a Drift row. Both are the accepted cost of exporting data sources
 - Single barrel export: `lib/{feature}_data.dart`
-- Dependencies: own domain layer + infrastructure libs (drift, http, etc.)
+- **Pure Dart, no Flutter.** The platform `QueryExecutor` is injected by the app from `query_executor_factory`, so nothing here needs the Flutter SDK. Tests use `package:test`, not `flutter_test`
+- Dependencies: own domain layer + infrastructure libs (drift, http, json_annotation, etc.)
 
 ### Presentation Layer (`{feature}_presentation`)
 
@@ -126,10 +133,17 @@ A feature domain may depend on another feature's domain (e.g. `favorites_domain`
 - Queries: `Get{Entity}Query` (e.g. `GetFavoriteQuery`)
 - Summary models: `{Entity}Summary` (e.g. `FavoriteSummary`)
 
+The `{Screen}` half decides singular or plural, and the whole screen folder
+agrees with it: `favorites_list` is plural down to `FavoritesListCubit` because
+it shows many, and `favorite_details` is singular down to `FavoriteDetailsCubit`
+because it shows one, matching `DrinkDetailsCubit` and `MealDetailsCubit`. A
+folder whose cubit disagrees with its module is the drift to fix, not a variant
+to copy.
+
 ### pubspec.yaml
 
 - All packages use `publish_to: none` and `resolution: workspace`
-- **Version constraints**: Read `.fvmrc` for the project's Flutter version. Match SDK and Flutter constraints from the root `pubspec.yaml` and existing packages — do NOT hardcode versions
+- **Version constraints**: Read `.fvmrc` for the project's Flutter version. Match SDK and Flutter constraints from the root `pubspec.yaml` and existing packages — do NOT hardcode versions. The exception is a constraint that carries a correctness requirement rather than a preference, like `query_executor_factory`'s `drift` floor; those are pinned deliberately and commented with why
 - Dev dependencies always include `very_good_analysis` and `mocktail`
 
 ### Testing
@@ -156,6 +170,26 @@ A feature domain may depend on another feature's domain (e.g. `favorites_domain`
 
 ### Code Generation
 
-- Drift for database layer (`.drift` files + `@DriftDatabase`)
+- Drift for the database layer (`.drift` files + `@DriftDatabase`)
 - GoRouter for routes (`routes.dart` → `routes.g.dart`)
-- Run: `dart run build_runner build --delete-conflicting-outputs`
+- `json_serializable` for api DTO parsing (`api_meal.dart` → `api_meal.g.dart`)
+- `gen-l10n` for localizations, into `lib/src/l10n/gen/` so the barrel stays the
+  package's only public surface
+- Run: `dart run melos generate`. Its `--order-dependents` is load-bearing:
+  without it the app's build fails with `AssetNotFoundException` on a data
+  package's Drift `.g.dart` that has not been written yet
+- Output is committed and gated in CI, so a stale generated file fails the build
+  rather than silently serving old code
+
+### Native dependencies
+
+- `package:sqlite3` 3.x ships its native library through a Dart build hook, not
+  a Flutter plugin. `sqlite3_flutter_libs` is end-of-life and must not come back
+- `query_executor_factory` floors `drift` at 2.34 to hold `sqlite3` on 3.x.
+  Below that, `sqlite3` resolves to 2.x, the version that needed the plugin
+- The hook builds one binary per target, so a local build or test only exercises
+  the host. CI builds Android and Windows and asserts the library is in each
+  artifact. Assert on the artifact, never on the exit code: `flutter build` has
+  been seen exiting 0 without building
+- The committed `sqlite3.wasm` and `drift_worker.js` under `apps/mealify_app/web/`
+  must match the resolved drift version. See `query_executor_factory/README.md`

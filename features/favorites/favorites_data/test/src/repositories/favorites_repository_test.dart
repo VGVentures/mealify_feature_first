@@ -1,9 +1,8 @@
 import 'dart:async';
-
 import 'package:favorites_data/favorites_data.dart';
 import 'package:favorites_domain/favorites_domain.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:test/test.dart';
 
 class MockFavoritesDatabase extends Mock implements FavoritesDatabase {}
 

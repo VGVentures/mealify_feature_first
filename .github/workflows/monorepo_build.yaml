@@ -68,6 +68,21 @@ jobs:
       # Resolves the whole workspace, which is also what installs Melos.
       - name: Install dependencies
         run: flutter pub get --no-example
+      # Generated code is committed, so regenerating it has to be a no-op. When
+      # it is not, a source changed without its output being refreshed, and the
+      # stale copy would otherwise pass review looking correct. `--intent-to-add`
+      # makes `git diff` see brand-new generated files, not only changed ones.
+      #
+      # Verified able to fail before being trusted: adding a string to
+      # `app_en.arb` without regenerating makes this step red on the rewritten
+      # `lib/src/l10n/gen/`. Re-do that if you ever change how this works, since
+      # a generated-file check and a check pointing at nothing look identical
+      # while everything happens to be in sync.
+      - name: Check generated files are up to date
+        run: |
+          dart run melos generate
+          git add --intent-to-add .
+          git diff --exit-code
       # Melos derives the package list from the `workspace` key in the root
       # pubspec, so a new package is covered here without touching this file.
       - name: Check formatting
@@ -76,3 +91,100 @@ jobs:
         run: dart run melos analyze
       - name: Test
         run: dart run melos test
+
+  # `package:sqlite3` 3.x bundles its native library through Dart build hooks
+  # rather than the old `sqlite3_flutter_libs` plugin. The hook builds one binary
+  # per target, so a local build or test only exercises the host, and Windows
+  # cannot be built from a mac at all. Without this job nothing checks that the
+  # library reaches the two platforms that need it.
+  #
+  # It asserts on the produced artifact, never on the exit status: `flutter
+  # build` has been observed exiting 0 while refusing to build (wrong target,
+  # missing flavor configuration), so a green step proves nothing on its own.
+  native_sqlite:
+    name: Native SQLite (${{ matrix.platform }})
+    needs: setup
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: android
+            runs-on: ubuntu-latest
+            # Android has product flavors; Windows does not support them at all,
+            # so the build arguments cannot be shared between the two.
+            #
+            # `--debug` is required, not a shortcut. A release build resolves the
+            # `release` signingConfig, which reads a keystore from
+            # ANDROID_KEYSTORE_PATH or a gitignored `key.properties`. CI has
+            # neither, so a release build dies at signing before this job's
+            # assertion ever runs, and the check silently stops checking SQLite.
+            # Debug signs with the auto-generated debug key, and bundles the same
+            # native libraries.
+            build: apk --debug --flavor development -t lib/main_development.dart
+          - platform: windows
+            runs-on: windows-latest
+            # Windows needs no signing, but debug keeps it symmetrical and quick.
+            build: windows --debug -t lib/main_development.dart
+    runs-on: ${{ matrix.runs-on }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        if: matrix.platform == 'android'
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: subosito/flutter-action@v2
+        with:
+          cache: true
+          flutter-version: ${{ needs.setup.outputs.flutter_version }}
+      - name: Install dependencies
+        run: flutter pub get --no-example
+      - name: Build ${{ matrix.platform }}
+        working-directory: apps/mealify_app
+        run: flutter build ${{ matrix.build }}
+      # The build above is not the check. This is. It looks inside the artifact
+      # that actually ships rather than at an intermediate build directory,
+      # because an intermediate path is a guess about the toolchain's internals
+      # and would start passing or failing for reasons unrelated to SQLite.
+      - name: Assert the SQLite binary was bundled
+        shell: bash
+        working-directory: apps/mealify_app
+        run: |
+          set -euo pipefail
+          case "${{ matrix.platform }}" in
+            android)
+              apk=$(find build -name "*.apk" -print -quit)
+              [ -n "$apk" ] || { echo "::error::No APK was produced."; exit 1; }
+              echo "Inspecting $apk"
+              # Native libraries live under lib/<abi>/ inside the APK.
+              found=$(unzip -Z1 "$apk" 'lib/*' | grep -i sqlite3 || true)
+              ;;
+            windows)
+              # Deliberately the whole tree, not just the runner output dir:
+              # the exact output path is a toolchain detail, and narrowing it
+              # would make this fail for reasons other than a missing library.
+              echo "Searching build/windows for a SQLite DLL"
+              found=$(find build/windows -iname "*sqlite3*.dll" || true)
+              ;;
+          esac
+          if [ -z "$found" ]; then
+            echo "::error::No SQLite native library in the ${{ matrix.platform }} artifact."
+            echo "The build hook in package:sqlite3 did not deliver it, so the app"
+            echo "would throw the first time it opens a database on this platform."
+            echo "--- what the artifact does contain ---"
+            case "${{ matrix.platform }}" in
+              android) unzip -Z1 "$apk" 'lib/*' || true ;;
+              windows) find build/windows -iname "*.dll" || true ;;
+            esac
+            # The pass condition above is deliberately unchanged: the library has
+            # to be where the app can load it. This only widens the evidence, so
+            # a failure says whether the hook produced nothing at all or produced
+            # it somewhere the build never installed from.
+            echo "--- every sqlite3 file anywhere under build/ ---"
+            find build -iname "*sqlite3*" || true
+            echo "--- native assets the hook wrote ---"
+            find build/native_assets -type f 2>/dev/null || echo "(no build/native_assets directory)"
+            exit 1
+          fi
+          echo "Found:"
+          echo "$found"

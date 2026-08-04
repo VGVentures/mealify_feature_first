@@ -5,11 +5,16 @@ publish_to: none
 resolution: workspace
 
 environment:
-  sdk: ^3.9.0
+  sdk: ^3.10.0
   flutter: ^3.35.0
 
 dependencies:
-  drift:
+  # Floored at 2.34 for `sqlite3` 3.x, which bundles a prebuilt SQLite through a
+  # Dart build hook. Below 2.34, `sqlite3` resolves to 2.x, the version that
+  # needed the `sqlite3_flutter_libs` plugin this repo no longer has. This
+  # package picks the platform executor, so it owns the floor. The
+  # `native_sqlite` CI job is what checks the library still arrives.
+  drift: ^2.34.0
   flutter:
     sdk: flutter
   path:

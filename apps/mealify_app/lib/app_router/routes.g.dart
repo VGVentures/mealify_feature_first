@@ -15,14 +15,17 @@ RouteBase get $appShellRouteData => StatefulShellRouteData.$route(
       routes: [
         GoRouteData.$route(
           path: '/ideas',
+          hasOverriddenOnExit: false,
           factory: $IdeasRoute._fromState,
           routes: [
             GoRouteData.$route(
               path: 'meal/:id',
+              hasOverriddenOnExit: false,
               factory: $MealDetailsRoute._fromState,
             ),
             GoRouteData.$route(
               path: 'drink/:id',
+              hasOverriddenOnExit: false,
               factory: $DrinkDetailsRoute._fromState,
             ),
           ],
@@ -33,10 +36,12 @@ RouteBase get $appShellRouteData => StatefulShellRouteData.$route(
       routes: [
         GoRouteData.$route(
           path: '/favorites',
+          hasOverriddenOnExit: false,
           factory: $FavoritesListRoute._fromState,
           routes: [
             GoRouteData.$route(
               path: ':id',
+              hasOverriddenOnExit: false,
               factory: $FavoriteDetailsRoute._fromState,
             ),
           ],

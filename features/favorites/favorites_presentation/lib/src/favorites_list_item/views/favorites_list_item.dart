@@ -10,11 +10,11 @@ import 'package:skeletonizer/skeletonizer.dart';
 /// A list tile responsible for loading the necessary data for showing a
 /// favorite. This works better if we need to move to a paginated list of
 /// favorites, rather than loading absolutely everything into memory.
-class FavoriteListItem extends StatelessWidget {
+class FavoritesListItem extends StatelessWidget {
   /// Construct a list tile responsible for loading the necessary data for
   /// showing a favorite. This works better if we need to move to a paginated
   /// list of favorites, rather than loading absolutely everything into memory.
-  const FavoriteListItem({
+  const FavoritesListItem({
     required this.onFavoriteTapped,
     required this.favoriteId,
     required super.key,
