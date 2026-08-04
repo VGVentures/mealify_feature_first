@@ -56,7 +56,10 @@ is all the setup there is. Every command uses the `.fvmrc` Flutter version,
 because the Melos config points `sdkPath` at `.fvm/flutter_sdk`.
 
 One package on its own:
-`cd features/favorites/favorites_domain && fvm flutter test`.
+`cd features/ingredients/ingredients_domain && fvm flutter test`. `fvm dart test`
+works too, and is the natural command in the packages with no Flutter dependency.
+Not every package has a `test/` directory yet, and the command errors rather than
+passing in the ones that do not.
 
 CI runs the same analyze and test steps, plus a license check over all direct and
 transitive dependencies.
