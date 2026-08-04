@@ -332,10 +332,12 @@ thing to maintain. That mattered more than it sounds: the old CI matrix listed i
 packages by hand and had drifted, so one package's tests were never running.
 
 Melos is held at 7.8.1 rather than the current 8.x. A pub workspace resolves every
-package together, so a dev dependency inherits the whole repo's constraints, and
-`drift_dev` and `flutter_test` disagree about `analyzer` in a way that keeps
-`cli_util` below what Melos 8 needs. Installing Melos globally would dodge this,
-at the cost of a setup step and an unpinned version.
+package together, so a dev tool in it inherits the whole repo's constraints, and
+the Flutter SDK's own pinned `meta` is what ultimately keeps `cli_util` below what
+Melos 8 needs. The full chain is in the comment above `dev_dependencies` in the
+root `pubspec.yaml`, kept in one place so the two cannot drift apart. Installing
+Melos globally would dodge this, at the cost of a setup step and an unpinned
+version.
 
 **Cubits, not full Blocs.** With a `sealed` state class, a `switch` in a screen is
 exhaustive, so adding a state variant becomes a compile error rather than a blank
