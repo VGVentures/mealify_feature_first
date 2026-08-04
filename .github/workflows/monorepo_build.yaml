@@ -176,6 +176,14 @@ jobs:
               android) unzip -Z1 "$apk" 'lib/*' || true ;;
               windows) find build/windows -iname "*.dll" || true ;;
             esac
+            # The pass condition above is deliberately unchanged: the library has
+            # to be where the app can load it. This only widens the evidence, so
+            # a failure says whether the hook produced nothing at all or produced
+            # it somewhere the build never installed from.
+            echo "--- every sqlite3 file anywhere under build/ ---"
+            find build -iname "*sqlite3*" || true
+            echo "--- native assets the hook wrote ---"
+            find build/native_assets -type f 2>/dev/null || echo "(no build/native_assets directory)"
             exit 1
           fi
           echo "Found:"
