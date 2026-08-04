@@ -29,10 +29,21 @@ class GetFavoriteQuery {
       throw FavoriteNotFoundException(favoriteId);
     }
 
+    // The meal and the drink are independent, so both reads go out before
+    // either is awaited. `Future.wait` rather than two awaits: it listens to
+    // both, so a failure on one side cannot leave the other's error unhandled
+    // while it is still in flight. It also reports the original exception,
+    // where the record form's `.wait` would wrap it in a ParallelWaitError that
+    // tells the error view nothing.
+    final results = await Future.wait<Object>([
+      _mealsRepository.getMealById(favoriteSummary.mealId),
+      _drinksRepository.getDrinkById(favoriteSummary.drinkId),
+    ]);
+
     return Favorite(
       id: favoriteId,
-      meal: await _mealsRepository.getMealById(favoriteSummary.mealId),
-      drink: await _drinksRepository.getDrinkById(favoriteSummary.drinkId),
+      meal: results.first as Meal,
+      drink: results.last as Drink,
       createdAt: favoriteSummary.createdAt,
     );
   }
