@@ -44,6 +44,7 @@ same `workspace:` key pub uses, so there is one place to add a package:
 
 | Command | What it does |
 | --- | --- |
+| `dart run melos generate` | Regenerates every checked-in generated file |
 | `dart run melos test` | Runs the tests of every package that has any |
 | `dart run melos analyze` | `dart analyze --fatal-infos` on every package |
 | `dart run melos format` | Formats every package |
@@ -346,7 +347,11 @@ nor the converters are exported.
 downloads and bundles it per target. There is no `sqlite3_flutter_libs` plugin
 any more, and `query_executor_factory` floors `drift` accordingly. Because the
 hook builds one binary per platform, a local build only exercises the host, so CI
-builds Android and Windows and asserts the library is in each artifact.
+builds Android and Windows and asserts the library is in each artifact. The web
+build is the exception: `apps/mealify_app/web/sqlite3.wasm` and `drift_worker.js`
+are committed by hand and have to match the resolved drift version.
+[`query_executor_factory`](shared/query_executor_factory/README.md) has the
+command that refreshes them.
 
 **Generated code is committed, and CI proves it is fresh.** One command,
 `dart run melos generate`, refreshes the localizations, the routes, the Drift
