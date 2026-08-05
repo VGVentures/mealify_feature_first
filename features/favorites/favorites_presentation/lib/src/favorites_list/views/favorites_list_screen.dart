@@ -57,12 +57,22 @@ class _SuccessView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // `ListView.builder` matches children to elements by index, and a local key
+    // is not reclaimed across an index shift. Without `findChildIndexCallback`,
+    // removing one favorite destroys and rebuilds every row below it, and each
+    // rebuilt row re-runs `BlocProvider.create` and refetches itself.
+    final indexOfId = <String, int>{
+      for (final (index, id) in favoriteIds.indexed) id: index,
+    };
+
     return ListView.builder(
       itemCount: favoriteIds.length,
+      findChildIndexCallback: (key) =>
+          indexOfId[(key as ValueKey<String>).value],
       itemBuilder: (context, index) {
         final favoriteId = favoriteIds[index];
         return FavoritesListItem(
-          key: Key('favorite_list_tile_$favoriteId'),
+          key: ValueKey(favoriteId),
           favoriteId: favoriteId,
           onFavoriteTapped: onFavoriteTapped,
         );

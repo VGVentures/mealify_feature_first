@@ -22,8 +22,6 @@ class FavoritesListItemCubit extends Cubit<FavoritesListItemState> {
   Future<void> loadFavorite(String favoriteId) async {
     emit(const FavoritesListItemLoading());
 
-    await Future<void>.delayed(const Duration(seconds: 1));
-
     try {
       emit(
         FavoritesListItemSuccess(

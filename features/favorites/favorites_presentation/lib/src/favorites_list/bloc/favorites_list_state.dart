@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 
 /// The State for the favorites list screen
 sealed class FavoritesListState {}
@@ -25,15 +25,19 @@ class FavoritesListSuccess implements FavoritesListState {
     return 'FavoritesListSuccess{favorites: $favorites}';
   }
 
+  // `listEquals` rather than `==`: Dart's `List` does not override equality, so
+  // comparing the lists directly compares identity, every emission from the
+  // favorites stream is then a distinct state, and `Cubit.emit` can no longer
+  // drop a re-emission that leaves the visible ids unchanged.
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is FavoritesListSuccess &&
           runtimeType == other.runtimeType &&
-          favorites == other.favorites;
+          listEquals(favorites, other.favorites);
 
   @override
-  int get hashCode => favorites.hashCode;
+  int get hashCode => Object.hashAll(favorites);
 }
 
 /// The error state for the favorites list screen
