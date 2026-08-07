@@ -392,7 +392,7 @@ screen.
 carries the same conventions in a form aimed at coding agents. If you change a
 convention, change it in both places.
 
-[ffca_link]: https://verygood.ventures/blog/feature-first-clean-architecture
-[vge_link]: https://verygood.ventures/engineering
+[ffca_link]: https://verygood.ventures/blog/feature-first-clean-architecture/
+[vge_link]: https://engineering.verygood.ventures/architecture/ffca/overview/
 [fvm_link]: https://fvm.app
 [melos_link]: https://melos.invertase.dev
