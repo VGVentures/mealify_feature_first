@@ -137,6 +137,10 @@ Note that `analysis_options.yaml` here disables `public_member_api_docs`. The ap
 composes rather than exporting an API, so its members have no external consumers to
 document.
 
+`build.yaml` sets `go_router_builder`'s `duplicate_route_paths` to `error`, so two
+routes resolving to the same path fail generation instead of silently shadowing
+each other at runtime.
+
 ## Testing
 
 `dart run melos test` from the repo root, or `fvm flutter test` here.
